@@ -9,7 +9,7 @@ public class Board extends JPanel {
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
 
-
+//testttt
     static int oben = -8;
     static int unten = 8;
     static int rechts = 1;
