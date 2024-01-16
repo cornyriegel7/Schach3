@@ -9,7 +9,7 @@ public class Board extends JPanel {
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
 
-//testttt
+
     static int oben = -8;
     static int unten = 8;
     static int rechts = 1;
@@ -24,44 +24,48 @@ public class Board extends JPanel {
             untenlinks, obenrechts,
             untenrechts, obenlinks};
 
-
+    //Größe der Rechtecke
     public int titleSize = 100;
     Piece piece;
-    Graphics2D g2d;
 
-    public Board(View pView,Graphics g2d){
+    //Debugging
+    public int pSquareIndex = 30;
+
+    //Konstruktor Board
+    public Board(View pView){
         view = pView;
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
         distancesToEdge = getDistanceToEdges();
 
         this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
         piece = new Piece();
-        Square[2] = 2;
-        paint((Graphics2D) g2d,Square[2],squareToX(Square[2]),squareToY(Square[2]));
-
         }
 
 
 
-    //Zum Painten des kompletten Felds (wird warum auch immer automatisch ausgeführt wenn ein Board erstellt wird)
+    //Zum Painten des kompletten Felds
+    //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
+    //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
     public void paintComponent(Graphics g) {
-
-        int c = 0;
-        int r = 0;
 
         Graphics2D g2d = (Graphics2D) g;
 
-        for(r = 0; r < 8; r++){
-            for(c = 0; c < 8; c++){
-                g2d.setColor((c+r) % 2 == 0 ? new Color(255, 255, 255) : new Color(0, 0, 0));
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                g2d.setColor((c+r) % 2 == 0 ? new Color(205, 133, 63) : new Color(101, 67, 33));
                 g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
             }
         }
-
+        Square[pSquareIndex] = 2;
+        paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
+        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
+        System.out.println("titleSize: " + titleSize);//Debugging
+        System.out.println("Painting component..."); //Debugging
     }
 
-    //Bestimmtes Feld färben(um z.B. available Moves anzuzeigen)
-    public void paintSquare(int pSquare) {
+
+    //Bestimmtes Feld(pSquare Index) färben(um z.B. available Moves anzuzeigen)
+    public void paintSquare(int pSquareInt) {
         Graphics g = getGraphics();
         Graphics2D g2d = (Graphics2D) g;
 
@@ -69,17 +73,17 @@ public class Board extends JPanel {
         g2d.setColor(new Color(1, 101, 1));
 
         // Hier zeichnest du das bestimmte Feld
-        g2d.fillRect(squareToX(pSquare) * titleSize, squareToY(pSquare) * titleSize, titleSize, titleSize);
+        g2d.fillRect(squareToX(pSquareInt) * titleSize, squareToY(pSquareInt) * titleSize, titleSize, titleSize);
     }
 
-    //Wandelt ein bestimmtes Square in die Y-Koordinate des Feldes um (linke obere Ecke)
-    public int squareToY(int pSquare) {
+    //Wandelt ein bestimmtes Square(Index pSquare Array) in die Y-Koordinate des Feldes um (linke obere Ecke)
+    public int squareToY(int pSquareInt) {
             int minRange = 0;
             int maxRange = 63;
             int yOffset = 0;
 
-            if (pSquare >= minRange && pSquare <= maxRange) {
-                yOffset = (pSquare / 8) * 100;
+            if (pSquareInt >= minRange && pSquareInt <= maxRange) {
+                yOffset = (pSquareInt / 8) * 100;
 
 
                 return yOffset;
@@ -91,34 +95,38 @@ public class Board extends JPanel {
 
     }
 
-    //Wandelt ein bestimmtes Square in die X-Koordinate des Feldes um (linke obere Ecke)
-    public int squareToX(int pSquare) {
-        if (pSquare >= 0 && pSquare < 64) {
-            return (pSquare % 8) * 100;
+    //Wandelt ein bestimmtes Square(Index pSquare Array) in die X-Koordinate des Feldes um (linke obere Ecke)
+    public int squareToX(int pSquareInt) {
+        if (pSquareInt >= 0 && pSquareInt < 64) {
+            return (pSquareInt % 8) * 100;
         } else {
             // Umgang mit ungültigen pSquare-Werten
             return -1;
         }
     }
 
+    //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild.
     private  Image pieceIntToImage(int pPieceInt)
     {
         int absolutFigurInt = Math.abs(pPieceInt);
-        int farbe = pPieceInt / absolutFigurInt;
+       int farbe = pPieceInt / absolutFigurInt;
 
         return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == Piece.black ? piece.getImage(1 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(1 * piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.king) -> farbe == Piece.black ? piece.getImage(piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(piece.getSheetScale(), 0, titleSize, titleSize);
             case (Piece.pawn) -> farbe == Piece.black ? piece.getImage(6 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(6 * piece.getSheetScale(), 0, titleSize, titleSize);
             case (Piece.knight) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(4 * piece.getSheetScale(), 0, titleSize, titleSize);
             case (Piece.bishop) -> farbe == Piece.black ? piece.getImage(3 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(3 * piece.getSheetScale(), 0, titleSize, titleSize);
             case (Piece.rook) -> farbe == Piece.black ? piece.getImage(5 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(5 * piece.getSheetScale(), 0, titleSize, titleSize);
             case (Piece.queen) -> farbe == Piece.black ? piece.getImage(2 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(2 * piece.getSheetScale(), 0, titleSize, titleSize);
             default -> null;
+
+
         };
     }
 
-    public void paint(Graphics2D g2d, int pPieceInt, int xPos, int yPos){
-        g2d.drawImage(pieceIntToImage(pPieceInt),xPos,yPos,null);
+    //Malt ein Bild an den Kordinaten x & y
+    public void paint(Graphics2D g2d, Image img, int xPos, int yPos){
+        g2d.drawImage(img,xPos,yPos,null);
     }
 
 

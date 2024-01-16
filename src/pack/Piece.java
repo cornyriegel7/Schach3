@@ -21,24 +21,25 @@ public class Piece {
 
     //Für die Bilder der Pieces
     BufferedImage sheet;
-    {
-        try{
-            sheet = ImageIO.read(ClassLoader.getSystemResourceAsStream("pieces.png"));
-        }
-        catch (IOException e){
+    public int sheetScale;
+
+    public Piece() {
+        try {
+            sheet = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("pieces.png")));
+            sheetScale = sheet.getWidth() / 6;
+            System.out.println("Bild geladen: " + sheet);   //debugging
+            System.out.println("sheetScale: " + sheetScale);//debugging
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    protected int SheetScale = sheet.getWidth()/6;
-
-    public int getSheetScale(){
-        return SheetScale;
+    public int getSheetScale() {
+        return sheetScale;
     }
 
     public Image getImage(int XImagePiece,int YImagePiece,int w, int h) {
-        return sheet.getSubimage(XImagePiece,YImagePiece, w, h); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
+        return sheet.getSubimage(XImagePiece,YImagePiece,w,h); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
     }
 
     Image sprite;

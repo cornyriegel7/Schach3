@@ -6,9 +6,9 @@ public class Controller {
 
     View view;
     Board board;
-    public Controller(View pView, Graphics g2d){
+    public Controller(View pView){
         view = pView;
-        board = new Board(view, g2d);
+        board = new Board(view);
 
 
     }

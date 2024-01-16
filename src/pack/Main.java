@@ -7,3 +7,9 @@ public class Main {
         View view = new View();
     }
 }
+
+
+/*
+Zum Verständnis: Main erstellt view --> view erstellt Controller und gibt sich selbst weiter
+Controller erstellt Board und gibt view an Board weiter.
+*/
