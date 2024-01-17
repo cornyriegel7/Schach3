@@ -79,7 +79,5 @@ public class View extends JFrame implements ActionListener {
     public void paint() {
         //int[] boardArray = c.board.giveBoard();
         //irgendwie ist c nicht instanziert, ich kann das board nicht holen...
-        //test
-
     }
 }

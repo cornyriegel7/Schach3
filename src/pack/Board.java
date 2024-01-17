@@ -5,36 +5,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Board extends JPanel {
-    //Gameplay Zeug#
-    //
-    //
+    //Gameplay Zeug
     int[] Square;
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
 
 
-    static int oben = -8;
-    static int unten = 8;
-    static int rechts = 1;
-    static int links = -1;
-    static int obenrechts = -7;
-    static int untenlinks = 7;
-    static int obenlinks = -9;
-    static int untenrechts = 9;
+    static int oben = -8, unten = 8,  rechts = 1, links = -1, obenrechts = -7, untenlinks = 7, obenlinks = -9, untenrechts = 9;
     
     static final int[] directions = {oben, unten,
             rechts, links,
             untenlinks, obenrechts,
             untenrechts, obenlinks};
-    int[] whitePositions;
-    int[] blackPositions;
-    LinkedList<int[]> attackedByWhitePositions;
-    LinkedList<int[]> attackedByBlackPositions;
+    int[] whitePositions, blackPositions;
+    LinkedList<int[]> attackedByWhitePositions, attackedByBlackPositions;
 
 
     //optisches Zeug
-    //
-    //
     View view; //das ist die gui
 
     //Größe der Rechtecke

@@ -8,17 +8,8 @@ import java.util.Objects;
 
 public class Piece {
     // Figur kann an einem int erkannt werden denn: Farbe * FigurTyp
-    static final int black = -1;
-    static final int white = 1; // moeglicherweise redundant, so aber verständlicher vllt
-
-
-    static final int pawn = 1;
-    static final int knight = 2;
-    static final int bishop = 3;
-    static final int rook = 4;
-    static final int queen = 5;
-    static final int king = 6;
-
+    static final int black = -1, white = 1; // moeglicherweise redundant, so aber verständlicher vllt
+    static final int pawn = 1, knight = 2, bishop = 3, rook = 4, queen = 5, king = 6;
     //Für die Bilder der Pieces
     BufferedImage sheet;
     public int sheetScale;
