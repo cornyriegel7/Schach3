@@ -39,6 +39,7 @@ public class View extends JFrame implements ActionListener {
         setVisible(true);
     }
     public void actionPerformed(ActionEvent e) {
+        c = new Controller(this);
         //fenster: lokaler gegner
         if (e.getSource() == bVsLokal) {
             fVsLokal = new JFrame();
@@ -47,7 +48,6 @@ public class View extends JFrame implements ActionListener {
             fVsLokal.setLayout(new GridBagLayout());
             fVsLokal.setMinimumSize(new Dimension(1000,1000));
             fVsLokal.setLocationRelativeTo(null);
-            c = new Controller(this);
             fVsLokal.add(c.board);
             fVsLokal.setVisible(true);
         }
@@ -58,18 +58,16 @@ public class View extends JFrame implements ActionListener {
             fVsOnline.setLayout(new GridBagLayout());
             fVsOnline.setMinimumSize(new Dimension(1000,1000));
             fVsOnline.setLocationRelativeTo(null);
-            c = new Controller(this);
             fVsOnline.add(c.board);
             fVsOnline.setVisible(true);
         }
         if (e.getSource() == bVsBot) {
             fVsBot = new JFrame();
             fVsBot.setTitle("Gegen Bot");
-            fVsBot.getContentPane().setBackground(new Color(236, 5, 5));
+            fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
             fVsBot.setLayout(new GridBagLayout());
             fVsBot.setMinimumSize(new Dimension(1000,1000));
             fVsBot.setLocationRelativeTo(null);
-            c = new Controller(this);
             fVsBot.add(c.board);
             fVsBot.setVisible(true);
         }

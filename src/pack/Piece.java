@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Piece {
     // Figur kann an einem int erkannt werden denn: Farbe * FigurTyp
-    static final int black = -1, white = 1; // moeglicherweise redundant, so aber verständlicher vllt
+    static final int black = -1, white = 1;
     static final int pawn = 1, knight = 2, bishop = 3, rook = 4, queen = 5, king = 6;
     //Für die Bilder der Pieces
     BufferedImage sheet;
@@ -32,7 +32,5 @@ public class Piece {
         //Image img = sheet.getSubimage(XImagePiece,YImagePiece);
         return sheet.getSubimage(XImagePiece,YImagePiece,sheetScale,sheetScale).getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
     }
-
     Image sprite;
-
 }
