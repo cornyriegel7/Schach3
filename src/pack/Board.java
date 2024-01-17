@@ -110,7 +110,6 @@ public class Board extends JPanel {
             // Umgang mit ungültigen pSquare-Werten(kann man rausmachen, aber so weiß man, wenn etwas falsches rauskommt)
             return -1;
         }
-
     }
 
     //Wandelt ein bestimmtes Square(Index pSquare Array) in die X-Koordinate des Feldes um (linke obere Ecke)
@@ -123,7 +122,7 @@ public class Board extends JPanel {
         }
     }
 
-    //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild.
+    //"Wandelt" das gegebene Int in ein Bild um und returnt es.
     private  Image pieceIntToImage(int pPieceInt)
     {
         if(pPieceInt==0) return null; //man kann nicht durch 0 teilen
@@ -139,13 +138,10 @@ public class Board extends JPanel {
             case (Piece.rook) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(4 * piece.getSheetScale(), 0);
             case (Piece.queen) -> farbe == Piece.black ? piece.getImage(1 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(1 * piece.getSheetScale(), 0);
             default -> null;
-
-
         };
-
     }
 
-    //Malt ein Bild an den Kordinaten x & y
+    //Malt ein Bild an den Kordinaten x & y, wird irgendwie nicht verwendet
     public void paint(Graphics2D g2d, Image img, int xPos, int yPos){
         g2d.drawImage(img,xPos,yPos,null);
     }
@@ -279,8 +275,6 @@ public class Board extends JPanel {
 
         for(;anfang < ende;anfang++)
         {
-
-
             for(int j = 1;j <= distancesToEdge[startPos][anfang];j++) // j=1 damit das Startfeld nicht mitreingenommen wird
             {
                 int square = startPos + j * directions[anfang];//aktuellesFeld = Startfeld + Die Anzahl von Schritten in eine Richtung
