@@ -27,10 +27,10 @@ public class Piece {
         return sheetScale;
     }
 
-    public Image getImage(int XImagePiece,int YImagePiece,int w, int h) {
+    public Image getImage(int XImagePiece,int YImagePiece) {
         //diese line nur test
-        Image img = sheet.getSubimage(XImagePiece,YImagePiece,w,h);
-        return sheet.getSubimage(XImagePiece,YImagePiece,w,h); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
+        //Image img = sheet.getSubimage(XImagePiece,YImagePiece);
+        return sheet.getSubimage(XImagePiece,YImagePiece,sheetScale,sheetScale).getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
     }
 
     Image sprite;
