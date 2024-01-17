@@ -27,15 +27,16 @@ public class Board extends JPanel {
     //Größe der Rechtecke
     public int titleSize = 100;
     Piece piece;
-
+    Input input;
     //Debugging
     public int pSquareIndex = 0;
 
+
     //Konstruktor Board
     public Board(View pView){
-
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
         initalizeSquare();
+
         distancesToEdge = getDistanceToEdges();
         whitePositions = getPositions(Piece.white, Square);
         blackPositions = getPositions(Piece.black, Square);
@@ -45,6 +46,11 @@ public class Board extends JPanel {
         view = pView;
         this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
         piece = new Piece();
+        input = new Input(this);
+
+        // Hinzufügen des Input-Listeners zum Board
+        this.addMouseListener(input);
+        this.addMouseMotionListener(input);
         }
 
 
@@ -53,7 +59,6 @@ public class Board extends JPanel {
     //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
     //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
     public void paintComponent(Graphics g) {
-        //Brett painten
         Graphics2D g2d = (Graphics2D) g;
 
         for(int r = 0; r < 8; r++){
@@ -62,22 +67,25 @@ public class Board extends JPanel {
                 g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
             }
         }
-//        paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
+
+        for(int i = 0; (i < Square.length); i++) {
+            pSquareIndex = i;
+            Image img = pieceIntToImage(Square[pSquareIndex]);
+            g2d.drawImage(img, squareToX(pSquareIndex), squareToY(pSquareIndex), null);
+        }
+//          paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
 //        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
 //        System.out.println("titleSize: " + titleSize);//Debugging
 //        System.out.println("Painting component..."); //Debugging
-        paintArray(g2d);
     }
-
-
     public void paintArray(Graphics2D g2d){
 
         //Painten des Arrays als Figuren aufm brett
         pSquareIndex = 0;
         for(int i=0; i< Square.length;i++) {
-                pSquareIndex = i;
-                Image img = pieceIntToImage(Square[pSquareIndex]);
-                g2d.drawImage(img, squareToX(pSquareIndex),squareToY(pSquareIndex),null);
+            pSquareIndex = i;
+            Image img = pieceIntToImage(Square[pSquareIndex]);
+            g2d.drawImage(img, squareToX(pSquareIndex),squareToY(pSquareIndex),null);
         }
     }
 
@@ -119,6 +127,23 @@ public class Board extends JPanel {
             return (pSquareInt % 8) * 100;
         } else {
             // Umgang mit ungültigen pSquare-Werten
+            return -1;
+        }
+    }
+
+    //Wandelt Koordinaten in ein Index fürs Square Array um
+    public int xyToSquare(int xValue, int yValue) {
+        int minRangeX = 0;      //Die Werte in dem der Mausklick stattfinden muss.
+        int maxRangeX = 800;    //(Weil in dem Bereich eben das Schachbrett ist)
+        int minRangeY = 0;
+        int maxRangeY = 800;
+
+        if (xValue >= minRangeX && xValue <= maxRangeX && yValue >= minRangeY && yValue <= maxRangeY) {
+            int row = yValue / 100;         //funktioniert, weil int ja nur ganzzahlige Zahlen akzeptiert und IMMER abrundet
+            int column = xValue / 100;
+            return row * 8 + column;
+        } else {
+            // Umgang mit ungültigen x- oder y-Werten
             return -1;
         }
     }
@@ -236,7 +261,7 @@ public class Board extends JPanel {
     /**
      *
      * @param startPosition startPosition auf dem brett
-     * @param figurInt den Integer ert einer Figur auf dem Brett
+     * @param figurInt den Integerwert einer Figur auf dem Brett//
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
    public  int[][] generateMoves(int startPosition, int figurInt, int[] pSquares)
@@ -416,9 +441,14 @@ public class Board extends JPanel {
 
 
 
+    public void setSquare(int pIndex, int pValue){
+        Square[pIndex] = pValue;
+    }
 
 
-
+    public int getSquare(int pIndex){
+        return Square[pIndex];
+    }
 
    //Default Position vom Schach. (EInfach ganz nach unten immer packen die nervt sonst nur)
     public void initalizeSquare() {
