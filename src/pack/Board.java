@@ -2,9 +2,12 @@ package pack;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Board extends JPanel {
-    View view; //das ist die gui
+    //Gameplay Zeug#
+    //
+    //
     int[] Square;
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
@@ -23,6 +26,16 @@ public class Board extends JPanel {
             rechts, links,
             untenlinks, obenrechts,
             untenrechts, obenlinks};
+    int[] whitePositions;
+    int[] blackPositions;
+    LinkedList<int[]> attackedByWhitePositions;
+    LinkedList<int[]> attackedByBlackPositions;
+
+
+    //optisches Zeug
+    //
+    //
+    View view; //das ist die gui
 
     //Größe der Rechtecke
     public int titleSize = 100;
@@ -33,10 +46,15 @@ public class Board extends JPanel {
 
     //Konstruktor Board
     public Board(View pView){
-        view = pView;
+
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
         distancesToEdge = getDistanceToEdges();
+        whitePositions = getPositions(Piece.white, Square);
+        blackPositions = getPositions(Piece.black, Square);
+        attackedByWhitePositions = new LinkedList<>();
+        attackedByBlackPositions = new LinkedList<>();
 
+        view = pView;
         this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
         piece = new Piece();
         }
@@ -263,23 +281,23 @@ public class Board extends JPanel {
             for(int j = 1;j <= distancesToEdge[startPos][anfang];j++) // j=1 damit das Startfeld nicht mitreingenommen wird
             {
                 int square = startPos + j * directions[anfang];//aktuellesFeld = Startfeld + Die Anzahl von Schritten in eine Richtung
+                int eigeneFarbe = FigurInt / Math.abs(FigurInt);
                 if(Square[square] == leeresFeld)
                 {
                     moves.add(new int[]{startPos,square});
-
-
+                    addToAttackedPositions(eigeneFarbe,absolutFigurInt,square);
                 }
                 else
                 {
-                    int eigeneFarbe = FigurInt / Math.abs(FigurInt);
                     int farbeAndereFigur = Square[square] / Math.abs(Square[square]);
                     if (eigeneFarbe != farbeAndereFigur) {
                         moves.add(new int[]{startPos,square});
-
+                        addToAttackedPositions(eigeneFarbe,absolutFigurInt,square);
                     }
                     break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
                 }
 
+                //TODO: kann iwie vereinfacht werden
                 if(absolutFigurInt == Piece.king){break;} // n könig kann nur ein Feld weit gehen
             }
         }
@@ -315,6 +333,7 @@ public class Board extends JPanel {
             if(pSquares[neuersquare] == leeresFeld || eigeneFarbe != pSquares[neuersquare] / Math.abs(pSquares[neuersquare]))
             {
                 moves.add(new int[]{startPos,neuersquare});
+                addToAttackedPositions(eigeneFarbe,Piece.knight,neuersquare);
                 System.out.println(neuersquare);
 
             }
@@ -340,12 +359,14 @@ public class Board extends JPanel {
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach rechts ein Gegner
         {
             moves.add(new int[]{startPos,neuersquare});
+            addToAttackedPositions(eigeneFarbe,Piece.pawn,neuersquare);
             System.out.println(neuersquare);
         }
         neuersquare = startPos+bewegungsrichtung-1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach links ein Gegner
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
+            addToAttackedPositions(eigeneFarbe,Piece.pawn,neuersquare);
 
         }
 
@@ -354,10 +375,31 @@ public class Board extends JPanel {
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
+            addToAttackedPositions(eigeneFarbe,Piece.pawn,neuersquare);
 
         }
 
         return moves.toArray(new int[0][0]);
+    }
+
+    private int[] getPositions(int pColor, int[] pSquare)
+    {
+        ArrayList<Integer> positions = new ArrayList<Integer>();
+        for (int i = 0; i < pSquare.length; i++) {
+            if(pSquare[i] != leeresFeld && pSquare[i]/Math.abs(pSquare[i]) == pColor)
+                positions.add(pSquare[i]);
+        }
+
+        int[] intArray = new int[positions.size()];
+        for (int i = 0; i < intArray.length; i++) {
+            intArray[i] = positions.get(i);
+        }
+        return intArray;
+    }
+    private void addToAttackedPositions(int pColor, int absFigurInt, int pAttackedSquare)
+    {
+        LinkedList<int[]> list = pColor == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
+        list.add(new int[]{absFigurInt,pAttackedSquare});
     }
 
 }
