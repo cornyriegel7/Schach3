@@ -52,7 +52,7 @@ public class Board extends JPanel {
     //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
     //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
     public void paintComponent(Graphics g) {
-
+        //Brett painten
         Graphics2D g2d = (Graphics2D) g;
 
         for(int r = 0; r < 8; r++){
@@ -67,6 +67,10 @@ public class Board extends JPanel {
 //        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
 //        System.out.println("titleSize: " + titleSize);//Debugging
 //        System.out.println("Painting component..."); //Debugging
+        paintArray(g2d);
+    }
+
+    public void paintArray(Graphics2D g2d){
 
         //Painten des Arrays als Figuren aufm brett
         for(int i=0; i<8;i++) {
