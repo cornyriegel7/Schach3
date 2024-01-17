@@ -43,7 +43,7 @@ public class View extends JFrame implements ActionListener {
         if (e.getSource() == bVsLokal) {
             fVsLokal = new JFrame();
             fVsLokal.setTitle("Gegen Lokalen Gegner");
-            fVsLokal.getContentPane().setBackground(new Color(236, 5, 5));
+            fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
             fVsLokal.setLayout(new GridBagLayout());
             fVsLokal.setMinimumSize(new Dimension(1000,1000));
             fVsLokal.setLocationRelativeTo(null);

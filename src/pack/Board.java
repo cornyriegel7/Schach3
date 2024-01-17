@@ -35,6 +35,7 @@ public class Board extends JPanel {
     public Board(View pView){
 
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
+        initalizeSquare();
         distancesToEdge = getDistanceToEdges();
         whitePositions = getPositions(Piece.white, Square);
         blackPositions = getPositions(Piece.black, Square);
@@ -61,8 +62,6 @@ public class Board extends JPanel {
                 g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
             }
         }
-        Square[pSquareIndex] = 5;
-        Square[pSquareIndex+1] = -2;
 //        paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
 //        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
 //        System.out.println("titleSize: " + titleSize);//Debugging
@@ -70,14 +69,15 @@ public class Board extends JPanel {
         paintArray(g2d);
     }
 
+
     public void paintArray(Graphics2D g2d){
 
         //Painten des Arrays als Figuren aufm brett
-        for(int i=0; i<8;i++) {
-            for (int j=0; j < 8; j++) {
-                Image img = pieceIntToImage(Square[j]);
+        pSquareIndex = 0;
+        for(int i=0; i< Square.length;i++) {
+                pSquareIndex = i;
+                Image img = pieceIntToImage(Square[pSquareIndex]);
                 g2d.drawImage(img, squareToX(pSquareIndex),squareToY(pSquareIndex),null);
-            }
         }
     }
 
@@ -405,4 +405,63 @@ public class Board extends JPanel {
         list.add(new int[]{absFigurInt,pAttackedSquare});
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   //Default Position vom Schach. (EInfach ganz nach unten immer packen die nervt sonst nur)
+    public void initalizeSquare() {
+        Square[0] = -4;
+        Square[1] = -2;
+        Square[2] = -3;
+        Square[3] = -5;
+        Square[4] = -6;
+        Square[5] = -3;
+        Square[6] = -2;
+        Square[7] = -4;
+
+        Square[8] = -1;
+        Square[9] = -1;
+        Square[10] = -1;
+        Square[11] = -1;
+        Square[12] = -1;
+        Square[13] = -1;
+        Square[14] = -1;
+        Square[15] = -1;
+
+        Square[48] = 1;
+        Square[49] = 1;
+        Square[50] = 1;
+        Square[51] = 1;
+        Square[52] = 1;
+        Square[53] = 1;
+        Square[54] = 1;
+        Square[55] = 1;
+
+        Square[56] = 4;
+        Square[57] = 2;
+        Square[58] = 3;
+        Square[59] = 5;
+        Square[60] = 6;
+        Square[61] = 3;
+        Square[62] = 2;
+        Square[63] = 4;
+
+        //Debugging
+        //for(int i = 0; i < Square.length; i++)
+        //{
+        //    System.out.println("Square[" + i + "]: " + Square[i]);
+        //}
+    }
 }
