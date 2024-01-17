@@ -218,22 +218,18 @@ public class Board extends JPanel {
      * @param figurInt den Integer ert einer Figur auf dem Brett
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
-    public  Move[] generateMoves(int startPosition, int figurInt, int[] pSquares)
+   public  int[][] generateMoves(int startPosition, int figurInt, int[] pSquares)
     {
         int absolutFigurInt = Math.abs(figurInt);
         if(absolutFigurInt == Piece.pawn)
         {
             return generatePawnMoves(startPosition,figurInt,pSquares);
         }
-        else if(absolutFigurInt == Piece.queen || absolutFigurInt == Piece.rook || absolutFigurInt == Piece.bishop)
-        {
-            return generateSlidingPieceMoves(startPosition,figurInt,pSquares);
-        }
         else if(absolutFigurInt == Piece.knight)
         {
             return generateKnightMoves(startPosition,figurInt,pSquares);
         }
-        return null;
+        return generateSlidingPieceMoves(startPosition,figurInt,pSquares);
     }
 
     /**
@@ -242,9 +238,9 @@ public class Board extends JPanel {
      * @param FigurInt Farbe + Art der Figur bekannt sind
      * @return Array an allen möglichen Moves
      */
-    public Move[] generateSlidingPieceMoves(int startPos, int FigurInt, int[] pSquares)
+    public int[][] generateSlidingPieceMoves(int startPos, int FigurInt, int[] pSquares)
     {
-        ArrayList<Move> moves = new ArrayList<>();
+        ArrayList<int[]> moves = new ArrayList<>();
         int absolutFigurInt = Math.abs(FigurInt);
 
 
@@ -267,36 +263,33 @@ public class Board extends JPanel {
             for(int j = 1;j <= distancesToEdge[startPos][anfang];j++) // j=1 damit das Startfeld nicht mitreingenommen wird
             {
                 int square = startPos + j * directions[anfang];//aktuellesFeld = Startfeld + Die Anzahl von Schritten in eine Richtung
-                if(pSquares[square] == leeresFeld)
+                if(Square[square] == leeresFeld)
                 {
-                    moves.add(new Move(startPos,square));
+                    moves.add(new int[]{startPos,square});
+
 
                 }
                 else
                 {
                     int eigeneFarbe = FigurInt / Math.abs(FigurInt);
-                    int farbeAndereFigur = pSquares[square] / Math.abs(pSquares[square]);
-                    if(eigeneFarbe == farbeAndereFigur) // wenn eigene Farbe auf Feld
-                    {
-                        break;
-                    }
-                    else // wenn Gegner auf Feld
-                    {
-                        moves.add(new Move(startPos,square));
+                    int farbeAndereFigur = Square[square] / Math.abs(Square[square]);
+                    if (eigeneFarbe != farbeAndereFigur) {
+                        moves.add(new int[]{startPos,square});
 
-                        break;
                     }
+                    break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
                 }
 
+                if(absolutFigurInt == Piece.king){break;} // n könig kann nur ein Feld weit gehen
             }
         }
-        return moves.toArray(new Move[0]);
+        return moves.toArray(new int[0][0]);
     }
 
-    public Move[] generateKnightMoves(int startPos, int FigurInt, int[] pSquares)
+    public int[][] generateKnightMoves(int startPos, int FigurInt, int[] pSquares)
     {
         int eigeneFarbe = FigurInt / Math.abs(FigurInt);
-        ArrayList<Move> moves = new ArrayList<>();
+        ArrayList<int[]> moves = new ArrayList<>();
 
         int[] knightDirections = new int[]{-16 + 1, -16 - 1, // 3 nach oben, 1 nach links/rechts
                 2 - 8, 2 + 8,    // 3 nach rechts, 1 nach oben/unten
@@ -321,7 +314,7 @@ public class Board extends JPanel {
             // wenn eine eigene Figur auf dem Feld ist, geht der Move nicht und muss dementsprechend auch nicht hinzugefuegt werden
             if(pSquares[neuersquare] == leeresFeld || eigeneFarbe != pSquares[neuersquare] / Math.abs(pSquares[neuersquare]))
             {
-                moves.add(new Move(startPos,neuersquare));
+                moves.add(new int[]{startPos,neuersquare});
                 System.out.println(neuersquare);
 
             }
@@ -329,12 +322,12 @@ public class Board extends JPanel {
 
 
         }
-        return moves.toArray(new Move[0]);
+        return moves.toArray(new int[0][0]);
     }
 
-    public Move[] generatePawnMoves(int startPos, int FigurInt, int[] pSquares)
+    public int[][] generatePawnMoves(int startPos, int FigurInt, int[] pSquares)
     {
-        ArrayList<Move> moves = new ArrayList<>();
+        ArrayList<int[]> moves = new ArrayList<>();
 
         int eigeneFarbe = FigurInt / Math.abs(FigurInt);
         int bewegungsrichtung = -8 * eigeneFarbe; //Weiß geht von höheren Zahlen zu niedrigeren#
@@ -346,13 +339,13 @@ public class Board extends JPanel {
         int neuersquare = startPos+bewegungsrichtung+1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach rechts ein Gegner
         {
-            moves.add(new Move(startPos,neuersquare));
+            moves.add(new int[]{startPos,neuersquare});
             System.out.println(neuersquare);
         }
         neuersquare = startPos+bewegungsrichtung-1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach links ein Gegner
         {
-            moves.add(new Move(startPos,neuersquare));System.out.println(neuersquare);
+            moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
 
         }
 
@@ -360,11 +353,11 @@ public class Board extends JPanel {
         neuersquare = startPos+bewegungsrichtung;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new Move(startPos,neuersquare));System.out.println(neuersquare);
+            moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
 
         }
 
-        return moves.toArray(new Move[0]);
+        return moves.toArray(new int[0][0]);
     }
 
 }
