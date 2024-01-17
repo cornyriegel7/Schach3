@@ -18,8 +18,6 @@ public class Piece {
         try {
             sheet = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("pieces.png")));
             sheetScale = sheet.getWidth() / 6;
-            System.out.println("Bild geladen: " + sheet);   //debugging
-            System.out.println("sheetScale: " + sheetScale);//debugging
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,6 +28,8 @@ public class Piece {
     }
 
     public Image getImage(int XImagePiece,int YImagePiece,int w, int h) {
+        //diese line nur test
+        Image img = sheet.getSubimage(XImagePiece,YImagePiece,w,h);
         return sheet.getSubimage(XImagePiece,YImagePiece,w,h); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
     }
 

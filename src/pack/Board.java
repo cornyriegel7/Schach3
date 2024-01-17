@@ -29,7 +29,7 @@ public class Board extends JPanel {
     Piece piece;
 
     //Debugging
-    public int pSquareIndex = 30;
+    public int pSquareIndex = 0;
 
     //Konstruktor Board
     public Board(View pView){
@@ -61,11 +61,20 @@ public class Board extends JPanel {
                 g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
             }
         }
-        Square[pSquareIndex] = 2;
-        paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
-        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
-        System.out.println("titleSize: " + titleSize);//Debugging
-        System.out.println("Painting component..."); //Debugging
+        Square[pSquareIndex] = 5;
+        Square[pSquareIndex+1] = -2;
+//        paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
+//        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
+//        System.out.println("titleSize: " + titleSize);//Debugging
+//        System.out.println("Painting component..."); //Debugging
+
+        //Painten des Arrays als Figuren aufm brett
+        for(int i=0; i<8;i++) {
+            for (int j=0; j < 8; j++) {
+                Image img = pieceIntToImage(Square[j]);
+                g2d.drawImage(img, squareToX(pSquareIndex),squareToY(pSquareIndex),null);
+            }
+        }
     }
 
 
@@ -113,20 +122,23 @@ public class Board extends JPanel {
     //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild.
     private  Image pieceIntToImage(int pPieceInt)
     {
+        if(pPieceInt==0) return null; //man kann nicht durch 0 teilen
+
         int absolutFigurInt = Math.abs(pPieceInt);
        int farbe = pPieceInt / absolutFigurInt;
 
         return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == Piece.black ? piece.getImage(piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(piece.getSheetScale(), 0, titleSize, titleSize);
-            case (Piece.pawn) -> farbe == Piece.black ? piece.getImage(6 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(6 * piece.getSheetScale(), 0, titleSize, titleSize);
-            case (Piece.knight) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(4 * piece.getSheetScale(), 0, titleSize, titleSize);
-            case (Piece.bishop) -> farbe == Piece.black ? piece.getImage(3 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(3 * piece.getSheetScale(), 0, titleSize, titleSize);
-            case (Piece.rook) -> farbe == Piece.black ? piece.getImage(5 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(5 * piece.getSheetScale(), 0, titleSize, titleSize);
-            case (Piece.queen) -> farbe == Piece.black ? piece.getImage(2 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(2 * piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.king) -> farbe == Piece.black ? piece.getImage(0*piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(0*piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.pawn) -> farbe == Piece.black ? piece.getImage(5 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(5 * piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.knight) -> farbe == Piece.black ? piece.getImage(3 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(3 * piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.bishop) -> farbe == Piece.black ? piece.getImage(2 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(2 * piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.rook) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(4 * piece.getSheetScale(), 0, titleSize, titleSize);
+            case (Piece.queen) -> farbe == Piece.black ? piece.getImage(1 * piece.getSheetScale(), piece.getSheetScale(), titleSize, titleSize) : piece.getImage(1 * piece.getSheetScale(), 0, titleSize, titleSize);
             default -> null;
 
 
         };
+
     }
 
     //Malt ein Bild an den Kordinaten x & y
