@@ -262,19 +262,20 @@ public class Board extends JPanel {
      * @param startPosition startPosition auf dem brett
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
-   public  int[][] generateMoves(int startPosition, int[] pSquares)
+   public  int[][] generateMoves(int startPosition, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
     {
+
         int figurInt = pSquares[startPosition];
         int absolutFigurInt = Math.abs(figurInt);
         if(absolutFigurInt == Piece.pawn)
         {
-            return generatePawnMoves(startPosition,figurInt,pSquares);
+            return generatePawnMoves(startPosition,figurInt,pSquares,attackedByColorPositions);
         }
         else if(absolutFigurInt == Piece.knight)
         {
-            return generateKnightMoves(startPosition,figurInt,pSquares);
+            return generateKnightMoves(startPosition,figurInt,pSquares,attackedByColorPositions);
         }
-        return generateSlidingPieceMoves(startPosition,figurInt,pSquares);
+        return generateSlidingPieceMoves(startPosition,figurInt,pSquares,attackedByColorPositions);
     }
 
     /**
@@ -282,7 +283,7 @@ public class Board extends JPanel {
      * @param startPos aktuelle Position der Figur un
      * @return Array an allen möglichen Moves
      */
-    public int[][] generateSlidingPieceMoves(int startPos, int FigurInt, int[] pSquares)
+    public int[][] generateSlidingPieceMoves(int startPos, int FigurInt, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
     {
         ArrayList<int[]> moves = new ArrayList<>();
         int absolutFigurInt = Math.abs(FigurInt);
@@ -311,14 +312,14 @@ public class Board extends JPanel {
                 if(pSquares[square] == leeresFeld)
                 {
                     moves.add(new int[]{startPos,square});
-                    addToAttackedPositions(eigeneFarbe,absolutFigurInt,square);
+                    addToAttackedPositions(absolutFigurInt,square,attackedByColorPositions);
                 }
                 else
                 {
                     int farbeAndereFigur = pSquares[square] / Math.abs(pSquares[square]);
                     if (eigeneFarbe != farbeAndereFigur) {
                         moves.add(new int[]{startPos,square});
-                        addToAttackedPositions(eigeneFarbe,absolutFigurInt,square);
+                        addToAttackedPositions(absolutFigurInt,square,attackedByColorPositions);
                     }
                     break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
                 }
@@ -330,7 +331,7 @@ public class Board extends JPanel {
         return moves.toArray(new int[0][0]);
     }
 
-    public int[][] generateKnightMoves(int startPos, int FigurInt,  int[] pSquares)
+    public int[][] generateKnightMoves(int startPos, int FigurInt,  int[] pSquares, LinkedList<int[]> attackedByColorPositions)
     {
 
         int eigeneFarbe = FigurInt / Math.abs(FigurInt);
@@ -360,7 +361,7 @@ public class Board extends JPanel {
             if(pSquares[neuersquare] == leeresFeld || eigeneFarbe != pSquares[neuersquare] / Math.abs(pSquares[neuersquare]))
             {
                 moves.add(new int[]{startPos,neuersquare});
-                addToAttackedPositions(eigeneFarbe,Piece.knight,neuersquare);
+                addToAttackedPositions(Piece.knight,neuersquare,attackedByColorPositions);
                 System.out.println(neuersquare);
 
             }
@@ -371,7 +372,7 @@ public class Board extends JPanel {
         return moves.toArray(new int[0][0]);
     }
 
-    public int[][] generatePawnMoves(int startPos,int FigurInt, int[] pSquares)
+    public int[][] generatePawnMoves(int startPos,int FigurInt, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
     {
         ArrayList<int[]> moves = new ArrayList<>();
 
@@ -386,14 +387,14 @@ public class Board extends JPanel {
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach rechts ein Gegner
         {
             moves.add(new int[]{startPos,neuersquare});
-            addToAttackedPositions(eigeneFarbe,Piece.pawn,neuersquare);
+            addToAttackedPositions(Piece.pawn,neuersquare,attackedByColorPositions);
             System.out.println(neuersquare);
         }
         neuersquare = startPos+bewegungsrichtung-1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach links ein Gegner
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
-            addToAttackedPositions(eigeneFarbe,Piece.pawn,neuersquare);
+            addToAttackedPositions(Piece.pawn,neuersquare,attackedByColorPositions);
 
         }
 
@@ -402,7 +403,7 @@ public class Board extends JPanel {
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
-            addToAttackedPositions(eigeneFarbe,Piece.pawn,neuersquare);
+            addToAttackedPositions(Piece.pawn,neuersquare,attackedByColorPositions);
 
         }
 
@@ -419,14 +420,14 @@ public class Board extends JPanel {
 
         return positions;
     }
-    public void execMove(int pStartPos, int pEndPos, int[] pSquare)
+    public void execMove(int pStartPos, int pEndPos, int[] pSquare, LinkedList<Integer> pPositionlist)
     {
         int color = pSquare[pStartPos] / Math.abs(pSquare[pStartPos]);
 
 
-        LinkedList<Integer> list = color == Piece.white ? whitePositions : blackPositions;
-        list.remove((Integer) pStartPos);
-        list.add(pEndPos);
+
+        pPositionlist.remove((Integer) pStartPos);
+        pPositionlist.add(pEndPos);
         if(pSquare[pEndPos] != leeresFeld)
         {
             LinkedList<Integer> enemylist = color == Piece.black ? whitePositions : blackPositions;
@@ -435,10 +436,9 @@ public class Board extends JPanel {
         pSquare[pEndPos] = pSquare[pStartPos];
         pSquare[pStartPos] = leeresFeld;
     }
-    private void addToAttackedPositions(int pColor, int absFigurInt, int pAttackedSquare)
+    private void addToAttackedPositions(int absFigurInt, int pAttackedSquare, LinkedList<int[]> pAttackedPositions)
     {
-        LinkedList<int[]> list = pColor == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
-        list.add(new int[]{absFigurInt,pAttackedSquare});
+        pAttackedPositions.add(new int[]{absFigurInt,pAttackedSquare});
     }
 
 
