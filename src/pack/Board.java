@@ -312,14 +312,14 @@ public class Board extends JPanel {
                 if(pSquares[square] == leeresFeld)
                 {
                     moves.add(new int[]{startPos,square});
-                    addToAttackedPositions(absolutFigurInt,square,attackedByColorPositions);
+                    addToAttackedPositions(startPos,square,attackedByColorPositions);
                 }
                 else
                 {
                     int farbeAndereFigur = pSquares[square] / Math.abs(pSquares[square]);
                     if (eigeneFarbe != farbeAndereFigur) {
                         moves.add(new int[]{startPos,square});
-                        addToAttackedPositions(absolutFigurInt,square,attackedByColorPositions);
+                        addToAttackedPositions(startPos,square,attackedByColorPositions);
                     }
                     break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
                 }
@@ -361,7 +361,7 @@ public class Board extends JPanel {
             if(pSquares[neuersquare] == leeresFeld || eigeneFarbe != pSquares[neuersquare] / Math.abs(pSquares[neuersquare]))
             {
                 moves.add(new int[]{startPos,neuersquare});
-                addToAttackedPositions(Piece.knight,neuersquare,attackedByColorPositions);
+                addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
                 System.out.println(neuersquare);
 
             }
@@ -387,14 +387,14 @@ public class Board extends JPanel {
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach rechts ein Gegner
         {
             moves.add(new int[]{startPos,neuersquare});
-            addToAttackedPositions(Piece.pawn,neuersquare,attackedByColorPositions);
+            addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
             System.out.println(neuersquare);
         }
         neuersquare = startPos+bewegungsrichtung-1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach links ein Gegner
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
-            addToAttackedPositions(Piece.pawn,neuersquare,attackedByColorPositions);
+            addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
 
         }
 
@@ -403,7 +403,7 @@ public class Board extends JPanel {
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
-            addToAttackedPositions(Piece.pawn,neuersquare,attackedByColorPositions);
+            addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
 
         }
 
@@ -436,9 +436,25 @@ public class Board extends JPanel {
         pSquare[pEndPos] = pSquare[pStartPos];
         pSquare[pStartPos] = leeresFeld;
     }
-    private void addToAttackedPositions(int absFigurInt, int pAttackedSquare, LinkedList<int[]> pAttackedPositions)
+    private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, LinkedList<int[]> pAttackedPositions)
     {
-        pAttackedPositions.add(new int[]{absFigurInt,pAttackedSquare});
+        pAttackedPositions.add(new int[]{pEigenePosition,pAttackedSquare});
+    }
+
+    /**
+     * funktioniert nur, wenn bekannst ist welche Felder angegriffen werden-> für die Figur,
+     * die den König angegriffen hat muss deshalb generateMoves(Position der Figur, aktuelles Brett, durchDieFarbeDerFigurAngegriffeneFelder)
+     * gelaufen sein.
+     * @param pKingPosition Position des Königs von dem geguckt werden soll ob er im Schach ist
+     * @param pAttackedByColorPositions
+     * @return
+     */
+    public boolean isCheck(int pKingPosition, LinkedList<int[]> pAttackedByColorPositions)
+    {
+        for (int i = 0; i < pAttackedByColorPositions.size(); i++) {
+            if(pKingPosition == pAttackedByColorPositions.get(i)[1]){return true;}
+        }
+        return false;
     }
 
 
