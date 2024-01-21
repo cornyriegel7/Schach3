@@ -258,6 +258,38 @@ public class Board extends JPanel {
     }
 
     /**
+     *  soll irgendwann mal alle moeglichen Zuege fuer eine Farbe ausgeben
+     * @param pPositions die Positionen d. Figuren d. Farbe
+     * @param pSquares das gesamte Brett
+     * @param durchAndereFarbeAngegriffeneFelder obv
+     * @param durchEigeneFarbeAngegriffeneFelder obv
+     * @return alle Zuege die nach allen Spielregeln okay sind
+     */
+    public int[][][] getLegalMoves(LinkedList<Integer> pPositions, int[] pSquares, LinkedList<int[]> durchAndereFarbeAngegriffeneFelder, LinkedList<int[]> durchEigeneFarbeAngegriffeneFelder)
+    {
+        LinkedList<int[][]> legalMoves = new LinkedList<>();
+        for (int i = 0; i < pPositions.size(); i++) {
+            legalMoves.add(generateMoves(pPositions.get(i),pSquares,durchEigeneFarbeAngegriffeneFelder));
+        }
+        for (int i = 0; i <legalMoves.size() ; i++) {
+            for (int j = 0; j < legalMoves.get(i).length; j++) {
+                printMove(legalMoves.get(i)[j]);
+            }
+        }
+        return legalMoves.toArray(new int[0][0][0]);
+    }
+
+
+    /**
+     *  unnoetige Hilfsmethode TODO: irgendwann entfernen
+     * @param move der move(StartPosition, Endposition
+     */
+    public void printMove(int[] move)
+    {
+        System.out.println("von "+move[0]+" nach "+move[1]);
+    }
+
+    /**
      *
      * @param startPosition startPosition auf dem brett
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
@@ -378,11 +410,15 @@ public class Board extends JPanel {
 
         int eigeneFarbe = FigurInt / Math.abs(FigurInt);
         int bewegungsrichtung = -8 * eigeneFarbe; //Weiß geht von höheren Zahlen zu niedrigeren#
+        int anfangsReiheAnfang = eigeneFarbe == Piece.white ? 48 : 8;
+        int anfangsReiheEnde = anfangsReiheAnfang + 7;
 
 
         /*Dadurch dass Zuerst nach moves gesucht wird, bei denen Bauern andere schlagen (ist immer mindestens ein gleichwertiger Trade),
         sind gute Moves am Anfang der Liste was z.B. bei Minimax mit Alpha-Beta-Pruning Sinn macht
         */
+
+        //schraeg rechts
         int neuersquare = startPos+bewegungsrichtung+1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach rechts ein Gegner
         {
@@ -390,6 +426,7 @@ public class Board extends JPanel {
             addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
             System.out.println(neuersquare);
         }
+        //schraeg links
         neuersquare = startPos+bewegungsrichtung-1;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach links ein Gegner
         {
@@ -399,8 +436,18 @@ public class Board extends JPanel {
         }
 
 
+        //geradeaus 1
         neuersquare = startPos+bewegungsrichtung;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
+        {
+            moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
+            addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
+
+        }
+
+        // geradeaus 2
+        neuersquare = startPos+bewegungsrichtung*2;
+        if((anfangsReiheAnfang <= startPos && startPos <= anfangsReiheEnde) && pSquares[neuersquare] == leeresFeld)
         {
             moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
             addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
