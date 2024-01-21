@@ -268,12 +268,12 @@ public class Board extends JPanel {
     public int[][][] getLegalMoves(LinkedList<Integer> pPositions, int[] pSquares, LinkedList<int[]> durchAndereFarbeAngegriffeneFelder, LinkedList<int[]> durchEigeneFarbeAngegriffeneFelder)
     {
         LinkedList<int[][]> legalMoves = new LinkedList<>();
-        for (int i = 0; i < pPositions.size(); i++) {
-            legalMoves.add(generateMoves(pPositions.get(i),pSquares,durchEigeneFarbeAngegriffeneFelder));
+        for (Integer pPosition : pPositions) {
+            legalMoves.add(generateMoves(pPosition, pSquares, durchEigeneFarbeAngegriffeneFelder));
         }
-        for (int i = 0; i <legalMoves.size() ; i++) {
-            for (int j = 0; j < legalMoves.get(i).length; j++) {
-                printMove(legalMoves.get(i)[j]);
+        for (int[][] legalMove : legalMoves) {
+            for (int[] ints : legalMove) {
+                printMove(ints);
             }
         }
         return legalMoves.toArray(new int[0][0][0]);
@@ -356,7 +356,7 @@ public class Board extends JPanel {
                     break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
                 }
 
-                //TODO: kann iwie vereinfacht werden
+                //TODO: kann vereinfacht werden
                 if(absolutFigurInt == Piece.king){break;} // n könig kann nur ein Feld weit gehen
             }
         }
@@ -493,13 +493,15 @@ public class Board extends JPanel {
      * die den König angegriffen hat muss deshalb generateMoves(Position der Figur, aktuelles Brett, durchDieFarbeDerFigurAngegriffeneFelder)
      * gelaufen sein.
      * @param pKingPosition Position des Königs von dem geguckt werden soll ob er im Schach ist
-     * @param pAttackedByColorPositions
-     * @return
+     * @param pAttackedByColorPositions durch Die Farbe Der Figur Angegriffene Felder??
+     * @return schach oder nicht schach?
      */
     public boolean isCheck(int pKingPosition, LinkedList<int[]> pAttackedByColorPositions)
     {
-        for (int i = 0; i < pAttackedByColorPositions.size(); i++) {
-            if(pKingPosition == pAttackedByColorPositions.get(i)[1]){return true;}
+        for (int[] pAttackedByColorPosition : pAttackedByColorPositions) {
+            if (pKingPosition == pAttackedByColorPosition[1]) {
+                return true;
+            }
         }
         return false;
     }
@@ -562,10 +564,7 @@ public class Board extends JPanel {
         Square[62] = 2;
         Square[63] = 4;
 
-        //Debugging
-        //for(int i = 0; i < Square.length; i++)
-        //{
-        //    System.out.println("Square[" + i + "]: " + Square[i]);
-        //}
+        //Debugging for(int i = 0; i < Square.length; i++)
+        //{System.out.println("Square[" + i + "]: " + Square[i]);}
     }
 }
