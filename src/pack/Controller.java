@@ -7,7 +7,6 @@ public class Controller {
     Client client;
     public Controller(View pView){
         view = pView;
-        board = new Board(view);
         //todo: noch nicht final ,sowohl client als auch server brauchen noch args. außerdem server als interface hinzufügen
         server = new Server();
         client = new Client();
@@ -18,5 +17,8 @@ public class Controller {
     public boolean handleMove(int startsquare, int endsquare)
     {
     return false;
+    }
+    public void createBoard() {
+        board = new Board(view);
     }
 }

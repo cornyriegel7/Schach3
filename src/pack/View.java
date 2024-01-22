@@ -13,6 +13,9 @@ public class View extends JFrame implements ActionListener {
 
     public View(){
         super("Schachprogramm");
+
+        c = new Controller(this);
+
         setSize(500,400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
@@ -39,7 +42,7 @@ public class View extends JFrame implements ActionListener {
         setVisible(true);
     }
     public void actionPerformed(ActionEvent e) {
-        c = new Controller(this);
+        c.createBoard();
         //fenster: lokaler gegner
         if (e.getSource() == bVsLokal) {
             fVsLokal = new JFrame();

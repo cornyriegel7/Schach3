@@ -522,6 +522,11 @@ public class Board extends JPanel {
     }
 
 
+    /**
+     *
+     * @param pIndex die Feldnummer
+     * @return das Piece was auf dem Feld vom pIndex is
+     */
     public int getSquare(int pIndex){
         return Square[pIndex];
     }
