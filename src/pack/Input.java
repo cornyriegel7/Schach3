@@ -8,8 +8,7 @@ public class Input extends MouseAdapter {
     Board board;
     int selectedSquare; //Index des SquareArrays, das grade selected ist
     int startSquare;  //Startposition vom Move
-    int xE; //Koordinaten der Maus zum Abrufen fürs board
-    int yE; //Koordinaten der Maus zum Abrufen fürs board
+    int xE, yE; //Koordinaten der Maus zum Abrufen fürs board
 
     public Input(Board pBoard){
         this.board = pBoard;
@@ -39,24 +38,21 @@ public class Input extends MouseAdapter {
         }
     }
 
-    //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab. (solange es valid ist, aber das ist noch nicht einprogrammiert)
+    //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.
+    //todo: (solange es valid ist, aber das ist noch nicht einprogrammiert)
     @Override
     public void mouseReleased(MouseEvent e) {
 
         System.out.println("MouseReleased");//Test
-        selectedSquare = board.xyToSquare(xE,yE);
+        selectedSquare = board.xyToSquare(xE, yE);
         if (board.isEmpty(selectedSquare)) { //wenn das feld frei ist
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
-            board.setSquare(selectedSquare, board.getPieceFromSquare(startSquare)); // der Square zu dem du hingesht soll den Wert von der FIgur bekommen die da hingeht
+            board.setSquare(selectedSquare, board.getPieceFromSquare(startSquare)); // der Square zu dem du hingehst soll den Wert von der FIgur bekommen die da hingeht
             board.setSquare(startSquare, 0);// der Square von dem du Weg gehst soll 0 gesetzt werden
-            //startSquare = -1;
-            //selectedSquare = 0;
             board.repaint();
             //}
         }
-
     }
-
     public int getSelectedSquare(){
         return selectedSquare;
     }
