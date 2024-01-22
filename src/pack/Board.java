@@ -138,8 +138,9 @@ public class Board extends JPanel {
         int maxRangeY = 800;
 
         if (xValue >= minRangeX && xValue <= maxRangeX && yValue >= minRangeY && yValue <= maxRangeY) {
-            int row = yValue / 100;         //funktioniert, weil int ja nur ganzzahlige Zahlen akzeptiert und IMMER abrundet
+            int row = yValue / 100; //funktioniert, weil int ja nur ganzzahlige Zahlen akzeptiert und IMMER abrundet
             int column = xValue / 100;
+            System.out.println("Row: " + row + ", Column: " + column);
             return row * 8 + column;
         } else {
             // Umgang mit ungültigen x- oder y-Werten

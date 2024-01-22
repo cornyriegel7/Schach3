@@ -31,8 +31,8 @@ public class Input extends MouseAdapter {
     //Wenn die Maus gezogen wird
     @Override
     public void mouseDragged(MouseEvent e) {
-        xE = e.getX() - board.titleSize/2;  //Zum Abrufen fürs Board
-        yE = e.getY() - board.titleSize/2;
+        xE = e.getX();  //Zum Abrufen fürs Board
+        yE = e.getY();
         if(selectedSquare != 0){
            board.repaint();     //swing sagen, dass es repainten soll
         }
@@ -44,7 +44,11 @@ public class Input extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
 
         System.out.println("MouseReleased");//Test
+        xE = e.getX();  //Zum Abrufen fürs Board
+        yE = e.getY();
         selectedSquare = board.xyToSquare(xE, yE);
+        System.out.println(selectedSquare);
+
         if (board.isEmpty(selectedSquare)) { //wenn das feld frei ist
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
             board.setSquare(selectedSquare, board.getPieceFromSquare(startSquare)); // der Square zu dem du hingehst soll den Wert von der FIgur bekommen die da hingeht
