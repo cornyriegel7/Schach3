@@ -505,27 +505,30 @@ public class Board extends JPanel {
         }
         return false;
     }
+//    soll checken ob ein square besetzt ist
+//    public boolean isSquareOccupied(int pSquare){
+//            if (pSquare < 0 || pSquare >= Square.length) {
+//                System.out.println("Achtung Fehler");
+//                return false; //irgendwas muss man ja zurückgeben
+//            }
+//            return Square[pSquare] != 0;
+//        }
+
     //soll checken ob ein square besetzt ist
-    public boolean isSquareOccupied(int pSquare){
-            if (pSquare < 0 || pSquare >= Square.length) {
-                System.out.println("Achtung Fehler");
-                return false; //irgendwas muss man ja zurückgeben
-            }
-            return Square[pSquare] != 0;
+    public boolean isEmpty(int pFeld) {
+        // Stimmt der Bereich
+        if (pFeld < 0 || pFeld >= Square.length) {
+            System.out.println("ACHTUNG FEHLER!!");
         }
+        // Wert ==0
+        return Square[pFeld] == 0;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * setter-methode um das square-array zu verändern mit
+     * @param pIndex an welchem square-index
+     * @param pValue welchen wert (Piece)
+     */
     public void setSquare(int pIndex, int pValue){
         Square[pIndex] = pValue;
     }

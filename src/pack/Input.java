@@ -44,10 +44,11 @@ public class Input extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
 
         System.out.println("MouseReleased");//Test
-        if (!board.isSquareOccupied(selectedSquare)) { //wenn das feld frei ist (Also NICHT besetzt ist..)
+        selectedSquare = board.xyToSquare(xE,yE);
+        if (board.isEmpty(selectedSquare)) { //wenn das feld frei ist
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
-            board.setSquare(board.xyToSquare(xE, yE), board.getPieceFromSquare(selectedSquare)); // der Square zu dem du hingesht soll den Wert von der FIgur bekommen die da hingeht
-            board.setSquare(startSquare, 0);// der Square von dem du Weg gehst solll 0 gesetzt werden
+            board.setSquare(selectedSquare, board.getPieceFromSquare(startSquare)); // der Square zu dem du hingesht soll den Wert von der FIgur bekommen die da hingeht
+            board.setSquare(startSquare, 0);// der Square von dem du Weg gehst soll 0 gesetzt werden
             //startSquare = -1;
             //selectedSquare = 0;
             board.repaint();
