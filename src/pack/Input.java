@@ -6,13 +6,13 @@ import java.awt.event.MouseEvent;
 public class Input extends MouseAdapter {
 
     Board board;
-    int selectedSquare; //Index des SquareArrays, das grade selected ist
-    int startSquare;  //Startposition vom Move
-    int xE, yE; //Koordinaten der Maus zum Abrufen fürs board
+    private static int selectedPieceValue;
+    public int startSquare;  //Index Startposition vom Move
+    public static int xE, yE; //Koordinaten der Maus zum Abrufen fürs board
 
     public Input(Board pBoard){
         this.board = pBoard;
-        selectedSquare = 0;
+        selectedPieceValue = 0;
         int xE = 0, yE = 0;
         startSquare = -1; // -1 weil 0 ein Index vom Array ist und startSquare ja erstmal nichts sein soll
     }
@@ -21,11 +21,18 @@ public class Input extends MouseAdapter {
     //Wenn die Maus gedrückt wird
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("MousePressed");//Test
-        startSquare = board.xyToSquare(e.getX(), e.getY());
+        xE = e.getX();  //Zum Abrufen fürs Board
+        yE = e.getY();
+        startSquare = board.xyToSquare(xE, yE);
         if(board.getPieceFromSquare(startSquare) != 0){
-            selectedSquare = startSquare;
+            selectedPieceValue = board.getPieceFromSquare(startSquare);
+            board.setSquare(startSquare, 0);
         }
+        else
+        {
+            startSquare = 0;
+        }
+
     }
 
     //Wenn die Maus gezogen wird
@@ -33,7 +40,7 @@ public class Input extends MouseAdapter {
     public void mouseDragged(MouseEvent e) {
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
-        if(selectedSquare != 0){
+        if(startSquare != 0){
            board.repaint();     //swing sagen, dass es repainten soll
         }
     }
@@ -43,33 +50,36 @@ public class Input extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
 
-        System.out.println("MouseReleased");//Test
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
-        selectedSquare = board.xyToSquare(xE, yE);
-        System.out.println(selectedSquare);
-
-        if (board.isEmpty(selectedSquare)) { //wenn das feld frei ist
+        if (board.isEmpty(board.xyToSquare(xE, yE))) { //wenn das feld frei ist
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
-            board.setSquare(selectedSquare, board.getPieceFromSquare(startSquare)); // der Square zu dem du hingehst soll den Wert von der FIgur bekommen die da hingeht
-            board.setSquare(startSquare, 0);// der Square von dem du Weg gehst soll 0 gesetzt werden
+            board.setSquare(board.xyToSquare(xE, yE), selectedPieceValue);// der Square von dem du Weg gehst soll 0 gesetzt werden
+            startSquare = 0;
+            selectedPieceValue = 0;
             board.repaint();
             //}
         }
-    }
-    public int getSelectedSquare(){
-        return selectedSquare;
+        else{
+            board.setSquare(startSquare, selectedPieceValue);
+            selectedPieceValue = 0;
+            board.repaint();
+        }
     }
 
     public int getstartSquare(){
         return startSquare;
     }
 
-    public int getxE(){
+    public static int getSelectedPieceValue(){
+        return  selectedPieceValue;
+    }
+
+    public static int getxE(){
         return xE;
     }
 
-    public int getyE(){
+    public static int getyE(){
         return yE;
     }
 }

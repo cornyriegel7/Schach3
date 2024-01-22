@@ -72,21 +72,11 @@ public class Board extends JPanel {
             Image img = pieceIntToImage(Square[pSquareIndex]);
             g2d.drawImage(img, squareToX(pSquareIndex), squareToY(pSquareIndex), null);
         }
-//          paint(g2d,pieceIntToImage(Square[pSquareIndex]),squareToX(pSquareIndex),squareToY(pSquareIndex));
-//        System.out.println("X Koordinate Bild: " + squareToX(pSquareIndex) + "   Y-Koordinate Bild: " + squareToY(pSquareIndex));//Debugging
-//        System.out.println("titleSize: " + titleSize);//Debugging
-//        System.out.println("Painting component..."); //Debugging
-    }
-    public void paintArray(Graphics2D g2d){
 
-        //Painten des Arrays als Figuren aufm brett
-        pSquareIndex = 0;
-        for(int i=0; i< Square.length;i++) {
-            pSquareIndex = i;
-            Image img = pieceIntToImage(Square[pSquareIndex]);
-            g2d.drawImage(img, squareToX(pSquareIndex),squareToY(pSquareIndex),null);
-        }
+        Image selectedPiece = pieceIntToImage(Input.getSelectedPieceValue());
+        g2d.drawImage(selectedPiece, Input.getxE() - titleSize/2,Input.getyE() - titleSize/2,null);
     }
+
 
 
     //Bestimmtes Feld(pSquare Index) färben(um z.B. available Moves anzuzeigen)
@@ -140,7 +130,6 @@ public class Board extends JPanel {
         if (xValue >= minRangeX && xValue <= maxRangeX && yValue >= minRangeY && yValue <= maxRangeY) {
             int row = yValue / 100; //funktioniert, weil int ja nur ganzzahlige Zahlen akzeptiert und IMMER abrundet
             int column = xValue / 100;
-            System.out.println("Row: " + row + ", Column: " + column);
             return row * 8 + column;
         } else {
             // Umgang mit ungültigen x- oder y-Werten
