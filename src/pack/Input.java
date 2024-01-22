@@ -43,6 +43,8 @@ public class Input extends MouseAdapter {
         if(startSquare != 0){
            board.repaint();     //swing sagen, dass es repainten soll
         }
+        System.out.println("Dragged"); //Wie oft wird draggen methode ausgeführt
+
     }
 
     //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.
