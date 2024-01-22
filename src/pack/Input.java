@@ -7,16 +7,15 @@ public class Input extends MouseAdapter {
 
     Board board;
     int selectedSquare; //Index des SquareArrays, das grade selected ist
-    int pStart;  //Startposition vom Move
+    int startSquare;  //Startposition vom Move
     int xE; //Koordinaten der Maus zum Abrufen fürs board
     int yE; //Koordinaten der Maus zum Abrufen fürs board
 
     public Input(Board pBoard){
         this.board = pBoard;
         selectedSquare = 0;
-        int xE = 0;
-        int yE = 0;
-        int pStart = -1; // -1 weil 0 ein Index vom Array ist und pStart ja erstmal nichts sein soll
+        int xE = 0, yE = 0;
+        startSquare = -1; // -1 weil 0 ein Index vom Array ist und startSquare ja erstmal nichts sein soll
     }
 
 
@@ -24,12 +23,13 @@ public class Input extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("MousePressed");//Test
-        pStart = board.xyToSquare(e.getX(), e.getY());
-        if(board.getSquare(pStart) != 0){
-            selectedSquare = pStart;
+        startSquare = board.xyToSquare(e.getX(), e.getY());
+        if(board.getPieceFromSquare(startSquare) != 0){
+            selectedSquare = startSquare;
         }
     }
 
+    //Wenn die Maus gezogen wird
     @Override
     public void mouseDragged(MouseEvent e) {
         xE = e.getX() - board.titleSize/2;  //Zum Abrufen fürs Board
@@ -44,11 +44,11 @@ public class Input extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
 
         System.out.println("MouseReleased");//Test
-        if (board.getSquare(selectedSquare) != 0) {
-            //if(board.generateMoves(pStart, board.getSquare(selectedPiece, ))){
-            board.setSquare(board.xyToSquare(xE, yE), board.getSquare(selectedSquare)); // der Square zu dem du hingesht soll den Wert von der FIgur bekommen die da hingeht
-            board.setSquare(pStart, 0);// der Square von dem du Weg gehst solll 0 gesetzt werden
-            //pStart = -1;
+        if (!board.isSquareOccupied(selectedSquare)) { //wenn das feld frei ist (Also NICHT besetzt ist..)
+            //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
+            board.setSquare(board.xyToSquare(xE, yE), board.getPieceFromSquare(selectedSquare)); // der Square zu dem du hingesht soll den Wert von der FIgur bekommen die da hingeht
+            board.setSquare(startSquare, 0);// der Square von dem du Weg gehst solll 0 gesetzt werden
+            //startSquare = -1;
             //selectedSquare = 0;
             board.repaint();
             //}
@@ -60,8 +60,8 @@ public class Input extends MouseAdapter {
         return selectedSquare;
     }
 
-    public int getpStart(){
-        return pStart;
+    public int getstartSquare(){
+        return startSquare;
     }
 
     public int getxE(){

@@ -505,6 +505,15 @@ public class Board extends JPanel {
         }
         return false;
     }
+    //soll checken ob ein square besetzt ist
+    public boolean isSquareOccupied(int pSquare){
+            if (pSquare < 0 || pSquare >= Square.length) {
+                System.out.println("Achtung Fehler");
+                return false; //irgendwas muss man ja zurückgeben
+            }
+            return Square[pSquare] != 0;
+        }
+
 
 
 
@@ -523,11 +532,11 @@ public class Board extends JPanel {
 
 
     /**
-     *
+     * unter angabe der feldnummer wird die daraufstehende figur returnt
      * @param pIndex die Feldnummer
      * @return das Piece was auf dem Feld vom pIndex is
      */
-    public int getSquare(int pIndex){
+    public int getPieceFromSquare(int pIndex){
         return Square[pIndex];
     }
 
