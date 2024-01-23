@@ -473,6 +473,23 @@ public class Board extends JPanel {
         pSquare[pEndPos] = pSquare[pStartPos];
         pSquare[pStartPos] = leeresFeld;
     }
+    public void execMove(int pPieceValue,int pStartPos, int pEndPos, int[] pSquare, LinkedList<Integer> pPositionlist)
+    {
+        int color = pPieceValue / Math.abs(pPieceValue);
+
+
+
+        pPositionlist.remove((Integer) pStartPos);
+        pPositionlist.add(pEndPos);
+        if(pSquare[pEndPos] != leeresFeld)
+        {
+            LinkedList<Integer> enemylist = color == Piece.black ? whitePositions : blackPositions;
+            enemylist.remove((Integer) pEndPos); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
+        }
+        pSquare[pEndPos] = pPieceValue;
+        pSquare[pStartPos] = leeresFeld;
+    }
+
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, LinkedList<int[]> pAttackedPositions)
     {
         pAttackedPositions.add(new int[]{pEigenePosition,pAttackedSquare});

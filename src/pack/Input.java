@@ -2,6 +2,7 @@ package pack;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 
 public class Input extends MouseAdapter {
 
@@ -26,7 +27,7 @@ public class Input extends MouseAdapter {
         startSquare = board.xyToSquare(xE, yE);
         if(board.getPieceFromSquare(startSquare) != 0){
             selectedPieceValue = board.getPieceFromSquare(startSquare);
-            board.setSquare(startSquare, 0);
+            board.setSquare(startSquare,0);
         }
         else
         {
@@ -54,15 +55,18 @@ public class Input extends MouseAdapter {
 
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
-        if (board.isEmpty(board.xyToSquare(xE, yE))) { //wenn das feld frei ist
+        /*if (board.isEmpty(board.xyToSquare(xE, yE))) { //wenn das feld frei ist
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
-            board.setSquare(board.xyToSquare(xE, yE), selectedPieceValue);// der Square von dem du Weg gehst soll 0 gesetzt werden
-            startSquare = 0;
+            //board.setSquare(board.xyToSquare(xE, yE), selectedPieceValue);// der Square von dem du Weg gehst soll 0 gesetzt werden
+            //startSquare = 0;
             //}
         }
         else{
-            board.setSquare(startSquare, selectedPieceValue);
-        }
+            //board.setSquare(startSquare, selectedPieceValue);
+        }*/
+        int endsquare = board.xyToSquare(xE, yE);
+        LinkedList<Integer> positionlsit = board.giveBoard()[endsquare] > 0 ? board.whitePositions : board.blackPositions;
+        board.execMove(selectedPieceValue,startSquare,endsquare,board.giveBoard(),positionlsit);
         selectedPieceValue = 0;
         board.repaint();
     }
