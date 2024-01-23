@@ -55,19 +55,17 @@ public class Input extends MouseAdapter {
 
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
-        /*if (board.isEmpty(board.xyToSquare(xE, yE))) { //wenn das feld frei ist
+        if (board.isEmpty(board.xyToSquare(xE, yE))) { //wenn das feld frei ist
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
-            //board.setSquare(board.xyToSquare(xE, yE), selectedPieceValue);// der Square von dem du Weg gehst soll 0 gesetzt werden
-            //startSquare = 0;
-            //}
+            int endsquare = board.xyToSquare(xE, yE);
+            board.execMove(selectedPieceValue,startSquare,endsquare);
+            selectedPieceValue = 0;
+
         }
         else{
-            //board.setSquare(startSquare, selectedPieceValue);
-        }*/
-        int endsquare = board.xyToSquare(xE, yE);
-        LinkedList<Integer> positionlsit = board.giveBoard()[endsquare] > 0 ? board.whitePositions : board.blackPositions;
-        board.execMove(selectedPieceValue,startSquare,endsquare,board.giveBoard(),positionlsit);
-        selectedPieceValue = 0;
+            board.setSquare(startSquare, selectedPieceValue);
+        }
+
         board.repaint();
     }
 

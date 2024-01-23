@@ -457,6 +457,14 @@ public class Board extends JPanel {
 
         return positions;
     }
+
+    /**
+     * Diese Version führt einen Move aus, dafür darf die Startpos aber noch nd == 0 sein
+     * @param pStartPos Startposition des MOves
+     * @param pEndPos Endposition
+     * @param pSquare das Schachbrett auf dem gemoved wird
+     * @param pPositionlist Liste mit Positionen der selben Farbe
+     */
     public void execMove(int pStartPos, int pEndPos, int[] pSquare, LinkedList<Integer> pPositionlist)
     {
         int color = pSquare[pStartPos] / Math.abs(pSquare[pStartPos]);
@@ -473,21 +481,28 @@ public class Board extends JPanel {
         pSquare[pEndPos] = pSquare[pStartPos];
         pSquare[pStartPos] = leeresFeld;
     }
-    public void execMove(int pPieceValue,int pStartPos, int pEndPos, int[] pSquare, LinkedList<Integer> pPositionlist)
+
+    /**
+     * Diese Version führt einen Move aus, AUF DEM HAUPTBOARD NICHT FUER MINIMAX
+     * @param pPieceValue
+     * @param pStartPos
+     * @param pEndPos
+     */
+    public void execMove(int pPieceValue,int pStartPos, int pEndPos)
     {
         int color = pPieceValue / Math.abs(pPieceValue);
 
 
-
-        pPositionlist.remove((Integer) pStartPos);
-        pPositionlist.add(pEndPos);
-        if(pSquare[pEndPos] != leeresFeld)
+        LinkedList<Integer> Positionlist = color == Piece.white ? whitePositions : blackPositions;
+        Positionlist.remove((Integer) pStartPos);
+        Positionlist.add(pEndPos);
+        if(Square[pEndPos] != leeresFeld)
         {
             LinkedList<Integer> enemylist = color == Piece.black ? whitePositions : blackPositions;
             enemylist.remove((Integer) pEndPos); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
         }
-        pSquare[pEndPos] = pPieceValue;
-        pSquare[pStartPos] = leeresFeld;
+        Square[pEndPos] = pPieceValue;
+        Square[pStartPos] = leeresFeld;
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, LinkedList<int[]> pAttackedPositions)
