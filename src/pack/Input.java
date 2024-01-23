@@ -55,18 +55,25 @@ public class Input extends MouseAdapter {
 
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
-        if (board.isEmpty(board.xyToSquare(xE, yE))) { //wenn das feld frei ist
-            //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
-            int endsquare = board.xyToSquare(xE, yE);
-            board.execMove(selectedPieceValue,startSquare,endsquare);
-            selectedPieceValue = 0;
-
+        int endsquare = board.xyToSquare(xE, yE);
+        int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
+        LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
+        LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+        LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+        int[][] legalmoves = board.getLegalMoves(selectedPieceValue,startSquare,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
+        for (int i = 0; i < legalmoves.length; i++) {
+            if(legalmoves[i][1] == endsquare)
+            {
+                board.execMove(selectedPieceValue,startSquare,endsquare);
+                selectedPieceValue = 0;
+                board.repaint();
+                return;
+            }
         }
-        else{
-            board.setSquare(startSquare, selectedPieceValue);
-        }
-
+        //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
+        board.setSquare(startSquare, selectedPieceValue);
         board.repaint();
+
     }
 
     public int getstartSquare(){

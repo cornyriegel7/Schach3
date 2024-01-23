@@ -2,6 +2,7 @@ package pack;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class Board extends JPanel {
@@ -255,7 +256,7 @@ public class Board extends JPanel {
      * @param durchEigeneFarbeAngegriffeneFelder obv
      * @return alle Zuege die nach allen Spielregeln okay sind
      */
-    public int[][][] getLegalMoves(LinkedList<Integer> pPositions, int[] pSquares, LinkedList<int[]> durchAndereFarbeAngegriffeneFelder, LinkedList<int[]> durchEigeneFarbeAngegriffeneFelder)
+   /* public int[][][] getLegalMoves(LinkedList<Integer> pPositions, int[] pSquares, LinkedList<int[]> durchAndereFarbeAngegriffeneFelder, LinkedList<int[]> durchEigeneFarbeAngegriffeneFelder)
     {
         LinkedList<int[][]> legalMoves = new LinkedList<>();
         for (Integer pPosition : pPositions) {
@@ -267,6 +268,57 @@ public class Board extends JPanel {
             }
         }
         return legalMoves.toArray(new int[0][0][0]);
+    }*/
+
+
+    /**
+     * Legalmoves fuer eine einzige Figur
+     * @param pFigurInt
+     * @param startPosition
+     * @param pSquares
+     * @param durchAndereFarbeAngegriffeneFelder
+     * @param durchEigeneFarbeAngegriffeneFelder
+     * @param pPositions
+     * @return
+     */
+    public int[][] getLegalMoves(int pFigurInt, int startPosition, int[] pSquares,
+                                 LinkedList<int[]> durchAndereFarbeAngegriffeneFelder,LinkedList<int[]> durchEigeneFarbeAngegriffeneFelder,
+                                 LinkedList<Integer> pPositions)
+    {
+
+        int[][] pseudolegalMoves = generateMoves(startPosition,pFigurInt,pSquares,durchEigeneFarbeAngegriffeneFelder);
+
+
+        //TODO: das koennte man Laufzeit technisch besser machen, wenn man die Positionslisten einfach nach groesse sortieren wuerde, dann koennte man sich eif ein bestimmten index holen
+        int kingPosition = 0;
+        for (int i = 0; i < pPositions.get(i); i++) {
+            if(Math.abs(Square[pPositions.get(i)]) == Piece.king)
+            {
+                kingPosition = pPositions.get(i);
+                break;
+            }
+        }
+        //wenn der Koenig nicht im Schach ist
+        if(!isPositionAttacked(kingPosition,durchAndereFarbeAngegriffeneFelder))
+        {
+            // Und wenn es kein Abzugsscach gibt
+            if(!isPositionAttacked(startPosition,durchAndereFarbeAngegriffeneFelder))
+            {
+            return pseudolegalMoves;}
+            else
+            {
+                //TODO: gucken ob es Abzugsschach geben koennte
+            }
+        }
+        else
+        {
+            //TODO: tun wenn der Koenig im Schach ist
+        }
+
+
+
+
+        return null;
     }
 
 
@@ -284,20 +336,22 @@ public class Board extends JPanel {
      * @param startPosition startPosition auf dem brett
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
-   public  int[][] generateMoves(int startPosition, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
+   public  int[][] generateMoves(int startPosition, int pFigurInt, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
     {
 
-        int figurInt = pSquares[startPosition];
-        int absolutFigurInt = Math.abs(figurInt);
+        //int figurInt = pSquares[startPosition]; -> waere theorethisch auch moeglich
+
+
+        int absolutFigurInt = Math.abs(pFigurInt);
         if(absolutFigurInt == Piece.pawn)
         {
-            return generatePawnMoves(startPosition,figurInt,pSquares,attackedByColorPositions);
+            return generatePawnMoves(startPosition,pFigurInt,pSquares,attackedByColorPositions);
         }
         else if(absolutFigurInt == Piece.knight)
         {
-            return generateKnightMoves(startPosition,figurInt,pSquares,attackedByColorPositions);
+            return generateKnightMoves(startPosition,pFigurInt,pSquares,attackedByColorPositions);
         }
-        return generateSlidingPieceMoves(startPosition,figurInt,pSquares,attackedByColorPositions);
+        return generateSlidingPieceMoves(startPosition,pFigurInt,pSquares,attackedByColorPositions);
     }
 
     /**
@@ -514,14 +568,14 @@ public class Board extends JPanel {
      * funktioniert nur, wenn bekannst ist welche Felder angegriffen werden-> für die Figur,
      * die den König angegriffen hat muss deshalb generateMoves(Position der Figur, aktuelles Brett, durchDieFarbeDerFigurAngegriffeneFelder)
      * gelaufen sein.
-     * @param pKingPosition Position des Königs von dem geguckt werden soll ob er im Schach ist
-     * @param pAttackedByColorPositions durch Die Farbe Der Figur Angegriffene Felder??
-     * @return schach oder nicht schach?
+     * @param pPosition Position der Figur von dem geguckt werden soll ob er im Schach ist
+     * @param pAttackedByColorPositions durch Die Farbe(die andere als die Figur) angegriffene Felder
+     * @return true = angegriffen
      */
-    public boolean isCheck(int pKingPosition, LinkedList<int[]> pAttackedByColorPositions)
+    public boolean isPositionAttacked(int pPosition, LinkedList<int[]> pAttackedByColorPositions)
     {
         for (int[] pAttackedByColorPosition : pAttackedByColorPositions) {
-            if (pKingPosition == pAttackedByColorPosition[1]) {
+            if (pPosition == pAttackedByColorPosition[1]) {
                 return true;
             }
         }
