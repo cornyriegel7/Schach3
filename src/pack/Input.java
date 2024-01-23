@@ -58,15 +58,13 @@ public class Input extends MouseAdapter {
             //if(board.generateMoves(startSquare, board.getSquare(selectedPiece, ))){
             board.setSquare(board.xyToSquare(xE, yE), selectedPieceValue);// der Square von dem du Weg gehst soll 0 gesetzt werden
             startSquare = 0;
-            selectedPieceValue = 0;
-            board.repaint();
             //}
         }
         else{
             board.setSquare(startSquare, selectedPieceValue);
-            selectedPieceValue = 0;
-            board.repaint();
         }
+        selectedPieceValue = 0;
+        board.repaint();
     }
 
     public int getstartSquare(){
