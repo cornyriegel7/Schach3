@@ -1,9 +1,7 @@
 package pack;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Board extends JPanel {
     //Gameplay Zeug
@@ -299,16 +297,20 @@ public class Board extends JPanel {
             }
         }
         //wenn der Koenig nicht im Schach ist
+
         if(!isPositionAttacked(kingPosition,durchAndereFarbeAngegriffeneFelder))
         {
+            /*
+        }
             // Und wenn es kein Abzugsscach gibt
             if(!isPositionAttacked(startPosition,durchAndereFarbeAngegriffeneFelder))
-            {
-            return pseudolegalMoves;}
+            {*/
+            return pseudolegalMoves;
+            /*}
             else
             {
                 //TODO: gucken ob es Abzugsschach geben koennte
-            }
+            }*/
         }
         else
         {
@@ -450,7 +452,7 @@ public class Board extends JPanel {
 
     public int[][] generatePawnMoves(int startPos,int FigurInt, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
     {
-        ArrayList<int[]> moves = new ArrayList<>();
+        LinkedList<int[]> moves = new LinkedList<>();
 
         int eigeneFarbe = FigurInt / Math.abs(FigurInt);
         int bewegungsrichtung = -8 * eigeneFarbe; //Weiß geht von höheren Zahlen zu niedrigeren#
@@ -547,16 +549,44 @@ public class Board extends JPanel {
         int color = pPieceValue / Math.abs(pPieceValue);
 
 
+
+        LinkedList<int[]> ownAttackedPositions = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
+        for (int i = 0; i < ownAttackedPositions.size(); i++) {
+            if(ownAttackedPositions.get(i)[0] == pStartPos)
+            {
+                ownAttackedPositions.remove();
+            }
+        }
+
+
         LinkedList<Integer> Positionlist = color == Piece.white ? whitePositions : blackPositions;
         Positionlist.remove((Integer) pStartPos);
         Positionlist.add(pEndPos);
+
+
+
+        LinkedList<int[]> enemyAttackedPositions = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
         if(Square[pEndPos] != leeresFeld)
         {
-            LinkedList<Integer> enemylist = color == Piece.black ? whitePositions : blackPositions;
-            enemylist.remove((Integer) pEndPos); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
+            //Wenn es eine Figur nicht mehr gibt, kann sie auch keine Felder mehr angreifen
+
+            for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+                if(enemyAttackedPositions.get(i)[0] == pEndPos)
+                {
+                    enemyAttackedPositions.remove();
+                }
+            }
+
+            //Figur wird aus den Positionen rausgenommen
+            LinkedList<Integer> Position = color == Piece.black ? whitePositions : blackPositions;
+            Position.remove((Integer) pEndPos); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
         }
         Square[pEndPos] = pPieceValue;
         Square[pStartPos] = leeresFeld;
+
+        int[][] newMoves = getLegalMoves(pPieceValue,pEndPos,Square,enemyAttackedPositions,ownAttackedPositions,Positionlist);
+        ownAttackedPositions.addAll(Arrays.asList(newMoves));
+
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, LinkedList<int[]> pAttackedPositions)

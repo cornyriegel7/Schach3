@@ -49,7 +49,6 @@ public class Input extends MouseAdapter {
     }
 
     //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.
-    //todo: (solange es valid ist, aber das ist noch nicht einprogrammiert)
     @Override
     public void mouseReleased(MouseEvent e) {
 
