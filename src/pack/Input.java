@@ -1,5 +1,8 @@
 package pack;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
@@ -37,15 +40,22 @@ public class Input extends MouseAdapter {
     }
 
     //Wenn die Maus gezogen wird
-    @Override
     public void mouseDragged(MouseEvent e) {
-        xE = e.getX();  //Zum Abrufen fürs Board
+        xE = e.getX();
         yE = e.getY();
-        if(startSquare != 0){
-           board.repaint();     //swing sagen, dass es repainten soll
-        }
-        System.out.println("Dragged"); //Wie oft wird draggen methode ausgeführt
 
+        if (startSquare != 0) {
+            board.repaint();     // Swing sagen, dass es repainten soll
+            //der teil ist neu... hab das gefühlt es läuft n bisschen smoother. aber das hauptploblem ist, dass mouseDragged zu wenig oft aufgerufen wird
+            Timer timer = new Timer(10, new ActionListener() {
+                public void actionPerformed(ActionEvent arg0) {
+                    board.repaint();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+        System.out.println("Dragged");
     }
 
     //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.
