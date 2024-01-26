@@ -45,11 +45,11 @@ public class Input extends MouseAdapter {
         yE = e.getY();
 
         if (startSquare != 0) {
-            board.repaint();     // Swing sagen, dass es repainten soll
+            board.boardgui.repaint();     // Swing sagen, dass es repainten soll
             //der teil ist neu... hab das gefühlt es läuft n bisschen smoother. aber das hauptploblem ist, dass mouseDragged zu wenig oft aufgerufen wird
             Timer timer = new Timer(10, new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
-                    board.repaint();
+                    board.boardgui.repaint();
                 }
             });
             timer.setRepeats(false);
@@ -75,13 +75,13 @@ public class Input extends MouseAdapter {
             {
                 board.execMove(selectedPieceValue,startSquare,endsquare);
                 selectedPieceValue = 0;
-                board.repaint();
+                board.boardgui.repaint();
                 return;
             }
         }
         //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
         board.setSquare(startSquare, selectedPieceValue);
-        board.repaint();
+        board.boardgui.repaint();
 
     }
 

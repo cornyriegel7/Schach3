@@ -3,9 +3,7 @@ package pack;
 public class Main {
 
     public static void main(String[] args) {
-        //Programmstart
         View view = new View();
-        //view.c.board.getLegalMoves( view.c.board.whitePositions,view.c.board.Square,view.c.board.attackedByBlackPositions,view.c.board.attackedByWhitePositions);
     }
 }
 

@@ -53,7 +53,7 @@ public class View extends JFrame implements ActionListener {
             fVsLokal.setLayout(new GridBagLayout());
             fVsLokal.setMinimumSize(new Dimension(1000,1000));
             fVsLokal.setLocationRelativeTo(null);
-            fVsLokal.add(c.board);
+            fVsLokal.add(c.board.boardgui);
             fVsLokal.setVisible(true);
         }
         if (e.getSource() == bVsOnline) {
@@ -63,7 +63,7 @@ public class View extends JFrame implements ActionListener {
             fVsOnline.setLayout(new GridBagLayout());
             fVsOnline.setMinimumSize(new Dimension(1000,1000));
             fVsOnline.setLocationRelativeTo(null);
-            fVsOnline.add(c.board);
+            fVsOnline.add(c.board.boardgui);
             fVsOnline.setVisible(true);
         }
         if (e.getSource() == bVsBot) {
@@ -73,14 +73,8 @@ public class View extends JFrame implements ActionListener {
             fVsBot.setLayout(new GridBagLayout());
             fVsBot.setMinimumSize(new Dimension(1000,1000));
             fVsBot.setLocationRelativeTo(null);
-            fVsBot.add(c.board);
+            fVsBot.add(c.board.boardgui);
             fVsBot.setVisible(true);
         }
-        }       //Das kann man alles noch zusammenfassen.
-
-
-    public void paint() {
-        //int[] boardArray = c.board.giveBoard();
-        //irgendwie ist c nicht instanziert, ich kann das board nicht holen...
-    }
+        }
 }

@@ -3,13 +3,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-public class Board extends JPanel {
+public class Board {
     //Gameplay Zeug
-    int[] Square;
+    private int[] Square;
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
-
-
+    BoardGUI boardgui;
     static int oben = -8, unten = 8,  rechts = 1, links = -1, obenrechts = -7, untenlinks = 7, obenlinks = -9, untenrechts = 9;
     
     static final int[] directions = {oben, unten,
@@ -18,22 +17,11 @@ public class Board extends JPanel {
             untenrechts, obenlinks};
     LinkedList<int[]> attackedByWhitePositions, attackedByBlackPositions;
     LinkedList<Integer>  whitePositions, blackPositions;
-
-    //optisches Zeug
-    View view; //das ist die gui
-
-    //Größe der Rechtecke
-    public int titleSize = 100;
-    Piece piece;
-    Input input;
-    //Debugging
-    public int pSquareIndex = 0;
-
-
-    //Konstruktor Board
+    View view;
     public Board(View pView){
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
         initalizeSquare();
+        boardgui = new BoardGUI(this);
 
         distancesToEdge = getDistanceToEdges();
         whitePositions=getPositions(Piece.white, Square);
@@ -42,82 +30,9 @@ public class Board extends JPanel {
         attackedByBlackPositions = new LinkedList<>();
 
         view = pView;
-        this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
-        piece = new Piece();
-        input = new Input(this);
-
-        // Hinzufügen des Input-Listeners zum Board
-        this.addMouseListener(input);
-        this.addMouseMotionListener(input);
         }
 
 
-
-    //Zum Painten des kompletten Felds
-    //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
-    //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
-    public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-        for(int r = 0; r < 8; r++){
-            for(int c = 0; c < 8; c++){
-                g2d.setColor((c+r) % 2 == 0 ? new Color(205, 133, 63) : new Color(101, 67, 33));
-                g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
-            }
-        }
-
-        for(int i = 0; (i < Square.length); i++) {
-            pSquareIndex = i;
-            Image img = pieceIntToImage(Square[pSquareIndex]);
-            g2d.drawImage(img, squareToX(pSquareIndex), squareToY(pSquareIndex), null);
-        }
-
-        Image selectedPiece = pieceIntToImage(Input.getSelectedPieceValue());
-        g2d.drawImage(selectedPiece, Input.getxE() - titleSize/2,Input.getyE() - titleSize/2,null);
-    }
-
-
-
-    //Bestimmtes Feld(pSquare Index) färben(um z.B. available Moves anzuzeigen)
-    public void paintSquare(int pSquareInt) {
-        Graphics g = getGraphics();
-        Graphics2D g2d = (Graphics2D) g;
-
-        // Hier kannst du die Farbe für das bestimmte Feld festlegen
-        g2d.setColor(new Color(1, 101, 1));
-
-        // Hier zeichnest du das bestimmte Feld
-        g2d.fillRect(squareToX(pSquareInt) * titleSize, squareToY(pSquareInt) * titleSize, titleSize, titleSize);
-    }
-
-    //Wandelt ein bestimmtes Square(Index pSquare Array) in die Y-Koordinate des Feldes um (linke obere Ecke)
-    public int squareToY(int pSquareInt) {
-            int minRange = 0;
-            int maxRange = 63;
-            int yOffset = 0;
-
-            if (pSquareInt >= minRange && pSquareInt <= maxRange) {
-                yOffset = (pSquareInt / 8) * 100;
-
-
-                return yOffset;
-
-            } else {
-            // Umgang mit ungültigen pSquare-Werten(kann man rausmachen, aber so weiß man, wenn etwas falsches rauskommt)
-            return -1;
-        }
-
-    }
-
-    //Wandelt ein bestimmtes Square(Index pSquare Array) in die X-Koordinate des Feldes um (linke obere Ecke)
-    public int squareToX(int pSquareInt) {
-        if (pSquareInt >= 0 && pSquareInt < 64) {
-            return (pSquareInt % 8) * 100;
-        } else {
-            // Umgang mit ungültigen pSquare-Werten
-            return -1;
-        }
-    }
 
     //Wandelt Koordinaten in ein Index fürs Square Array um
     public int xyToSquare(int xValue, int yValue) {
@@ -136,27 +51,7 @@ public class Board extends JPanel {
         }
     }
 
-    //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild.
-    private  Image pieceIntToImage(int pPieceInt)
-    {
-        if(pPieceInt==0) return null; //man kann nicht durch 0 teilen
 
-        int absolutFigurInt = Math.abs(pPieceInt);
-       int farbe = pPieceInt / absolutFigurInt;
-
-        return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == Piece.black ? piece.getImage(0*piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(0*piece.getSheetScale(), 0);
-            case (Piece.pawn) -> farbe == Piece.black ? piece.getImage(5 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(5 * piece.getSheetScale(), 0);
-            case (Piece.knight) -> farbe == Piece.black ? piece.getImage(3 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(3 * piece.getSheetScale(), 0);
-            case (Piece.bishop) -> farbe == Piece.black ? piece.getImage(2 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(2 * piece.getSheetScale(), 0);
-            case (Piece.rook) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(4 * piece.getSheetScale(), 0);
-            case (Piece.queen) -> farbe == Piece.black ? piece.getImage(1 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(1 * piece.getSheetScale(), 0);
-            default -> null;
-
-
-        };
-
-    }
 
     //Malt ein Bild an den Kordinaten x & y
     public void paint(Graphics2D g2d, Image img, int xPos, int yPos){
@@ -185,7 +80,9 @@ public class Board extends JPanel {
         };
     }
 
-
+    /**
+     * Dreckige HIlfsmethode (braucht keiner)
+     */
     public  void printBoard()
     {
         String lineString = "";
