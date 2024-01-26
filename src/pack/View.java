@@ -10,6 +10,7 @@ public class View extends JFrame implements ActionListener {
     JFrame fVsBot, fVsLokal, fVsOnline;
     //   frames, die auf buttonclick lokal und online entstehen
     Controller c;
+    private int pickedMode;
 
     public View(){
         super("Schachprogramm");
@@ -47,6 +48,8 @@ public class View extends JFrame implements ActionListener {
             System.out.println(c.board.isEmpty(i));
         //fenster: lokaler gegner
         if (e.getSource() == bVsLokal) {
+            pickedMode = 1; //modus:1,2 oder 3
+
             fVsLokal = new JFrame();
             fVsLokal.setTitle("Gegen Lokalen Gegner");
             fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
@@ -57,6 +60,8 @@ public class View extends JFrame implements ActionListener {
             fVsLokal.setVisible(true);
         }
         if (e.getSource() == bVsOnline) {
+            pickedMode = 2;
+
             fVsOnline = new JFrame();
             fVsOnline.setTitle("Gegen Online Gegner");
             fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
@@ -67,6 +72,8 @@ public class View extends JFrame implements ActionListener {
             fVsOnline.setVisible(true);
         }
         if (e.getSource() == bVsBot) {
+            pickedMode = 3;
+
             fVsBot = new JFrame();
             fVsBot.setTitle("Gegen Bot");
             fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
@@ -77,4 +84,6 @@ public class View extends JFrame implements ActionListener {
             fVsBot.setVisible(true);
         }
         }
+
+        public int getPickedMode() { return pickedMode; }
 }
