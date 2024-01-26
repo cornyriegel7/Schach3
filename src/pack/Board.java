@@ -1,11 +1,10 @@
 package pack;
-import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
 public class Board {
     //Gameplay Zeug
-    private int[] Square;
+    private final int[] Square;
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
     BoardGUI boardgui;
@@ -50,16 +49,6 @@ public class Board {
             return -1;
         }
     }
-
-
-
-    //Malt ein Bild an den Kordinaten x & y
-    public void paint(Graphics2D g2d, Image img, int xPos, int yPos){
-        g2d.drawImage(img,xPos,yPos,null);
-    }
-
-
-
     /**
      * @param pPieceInt den wert einer Figur aus Farbe * FigurTyp
      * @return den Anfangsbuchstaben des Namen der Figur (klein wenn Figur == schwarz, gross wenn weiß)
@@ -508,14 +497,6 @@ public class Board {
         }
         return false;
     }
-//    soll checken ob ein square besetzt ist
-//    public boolean isSquareOccupied(int pSquare){
-//            if (pSquare < 0 || pSquare >= Square.length) {
-//                System.out.println("Achtung Fehler");
-//                return false; //irgendwas muss man ja zurückgeben
-//            }
-//            return Square[pSquare] != 0;
-//        }
 
     //soll checken ob ein square besetzt ist
     public boolean isEmpty(int pFeld) {
