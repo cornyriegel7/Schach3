@@ -81,8 +81,8 @@ public class Input extends MouseAdapter {
             }
         }
         //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
-        //board.setSquare(startSquare, selectedPieceValue);
-        //board.boardgui.repaint();
+        board.setSquare(startSquare, selectedPieceValue);
+        board.boardgui.repaint();
     }
 
     public int getstartSquare(){
