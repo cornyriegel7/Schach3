@@ -12,13 +12,18 @@ public class Input extends MouseAdapter {
     Board board;
     private static int selectedPieceValue;
     public int startSquare;  //Index Startposition vom Move
-    public static int xE, yE; //Koordinaten der Maus zum Abrufen fürs board
+    public static int xE, yE;//Koordinaten der Maus zum Abrufen fürs board
+
+    private int[][] legalMoves;
+    private int endSquare;
 
     public Input(Board pBoard){
         this.board = pBoard;
         selectedPieceValue = 0;
         int xE = 0, yE = 0;
-        startSquare = -1; // -1 weil 0 ein Index vom Array ist und startSquare ja erstmal nichts sein soll
+        startSquare = -1;// -1 weil 0 ein Index vom Array ist und startSquare ja erstmal nichts sein soll
+        endSquare = -1;
+        legalMoves = new int[0][0];
     }
 
 
@@ -30,6 +35,11 @@ public class Input extends MouseAdapter {
         startSquare = board.xyToSquare(xE, yE);
         if(board.getPieceFromSquare(startSquare) != 0){
             selectedPieceValue = board.getPieceFromSquare(startSquare);
+            int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
+            LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
+            LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+            LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+            legalMoves = board.getLegalMoves(selectedPieceValue,startSquare,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
             board.setSquare(startSquare,0);
         }
         else
@@ -63,16 +73,11 @@ public class Input extends MouseAdapter {
 
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
-        int endsquare = board.xyToSquare(xE, yE);
-        int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
-        LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
-        LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-        LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-        int[][] legalmoves = board.getLegalMoves(selectedPieceValue,startSquare,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
-        for (int i = 0; i < legalmoves.length; i++) {
-            if(legalmoves[i][1] == endsquare)
+        endSquare = board.xyToSquare(xE, yE);
+        for (int i = 0; i < legalMoves.length; i++) {
+            if(legalMoves[i][1] == endSquare)
             {
-                board.execMove(selectedPieceValue,startSquare,endsquare);
+                board.execMove(selectedPieceValue,startSquare,endSquare);
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
                 board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
