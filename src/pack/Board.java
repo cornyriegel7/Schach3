@@ -356,7 +356,6 @@ public class Board {
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach rechts ein Gegner
             {
                 moves.add(new int[]{startPos, neuersquare});
-                printMove(new int[]{startPos, neuersquare});
                 addToAttackedPositions(startPos, neuersquare, attackedByColorPositions);
             }
         }
@@ -366,7 +365,6 @@ public class Board {
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach links ein Gegner
             {
                 moves.add(new int[]{startPos, neuersquare});
-                printMove(new int[]{startPos, neuersquare});
                 addToAttackedPositions(startPos, neuersquare, attackedByColorPositions);
 
             }
