@@ -75,7 +75,7 @@ public class Input extends MouseAdapter {
                 board.execMove(selectedPieceValue,startSquare,endsquare);
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
-                board.view.c.client.setIntArray(board.giveBoard()); //intarray wird verschickt
+                board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
                 return;
             }
         }
