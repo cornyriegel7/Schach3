@@ -55,7 +55,6 @@ public class Input extends MouseAdapter {
             timer.setRepeats(false);
             timer.start();
         }
-        System.out.println("Dragged");
     }
 
     //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.

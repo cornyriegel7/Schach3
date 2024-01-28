@@ -352,19 +352,24 @@ public class Board {
 
         //schraeg rechts
         int neuersquare = startPos+bewegungsrichtung+1;
-        if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach rechts ein Gegner
-        {
-            moves.add(new int[]{startPos,neuersquare});
-            addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
-            System.out.println(neuersquare);
+        if(neuersquare % 8 != 0 && (0 <= neuersquare && neuersquare < 64)) {
+            if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach rechts ein Gegner
+            {
+                moves.add(new int[]{startPos, neuersquare});
+                printMove(new int[]{startPos, neuersquare});
+                addToAttackedPositions(startPos, neuersquare, attackedByColorPositions);
+            }
         }
         //schraeg links
         neuersquare = startPos+bewegungsrichtung-1;
-        if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == eigeneFarbe*-1) // Ist vorne und 1 nach links ein Gegner
-        {
-            moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
-            addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
+        if(neuersquare+1 % 8 != 0 && (0 <= neuersquare && neuersquare < 64)) {
+            if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach links ein Gegner
+            {
+                moves.add(new int[]{startPos, neuersquare});
+                printMove(new int[]{startPos, neuersquare});
+                addToAttackedPositions(startPos, neuersquare, attackedByColorPositions);
 
+            }
         }
 
 
@@ -372,7 +377,7 @@ public class Board {
         neuersquare = startPos+bewegungsrichtung;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
+            moves.add(new int[]{startPos,neuersquare});
             addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
 
         }
@@ -381,7 +386,7 @@ public class Board {
         neuersquare = startPos+bewegungsrichtung*2;
         if((anfangsReiheAnfang <= startPos && startPos <= anfangsReiheEnde) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new int[]{startPos,neuersquare});System.out.println(neuersquare);
+            moves.add(new int[]{startPos,neuersquare});
             addToAttackedPositions(startPos,neuersquare,attackedByColorPositions);
 
         }
