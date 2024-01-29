@@ -41,6 +41,16 @@ public class View extends JFrame implements ActionListener {
         bVsOnline.addActionListener(this);
         add(bVsOnline);
         setVisible(true);
+
+        //Button für das ScrollPanel
+        JButton send = new JButton("Update");
+        send.setBounds(360, 210, 80, 25);
+        send.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // noch keine Funktion zugewiesen
+            }
+        });
     }
     public void actionPerformed(ActionEvent e) {
         c.createBoard();
@@ -84,6 +94,22 @@ public class View extends JFrame implements ActionListener {
             fVsBot.setVisible(true);
         }
         }
+
+    public void createScrollPanel(JFrame pframe)
+    {
+
+        
+        JTextArea textArea = new JTextArea();
+        for (int i = 0; i < 100; i++) {
+            textArea.append("Zeile " + (i + 1) + "\n");
+        }
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.add(send);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+         frame.add(scrollPane);
+         frame.setVisible(true);
+    }
 
         public int getPickedMode() { return pickedMode; }
 }
