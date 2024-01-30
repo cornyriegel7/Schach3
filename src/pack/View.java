@@ -95,21 +95,21 @@ public class View extends JFrame implements ActionListener {
         }
         }
 
-    public void createScrollPanel(JFrame pframe)
-    {
-
-        
-        JTextArea textArea = new JTextArea();
-        for (int i = 0; i < 100; i++) {
-            textArea.append("Zeile " + (i + 1) + "\n");
-        }
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.add(send);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-         frame.add(scrollPane);
-         frame.setVisible(true);
-    }
+//    public void createScrollPanel(JFrame pframe)
+//    {
+//
+//
+//        JTextArea textArea = new JTextArea();
+//        for (int i = 0; i < 100; i++) {
+//            textArea.append("Zeile " + (i + 1) + "\n");
+//        }
+//
+//        JScrollPane scrollPane = new JScrollPane(textArea);
+//        //scrollPane.add(send); was soll denn diese line hier
+//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//         pframe.add(scrollPane);
+//         pframe.setVisible(true);
+//    }
 
         public int getPickedMode() { return pickedMode; }
 }
