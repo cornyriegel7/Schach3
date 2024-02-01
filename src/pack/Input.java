@@ -39,8 +39,12 @@ public class Input extends MouseAdapter {
             LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
             LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
             LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-            legalMoves = board.getLegalMoves(selectedPieceValue,startSquare,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
-            board.setSquare(startSquare,0);
+            legalMoves = board.generateLegalMoves(startSquare,selectedPieceValue,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
+            if(legalMoves.length == 0) {
+                System.out.println("DIESE FIGUR DARF SICH NICHT BEWEGEN");
+                return;
+            }
+            board.setSquare(startSquare, 0);
         }
         else
         {
