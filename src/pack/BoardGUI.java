@@ -42,6 +42,7 @@ public class BoardGUI extends JPanel {
 
             Image selectedPiece = pieceIntToImage(Input.getSelectedPieceValue());
             g2d.drawImage(selectedPiece, Input.getxE() - titleSize/2,Input.getyE() - titleSize/2,null);
+
         }
 
 

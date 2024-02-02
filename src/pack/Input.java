@@ -35,12 +35,16 @@ public class Input extends MouseAdapter {
         startSquare = board.xyToSquare(xE, yE);
         if(board.getPieceFromSquare(startSquare) != 0){
             selectedPieceValue = board.getPieceFromSquare(startSquare);
-            int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
-            LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
-            LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-            LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-            legalMoves = board.getLegalMoves(selectedPieceValue,startSquare,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
-            board.setSquare(startSquare,0);
+            int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+            if(pieceColor == board.view.c.dran) {
+                int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
+                LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
+                LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+                LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+                legalMoves = board.getLegalMoves(selectedPieceValue, startSquare, board.giveBoard(), vonAnderenAngegriffen, vonEigenenAngegriffen, eigenePositionen);
+                board.setSquare(startSquare, 0);
+                board.view.c.dran =  pieceColor ==Piece.white ? Piece.black : Piece.white;
+            }
         }
         else
         {

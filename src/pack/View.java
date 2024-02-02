@@ -5,9 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 public class View extends JFrame implements ActionListener {
-    JButton bVsBot, bVsLokal, bVsOnline;
+    JButton bVsBot, bVsLokal, bVsOnline, bSend;
     JLabel lTitle;
-    JFrame fVsBot, fVsLokal, fVsOnline;
+    JTextArea taChat;
+    JTextField tbEnter;
+    JScrollPane scrollPane;
+    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame;
     //   frames, die auf buttonclick lokal und online entstehen
     Controller c;
     private int pickedMode;
@@ -40,22 +43,25 @@ public class View extends JFrame implements ActionListener {
         bVsOnline.setBounds(270,100,100,30);
         bVsOnline.addActionListener(this);
         add(bVsOnline);
-        setVisible(true);
 
-        //Button für das ScrollPanel
-        JButton send = new JButton("Update");
-        send.setBounds(360, 210, 80, 25);
-        send.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                // noch keine Funktion zugewiesen
-            }
-        });
+        //das ist der main frame
+        this.setVisible(true);
+
+        bSend = new JButton("Senden");
+        bSend.setBounds(110,625,100,30);
+        bSend.addActionListener(this);
+
+        taChat = new JTextArea();
+        taChat.setEditable(false);
+
+        scrollPane = new JScrollPane(taChat);
+        scrollPane.setBounds(10,10,200,550);
+
+        tbEnter = new JTextField();
+        tbEnter.setBounds(10, 570, 100,30);
     }
     public void actionPerformed(ActionEvent e) {
         c.createBoard();
-        for(int i=0; i<64; i++)
-            System.out.println(c.board.isEmpty(i));
         //fenster: lokaler gegner
         if (e.getSource() == bVsLokal) {
             pickedMode = 1; //modus:1,2 oder 3
@@ -80,6 +86,17 @@ public class View extends JFrame implements ActionListener {
             fVsOnline.setLocationRelativeTo(null);
             fVsOnline.add(c.board.boardgui);
             fVsOnline.setVisible(true);
+
+            chatFrame = new JFrame();
+            chatFrame.setTitle("Chat");
+            chatFrame.setBounds(1275,20,250,700);
+            chatFrame.setLayout(null);
+
+            chatFrame.add(bSend);
+            chatFrame.add(scrollPane);
+            chatFrame.add(tbEnter);
+
+            chatFrame.setVisible(true);
         }
         if (e.getSource() == bVsBot) {
             pickedMode = 3;
@@ -93,12 +110,18 @@ public class View extends JFrame implements ActionListener {
             fVsBot.add(c.board.boardgui);
             fVsBot.setVisible(true);
         }
+
+        if(e.getSource()==bSend) {
+            this.appendToArea(tbEnter.getText());
+        }
+        }
+
+        public void appendToArea(String pText) {
+            taChat.append("Du: " + pText + "\n");
         }
 
 //    public void createScrollPanel(JFrame pframe)
 //    {
-//
-//
 //        JTextArea textArea = new JTextArea();
 //        for (int i = 0; i < 100; i++) {
 //            textArea.append("Zeile " + (i + 1) + "\n");
