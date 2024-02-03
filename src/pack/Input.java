@@ -39,7 +39,7 @@ public class Input extends MouseAdapter {
             LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
             LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
             LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-            legalMoves = board.generateLegalMoves(startSquare,selectedPieceValue,board.giveBoard(),vonAnderenAngegriffen,vonEigenenAngegriffen,eigenePositionen);
+            legalMoves = board.generateLegalMoves(startSquare,selectedPieceValue,board.giveBoard(),vonEigenenAngegriffen,vonAnderenAngegriffen,eigenePositionen);
             if(legalMoves.length == 0) {
                 System.out.println("DIESE FIGUR DARF SICH NICHT BEWEGEN");
                 return;
@@ -81,7 +81,7 @@ public class Input extends MouseAdapter {
         for (int i = 0; i < legalMoves.length; i++) {
             if(legalMoves[i][1] == endSquare)
             {
-                board.execMove(selectedPieceValue,new int[]{startSquare,endSquare});
+                board.execMove(selectedPieceValue,new int[]{startSquare,endSquare,Math.abs(selectedPieceValue)});
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
                 board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt

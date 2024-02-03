@@ -54,8 +54,6 @@ public class View extends JFrame implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         c.createBoard();
-        for(int i=0; i<64; i++)
-            System.out.println(c.board.isEmpty(i));
         //fenster: lokaler gegner
         if (e.getSource() == bVsLokal) {
             pickedMode = 1; //modus:1,2 oder 3
