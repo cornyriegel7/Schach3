@@ -90,8 +90,8 @@ public class Input extends MouseAdapter {
         }
         //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
         board.setSquare(startSquare, selectedPieceValue);
-        //dirty sagen
         board.boardgui.repaint(0,0,3000,3000);
+        //todo: figur wird nicht gelöscht nach verbotener bewegung
     }
 
     public int getstartSquare(){
