@@ -25,6 +25,7 @@ public class BoardGUI extends JPanel {
         //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
         //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
         public void paintComponent(Graphics g) {
+        System.out.println("Paoint component");
             Graphics2D g2d = (Graphics2D) g;
 
             for(int r = 0; r < 8; r++){
@@ -76,8 +77,6 @@ public class BoardGUI extends JPanel {
             case (Piece.rook) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(4 * piece.getSheetScale(), 0);
             case (Piece.queen) -> farbe == Piece.black ? piece.getImage(1 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(1 * piece.getSheetScale(), 0);
             default -> null;
-
-
         };
 
     }

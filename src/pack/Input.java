@@ -84,13 +84,14 @@ public class Input extends MouseAdapter {
                 board.execMove(selectedPieceValue,startSquare,endSquare);
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
-                board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
+                //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
                 return;
             }
         }
         //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
         board.setSquare(startSquare, selectedPieceValue);
-        board.boardgui.repaint();
+        //dirty sagen
+        board.boardgui.repaint(0,0,3000,3000);
     }
 
     public int getstartSquare(){

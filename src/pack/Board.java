@@ -445,8 +445,8 @@ public class Board {
      */
     public void execMove(int pPieceValue,int pStartPos, int pEndPos)
     {
+        //TODO: hier fehler aufgetreten, division durch 0 , lieber if anweisung? oder pPiecevalue garnicht 0 ewerden lassen?
         int color = pPieceValue / Math.abs(pPieceValue);
-
 
 
         LinkedList<int[]> ownAttackedPositions = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
