@@ -41,10 +41,10 @@ public class Board {
 
     //Wandelt Koordinaten in ein Index fürs Square Array um
     public int xyToSquare(int xValue, int yValue) {
-        int minRangeX = 0;      //Die Werte in dem der Mausklick stattfinden muss.
-        int maxRangeX = 800;    //(Weil in dem Bereich eben das Schachbrett ist)
-        int minRangeY = 0;
-        int maxRangeY = 800;
+        //Die Werte in dem der Mausklick stattfinden muss.
+        //(Weil in dem Bereich eben das Schachbrett ist)
+        int minRangeX = 0, maxRangeX = 800, minRangeY = 0, maxRangeY = 800;
+
 
         if (xValue >= minRangeX && xValue <= maxRangeX && yValue >= minRangeY && yValue <= maxRangeY) {
             int row = yValue / 100; //funktioniert, weil int ja nur ganzzahlige Zahlen akzeptiert und IMMER abrundet

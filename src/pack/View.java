@@ -4,7 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-public class View extends JFrame implements ActionListener {
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+public class View extends JFrame implements ActionListener, WindowListener {
     JButton bVsBot, bVsLokal, bVsOnline, bSend;
     JLabel lTitle;
     JTextArea taChat;
@@ -13,7 +16,7 @@ public class View extends JFrame implements ActionListener {
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame;
     //   frames, die auf buttonclick lokal und online entstehen
     Controller c;
-    private int pickedMode;
+    private int pickedMode=0; //fake wert nur um if anweisung zu passen
 
     public View(){
         super("Schachprogramm");
@@ -61,54 +64,59 @@ public class View extends JFrame implements ActionListener {
         tbEnter.setBounds(10, 570, 100,30);
     }
     public void actionPerformed(ActionEvent e) {
-        c.createBoard();
-        //fenster: lokaler gegner
-        if (e.getSource() == bVsLokal) {
-            pickedMode = 1; //modus:1,2 oder 3
+        if(pickedMode==0) {
+            c.createBoard();
+            //fenster: lokaler gegner
+            if (e.getSource() == bVsLokal) {
+                pickedMode = 1; //modus:1,2 oder 3
 
-            fVsLokal = new JFrame();
-            fVsLokal.setTitle("Gegen Lokalen Gegner");
-            fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
-            fVsLokal.setLayout(new GridBagLayout());
-            fVsLokal.setMinimumSize(new Dimension(1000,1000));
-            fVsLokal.setLocationRelativeTo(null);
-            fVsLokal.add(c.board.boardgui);
-            fVsLokal.setVisible(true);
-        }
-        if (e.getSource() == bVsOnline) {
-            pickedMode = 2;
+                fVsLokal = new JFrame();
+                fVsLokal.setTitle("Gegen Lokalen Gegner");
+                fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
+                fVsLokal.setLayout(new GridBagLayout());
+                fVsLokal.setMinimumSize(new Dimension(1000, 1000));
+                fVsLokal.setLocationRelativeTo(null);
+                fVsLokal.add(c.board.boardgui);
+                fVsLokal.addWindowListener(this);
+                fVsLokal.setVisible(true);
+            }
+            if (e.getSource() == bVsOnline) {
+                pickedMode = 2;
 
-            fVsOnline = new JFrame();
-            fVsOnline.setTitle("Gegen Online Gegner");
-            fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
-            fVsOnline.setLayout(new GridBagLayout());
-            fVsOnline.setMinimumSize(new Dimension(1000,1000));
-            fVsOnline.setLocationRelativeTo(null);
-            fVsOnline.add(c.board.boardgui);
-            fVsOnline.setVisible(true);
+                fVsOnline = new JFrame();
+                fVsOnline.setTitle("Gegen Online Gegner");
+                fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
+                fVsOnline.setLayout(new GridBagLayout());
+                fVsOnline.setMinimumSize(new Dimension(1000, 1000));
+                fVsOnline.setLocationRelativeTo(null);
+                fVsOnline.add(c.board.boardgui);
+                fVsOnline.addWindowListener(this);
+                fVsOnline.setVisible(true);
 
-            chatFrame = new JFrame();
-            chatFrame.setTitle("Chat");
-            chatFrame.setBounds(1275,20,250,700);
-            chatFrame.setLayout(null);
+                chatFrame = new JFrame();
+                chatFrame.setTitle("Chat");
+                chatFrame.setBounds(1275, 20, 250, 700);
+                chatFrame.setLayout(null);
 
-            chatFrame.add(bSend);
-            chatFrame.add(scrollPane);
-            chatFrame.add(tbEnter);
+                chatFrame.add(bSend);
+                chatFrame.add(scrollPane);
+                chatFrame.add(tbEnter);
 
-            chatFrame.setVisible(true);
-        }
-        if (e.getSource() == bVsBot) {
-            pickedMode = 3;
+                chatFrame.setVisible(true);
+            }
+            if (e.getSource() == bVsBot) {
+                pickedMode = 3;
 
-            fVsBot = new JFrame();
-            fVsBot.setTitle("Gegen Bot");
-            fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
-            fVsBot.setLayout(new GridBagLayout());
-            fVsBot.setMinimumSize(new Dimension(1000,1000));
-            fVsBot.setLocationRelativeTo(null);
-            fVsBot.add(c.board.boardgui);
-            fVsBot.setVisible(true);
+                fVsBot = new JFrame();
+                fVsBot.setTitle("Gegen Bot");
+                fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
+                fVsBot.setLayout(new GridBagLayout());
+                fVsBot.setMinimumSize(new Dimension(1000, 1000));
+                fVsBot.setLocationRelativeTo(null);
+                fVsBot.addWindowListener(this);
+                fVsBot.add(c.board.boardgui);
+                fVsBot.setVisible(true);
+            }
         }
 
         if(e.getSource()==bSend) {
@@ -116,7 +124,43 @@ public class View extends JFrame implements ActionListener {
         }
         }
 
-        public void appendToArea(String pText) {
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        pickedMode = 0;
+        System.out.println("EEEEE");
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
+
+    public void appendToArea(String pText) {
             taChat.append("Du: " + pText + "\n");
         }
 

@@ -25,7 +25,7 @@ public class BoardGUI extends JPanel {
         //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
         //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
         public void paintComponent(Graphics g) {
-        System.out.println("Paoint component");
+        System.out.println("Paint component");
             Graphics2D g2d = (Graphics2D) g;
 
             for(int r = 0; r < 8; r++){

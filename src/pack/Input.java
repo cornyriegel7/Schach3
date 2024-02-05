@@ -60,20 +60,14 @@ public class Input extends MouseAdapter {
 
         if (startSquare != 0) {
             board.boardgui.repaint();     // Swing sagen, dass es repainten soll
-            //der teil ist neu... hab das gefühlt es läuft n bisschen smoother. aber das hauptploblem ist, dass mouseDragged zu wenig oft aufgerufen wird
-            Timer timer = new Timer(10, new ActionListener() {
-                public void actionPerformed(ActionEvent arg0) {
-                    board.boardgui.repaint();
-                }
-            });
-            timer.setRepeats(false);
-            timer.start();
+           // aber das hauptproblem ist, dass mouseDragged zu wenig oft aufgerufen wird
         }
     }
 
     //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.
     @Override
     public void mouseReleased(MouseEvent e) {
+        System.out.println(Runtime.getRuntime().totalMemory() + " uebrig: "+Runtime.getRuntime().freeMemory());
 
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
@@ -88,10 +82,10 @@ public class Input extends MouseAdapter {
                 return;
             }
         }
-        //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
+      // figur wird an die stelle zurückgesetzt und repaint
         board.setSquare(startSquare, selectedPieceValue);
+        selectedPieceValue = 0;
         board.boardgui.repaint(0,0,3000,3000);
-        //todo: figur wird nicht gelöscht nach verbotener bewegung
     }
 
     public int getstartSquare(){
