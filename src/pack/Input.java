@@ -75,7 +75,7 @@ public class Input extends MouseAdapter {
         for (int i = 0; i < legalMoves.length; i++) {
             if(legalMoves[i][1] == endSquare)
             {
-                board.execMove(selectedPieceValue,startSquare,endSquare);
+                board.execMove(legalMoves[i][0],legalMoves[i][1],legalMoves[i][2]);
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
                 //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt

@@ -283,14 +283,14 @@ public class Board {
                 int eigeneFarbe = pPieceValue / Math.abs(pPieceValue);
                 if(pSquares[square] == leeresFeld)
                 {
-                    moves.add(new int[]{startPos,square});
+                    moves.add(new int[]{startPos,square,pPieceValue});
                     addToAttackedPositions(startPos,square,absPieceValue,attackedByColorPositions);
                 }
                 else
                 {
                     int farbeAndereFigur = pSquares[square] / Math.abs(pSquares[square]);
                     if (eigeneFarbe != farbeAndereFigur) {
-                        moves.add(new int[]{startPos,square});
+                        moves.add(new int[]{startPos,square,pPieceValue});
                         addToAttackedPositions(startPos,square,absPieceValue,attackedByColorPositions);
                     }
                     break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
@@ -333,7 +333,7 @@ public class Board {
             // wenn eine eigene Figur auf dem Feld ist, geht der Move nicht und muss dementsprechend auch nicht hinzugefuegt werden
             if(pSquares[neuersquare] == leeresFeld || eigeneFarbe != pSquares[neuersquare] / Math.abs(pSquares[neuersquare]))
             {
-                moves.add(new int[]{startPos,neuersquare});
+                moves.add(new int[]{startPos,neuersquare,pPieceValue});
                 addToAttackedPositions(startPos,neuersquare,absPieceValue,attackedByColorPositions);
                 System.out.println(neuersquare);
 
@@ -354,6 +354,8 @@ public class Board {
         int bewegungsrichtung = -8 * eigeneFarbe; //Weiß geht von höheren Zahlen zu niedrigeren#
         int anfangsReiheAnfang = eigeneFarbe == Piece.white ? 48 : 8;
         int anfangsReiheEnde = anfangsReiheAnfang + 7;
+        int endReiheAnfang = eigeneFarbe == Piece.black ? 48 : 8;
+        int endReiheEnde = endReiheAnfang + 7;
 
 
         /*Dadurch dass Zuerst nach moves gesucht wird, bei denen Bauern andere schlagen (ist immer mindestens ein gleichwertiger Trade),
@@ -362,20 +364,33 @@ public class Board {
 
         //schraeg rechts
         int neuersquare = startPos+bewegungsrichtung+1;
-        if(neuersquare % 8 != 0 && (0 <= neuersquare && neuersquare < 64)) {
-            if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach rechts ein Gegner
+        if(/*neuersquare % 8 != 0 && */(0 <= neuersquare && neuersquare < 64)) {
+            if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
             {
-                moves.add(new int[]{startPos, neuersquare});
-                addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
+                System.out.println("IIIIIIIIIIIIIIIIII");
+                moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                addToAttackedPositions(startPos, neuersquare, absPieceValue, attackedByColorPositions);
+            }
+            else {
+                moves.add(new int[]{startPos, neuersquare,pPieceValue});
+                addToAttackedPositions(startPos, neuersquare, absPieceValue, attackedByColorPositions);
             }
         }
         //schraeg links
         neuersquare = startPos+bewegungsrichtung-1;
-        if(neuersquare+1 % 8 != 0 && (0 <= neuersquare && neuersquare < 64)) {
+        if((0 <= neuersquare && neuersquare < 64)) {
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach links ein Gegner
             {
-                moves.add(new int[]{startPos, neuersquare});
-                addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
+                if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
+                {
+                    System.out.println("IIIIIIIIIIIIIIIIII");
+                    moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                    addToAttackedPositions(startPos, neuersquare, absPieceValue, attackedByColorPositions);
+                }
+                else {
+                    moves.add(new int[]{startPos, neuersquare,pPieceValue});
+                    addToAttackedPositions(startPos, neuersquare, absPieceValue, attackedByColorPositions);
+                }
 
             }
         }
@@ -385,7 +400,7 @@ public class Board {
         neuersquare = startPos+bewegungsrichtung;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new int[]{startPos,neuersquare});
+            moves.add(new int[]{startPos,neuersquare,pPieceValue});
             addToAttackedPositions(startPos,neuersquare,absPieceValue,attackedByColorPositions);
 
         }
@@ -394,7 +409,7 @@ public class Board {
         neuersquare = startPos+bewegungsrichtung*2;
         if((anfangsReiheAnfang <= startPos && startPos <= anfangsReiheEnde) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new int[]{startPos,neuersquare});
+            moves.add(new int[]{startPos,neuersquare,pPieceValue});
             addToAttackedPositions(startPos,neuersquare,absPieceValue,attackedByColorPositions);
 
         }
@@ -443,7 +458,7 @@ public class Board {
      * @param pStartPos
      * @param pEndPos
      */
-    public void execMove(int pPieceValue,int pStartPos, int pEndPos)
+    public void execMove(int pStartPos, int pEndPos,int pPieceValue)
     {
         //TODO: hier fehler aufgetreten, division durch 0 , lieber if anweisung? oder pPiecevalue garnicht 0 ewerden lassen?
         int color = pPieceValue / Math.abs(pPieceValue);
