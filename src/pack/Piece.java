@@ -27,10 +27,15 @@ public class Piece {
         return sheetScale;
     }
 
-    public Image getImage(int XImagePiece,int YImagePiece) {
+    public Image getSubImage(int XImagePiece, int YImagePiece) {
         //diese line nur test
-        //Image img = sheet.getSubimage(XImagePiece,YImagePiece);
         return sheet.getSubimage(XImagePiece,YImagePiece,sheetScale,sheetScale).getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
     }
-    Image sprite;
+
+    public Image getImage(int pValue) {
+        //gibt bild für schwarz/weiß
+        if(pValue>0)
+        return sheet.getSubimage(0,0,sheetScale*5,sheetScale).getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
+        else return sheet.getSubimage(0,sheetScale,sheetScale*5,sheetScale).getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH);
+    }
 }

@@ -16,7 +16,10 @@ public class View extends JFrame implements ActionListener, WindowListener {
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame;
     //   frames, die auf buttonclick lokal und online entstehen
     Controller c;
+    int promotionValue;
     private int pickedMode=0; //fake wert nur um if anweisung zu passen
+
+    Image pieceImage;
 
     public View(){
         super("Schachprogramm");
@@ -102,6 +105,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
                 chatFrame.add(scrollPane);
                 chatFrame.add(tbEnter);
 
+                addPromoWindow(6);
                 chatFrame.setVisible(true);
             }
             if (e.getSource() == bVsBot) {
@@ -179,4 +183,25 @@ public class View extends JFrame implements ActionListener, WindowListener {
 //    }
 
         public int getPickedMode() { return pickedMode; }
+    public void setPromotionValue(int pValue){
+        promotionValue = pValue;
+    }
+    public int getPromotionValue(){
+        return promotionValue;
+    }
+
+    public void addPromoWindow(int pieceValue){
+        JFrame promFrame = new JFrame();
+        promFrame.setTitle("Promotion");
+        promFrame.setBounds(200,200,200,200);
+        promFrame.setLocationRelativeTo(null);
+        promFrame.setLayout(null);
+        promFrame.addWindowListener(this);
+
+        Image i = this.c.board.boardgui.piece.getImage(pieceValue);
+        JLabel label = new JLabel(new ImageIcon(i));
+        promFrame.add(label);
+        promFrame.setVisible(true);
+        }
 }
+

@@ -70,12 +70,12 @@ public class BoardGUI extends JPanel {
         int farbe = pPieceInt / absolutFigurInt;
 
         return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == Piece.black ? piece.getImage(0*piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(0*piece.getSheetScale(), 0);
-            case (Piece.pawn) -> farbe == Piece.black ? piece.getImage(5 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(5 * piece.getSheetScale(), 0);
-            case (Piece.knight) -> farbe == Piece.black ? piece.getImage(3 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(3 * piece.getSheetScale(), 0);
-            case (Piece.bishop) -> farbe == Piece.black ? piece.getImage(2 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(2 * piece.getSheetScale(), 0);
-            case (Piece.rook) -> farbe == Piece.black ? piece.getImage(4 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(4 * piece.getSheetScale(), 0);
-            case (Piece.queen) -> farbe == Piece.black ? piece.getImage(1 * piece.getSheetScale(), piece.getSheetScale()) : piece.getImage(1 * piece.getSheetScale(), 0);
+            case (Piece.king) -> farbe == Piece.black ? piece.getSubImage(0*piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(0*piece.getSheetScale(), 0);
+            case (Piece.pawn) -> farbe == Piece.black ? piece.getSubImage(5 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(5 * piece.getSheetScale(), 0);
+            case (Piece.knight) -> farbe == Piece.black ? piece.getSubImage(3 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(3 * piece.getSheetScale(), 0);
+            case (Piece.bishop) -> farbe == Piece.black ? piece.getSubImage(2 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(2 * piece.getSheetScale(), 0);
+            case (Piece.rook) -> farbe == Piece.black ? piece.getSubImage(4 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(4 * piece.getSheetScale(), 0);
+            case (Piece.queen) -> farbe == Piece.black ? piece.getSubImage(1 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(1 * piece.getSheetScale(), 0);
             default -> null;
         };
 
