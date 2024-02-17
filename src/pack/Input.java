@@ -35,16 +35,16 @@ public class Input extends MouseAdapter {
         startSquare = board.xyToSquare(xE, yE);
         if(board.getPieceFromSquare(startSquare) != 0){
             selectedPieceValue = board.getPieceFromSquare(startSquare);
-            int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
-            LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
-            LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-            LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-            legalMoves = board.generateLegalMoves(startSquare,selectedPieceValue,board.giveBoard(),vonEigenenAngegriffen,vonAnderenAngegriffen,eigenePositionen);
-            if(legalMoves.length == 0) {
-                System.out.println("DIESE FIGUR DARF SICH NICHT BEWEGEN");
-                return;
+            int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+            if(pieceColor == board.view.c.dran) {
+                int farbe = selectedPieceValue / Math.abs(selectedPieceValue);
+                LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
+                LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+                LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
+                legalMoves = board.getLegalMoves(selectedPieceValue, startSquare, board.giveBoard(), vonAnderenAngegriffen, vonEigenenAngegriffen, eigenePositionen);
+                board.setSquare(startSquare, 0);
+                board.view.c.dran =  pieceColor ==Piece.white ? Piece.black : Piece.white;
             }
-            board.setSquare(startSquare, 0);
         }
         else
         {
@@ -60,20 +60,14 @@ public class Input extends MouseAdapter {
 
         if (startSquare != 0) {
             board.boardgui.repaint();     // Swing sagen, dass es repainten soll
-            //der teil ist neu... hab das gefühlt es läuft n bisschen smoother. aber das hauptploblem ist, dass mouseDragged zu wenig oft aufgerufen wird
-            Timer timer = new Timer(10, new ActionListener() {
-                public void actionPerformed(ActionEvent arg0) {
-                    board.boardgui.repaint();
-                }
-            });
-            timer.setRepeats(false);
-            timer.start();
+           // aber das hauptproblem ist, dass mouseDragged zu wenig oft aufgerufen wird
         }
     }
 
     //Wenn die Maus released wird und ein Piece gehalten wird, setze es bei dem Square wo die Maus ist ab.
     @Override
     public void mouseReleased(MouseEvent e) {
+        System.out.println(Runtime.getRuntime().totalMemory() + " uebrig: "+Runtime.getRuntime().freeMemory());
 
         xE = e.getX();  //Zum Abrufen fürs Board
         yE = e.getY();
@@ -81,16 +75,17 @@ public class Input extends MouseAdapter {
         for (int i = 0; i < legalMoves.length; i++) {
             if(legalMoves[i][1] == endSquare)
             {
-                board.execMove(selectedPieceValue,new int[]{startSquare,endSquare,Math.abs(selectedPieceValue)});
+                board.execMove(legalMoves[i][0],legalMoves[i][1],legalMoves[i][2]);
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
-                board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
+                //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
                 return;
             }
         }
-        //Das hier ist die Aktion die geändert werden muss, zurzeit wird einfach nen neues Piece gespawnt wenn der MOve nd ok is
+      // figur wird an die stelle zurückgesetzt und repaint
         board.setSquare(startSquare, selectedPieceValue);
-        board.boardgui.repaint();
+        selectedPieceValue = 0;
+        board.boardgui.repaint(0,0,3000,3000);
     }
 
     public int getstartSquare(){
