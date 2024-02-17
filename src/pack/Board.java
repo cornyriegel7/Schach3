@@ -140,6 +140,10 @@ public class Board {
 
     public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy,LinkedList<Integer> pPositions)
     {
+
+        int color = pPieceValue / Math.abs(pPieceValue);
+
+
         //TODO: das koennte man Laufzeit technisch besser machen, wenn man die Positionslisten einfach nach groesse sortieren wuerde, dann koennte man sich eif ein bestimmten index holen
         int kingPosition = 0;
         for (int i = 0; i < pPositions.size(); i++) {
@@ -159,20 +163,21 @@ public class Board {
                 attacksOnKing.add(attackedByEnemy.get(i));
             }
         }
-        if(attacksOnKing.size() == 0)
-        {
-
-            return generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+        int[][] moves = new int[0][0];
+        if (Math.abs(pPieceValue) == Piece.king) {
+            moves =  generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy);
         }
-        else
+        else if(attacksOnKing.size() == 0)
+        {
+            moves =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+        }
+        else if(attacksOnKing.size() == 1)
         {
             System.out.println("SCHACH");
-            int color = pPieceValue / Math.abs(pPieceValue);
-            if (Math.abs(pPieceValue) == Piece.king) {
-                return generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy);
-            }
+
+
         }
-        return null;
+        return moves;
     }
 
     public int[][] generateLegalKingMoves(int startPosition, int color, int[] pSquares,LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy)
@@ -187,6 +192,17 @@ public class Board {
                     {
                         //System.out.println(newSquare + "is nd ok("+i+")");
                         continue outerloop;
+                    }
+                    else if(Math.abs(attackedByEnemy.get(j)[1] - startPosition) < 10 && (attackedByEnemy.get(j)[2] == Piece.queen || attackedByEnemy.get(j)[2] == Piece.rook|| attackedByEnemy.get(j)[2] == Piece.bishop))
+                    {
+                        printMove(attackedByEnemy.get(j));
+                        int attackDirection = startPosition - attackedByEnemy.get(j)[0];
+                        System.out.println(attackDirection);
+                        System.out.println((newSquare - startPosition));
+                        if(attackDirection % (newSquare - startPosition) == 0)
+                        {
+                            continue outerloop;
+                        }
                     }
                 }
 
