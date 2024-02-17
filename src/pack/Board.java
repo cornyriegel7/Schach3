@@ -217,7 +217,7 @@ public class Board {
                     }
                 }
 
-                moves.add(new int[]{startPosition,newSquare,Piece.king});
+                moves.add(new int[]{startPosition,newSquare,Piece.king * color});
                 addToAttackedPositions(startPosition,newSquare,Piece.king,attackedByOwn);
             }
         }
@@ -590,7 +590,8 @@ public class Board {
             for (int i = 0; i < enemyAttackedPositions.size(); i++) {
                 if(enemyAttackedPositions.get(i)[0] == endPosition)
                 {
-                    enemyAttackedPositions.remove();
+                    enemyAttackedPositions.remove(i);
+                    i-=1;
                 }
             }
 
