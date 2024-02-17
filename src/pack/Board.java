@@ -1,6 +1,7 @@
 package pack;
 import java.awt.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Board {
     //Gameplay Zeug
@@ -169,14 +170,29 @@ public class Board {
         }
         else if(attacksOnKing.size() == 0)
         {
-            moves =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+
         }
         else if(attacksOnKing.size() == 1)
         {
+            System.out.println("SCHACH1");
+            moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+            LinkedList<int[]> legalMoves = new LinkedList<>();
             System.out.println("SCHACH");
+            int[] allowedSquares = generateAllowedSquares(attacksOnKing.get(0));
 
-
+            for (int i = 0; i < moves.length; i++) {
+                for (int j = 0; j < allowedSquares.length; j++) {
+                    if(moves[i][1] == allowedSquares[j])
+                    {
+                        legalMoves.add(moves[i]);
+                        break;
+                    }
+                }
+            }
+            moves = legalMoves.toArray(new int[0][0]);
         }
+
         return moves;
     }
 
@@ -195,10 +211,7 @@ public class Board {
                     }
                     else if(Math.abs(attackedByEnemy.get(j)[1] - startPosition) < 10 && (attackedByEnemy.get(j)[2] == Piece.queen || attackedByEnemy.get(j)[2] == Piece.rook|| attackedByEnemy.get(j)[2] == Piece.bishop))
                     {
-                        printMove(attackedByEnemy.get(j));
                         int attackDirection = startPosition - attackedByEnemy.get(j)[0];
-                        System.out.println(attackDirection);
-                        System.out.println((newSquare - startPosition));
                         if(attackDirection % (newSquare - startPosition) == 0)
                         {
                             continue outerloop;
@@ -211,6 +224,37 @@ public class Board {
             }
         }
         return moves.toArray(new int[0][0]);
+    }
+
+    private int[] generateAllowedSquares(int[] attackOnKing)
+    {
+        LinkedList<Integer> squares = new LinkedList<>();
+        squares.add(attackOnKing[0]); // Das Square von dem der Keonig angegriffen wird is immer dabei
+        if((attackOnKing[2] == Piece.queen || attackOnKing[2] == Piece.rook|| attackOnKing[2] == Piece.bishop))
+        {
+            int attackDirection = attackOnKing[1] - attackOnKing[0];
+            int vorzeichen = attackDirection / Math.abs(attackDirection);
+            if(attackDirection % 9 == 0)
+            {
+                attackDirection /= (attackDirection /= 9);
+                attackDirection *= vorzeichen;
+            }
+            else if(attackDirection % 8 == 0)
+            {
+                attackDirection /= (attackDirection /= 8);
+                attackDirection *= vorzeichen;
+            }
+            else if(attackDirection % 7 == 0)
+            {
+                attackDirection /= (attackDirection /= 7);
+                attackDirection *= vorzeichen;
+            }
+            for(int i = attackOnKing[0] + attackDirection;i != attackOnKing[1]; i += attackDirection)
+            {
+                squares.add(i);
+            }
+        }
+        return squares.stream().mapToInt(Integer::intValue).toArray();
     }
 
     /**
