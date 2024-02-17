@@ -41,7 +41,7 @@ public class Input extends MouseAdapter {
                 LinkedList<Integer> eigenePositionen = farbe == Piece.white ? board.whitePositions : board.blackPositions;
                 LinkedList<int[]> vonAnderenAngegriffen = farbe == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
                 LinkedList<int[]> vonEigenenAngegriffen = farbe == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-                legalMoves = board.getLegalMoves(selectedPieceValue, startSquare, board.giveBoard(), vonAnderenAngegriffen, vonEigenenAngegriffen, eigenePositionen);
+                legalMoves = board.generateLegalMoves( startSquare,selectedPieceValue, board.giveBoard(),vonEigenenAngegriffen, vonAnderenAngegriffen,  eigenePositionen);
                 board.setSquare(startSquare, 0);
                 board.view.c.dran =  pieceColor ==Piece.white ? Piece.black : Piece.white;
             }

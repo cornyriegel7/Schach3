@@ -265,7 +265,7 @@ public class Board {
      * @param pPositions
      * @return
      */
-    public int[][] getLegalMoves(int pPieceValue, int startPosition, int[] pSquares,
+    /*public int[][] getLegalMoves(int pPieceValue, int startPosition, int[] pSquares,
                                  LinkedList<int[]> durchAndereFarbeAngegriffeneFelder,LinkedList<int[]> durchEigeneFarbeAngegriffeneFelder,
                                  LinkedList<Integer> pPositions)
     {
@@ -305,14 +305,14 @@ public class Board {
             else
             {
                 //TODO: gucken ob es Abzugsschach geben koennte
-            }*/
+            }
         }
         else
         {
             return pseudolegalMoves;
         }
         return null;
-    }
+    }*/
 
 
 
@@ -387,13 +387,13 @@ public class Board {
                 addToAttackedPositions(startPos,square,absPieceValue,attackedByColorPositions);
                 if(pSquares[square] == leeresFeld)
                 {
-                    moves.add(new int[]{startPos,square,absPieceValue});
+                    moves.add(new int[]{startPos,square,pPieceValue});
                 }
                 else
                 {
                     int farbeAndereFigur = pSquares[square] / Math.abs(pSquares[square]);
                     if (eigeneFarbe != farbeAndereFigur) {
-                        moves.add(new int[]{startPos,square,absPieceValue});
+                        moves.add(new int[]{startPos,square,pPieceValue});
                     }
                     break; //in jedem Fall kann die Figur nachdem sie auf eine andere Figur getroffen ist nicht weiterlaufen
                 }
@@ -432,7 +432,7 @@ public class Board {
             // wenn eine eigene Figur auf dem Feld ist, geht der Move nicht und muss dementsprechend auch nicht hinzugefuegt werden
             addToAttackedPositions(startPos, neuersquare, absPieceValue, attackedByColorPositions);
             if(pSquares[neuersquare] == leeresFeld || (eigeneFarbe != pSquares[neuersquare] / Math.abs(pSquares[neuersquare]))) {
-                moves.add(new int[]{startPos, neuersquare, Piece.knight});
+                moves.add(new int[]{startPos, neuersquare, Piece.knight * eigeneFarbe});
             }
 
 
@@ -450,6 +450,8 @@ public class Board {
         int bewegungsrichtung = -8 * eigeneFarbe; //Weiß geht von höheren Zahlen zu niedrigeren#
         int anfangsReiheAnfang = eigeneFarbe == Piece.white ? 48 : 8;
         int anfangsReiheEnde = anfangsReiheAnfang + 7;
+        int endReiheAnfang = eigeneFarbe == Piece.white ? 8 : 48;
+        int endReiheEnde = endReiheAnfang + 7;
 
 
         /*Dadurch dass Zuerst nach moves gesucht wird, bei denen Bauern andere schlagen (ist immer mindestens ein gleichwertiger Trade),
@@ -462,7 +464,13 @@ public class Board {
             addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach rechts ein Gegner
             {
-                moves.add(new int[]{startPos, neuersquare,Piece.pawn});
+                if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
+                {
+                    moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                }
+                else
+                {moves.add(new int[]{startPos, neuersquare,Piece.pawn * eigeneFarbe});}
+
             }
         }
         //schraeg links
@@ -471,7 +479,12 @@ public class Board {
             addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach links ein Gegner
             {
-                moves.add(new int[]{startPos, neuersquare,Piece.pawn});
+                if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
+                {
+                    moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                }
+                else
+                {moves.add(new int[]{startPos, neuersquare,Piece.pawn * eigeneFarbe});}
 
 
             }
@@ -482,15 +495,19 @@ public class Board {
         neuersquare = startPos+bewegungsrichtung;
         if((0 <= neuersquare && neuersquare < 64) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new int[]{startPos,neuersquare,Piece.pawn});
-
+            if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
+            {
+                moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+            }
+            else
+            {moves.add(new int[]{startPos, neuersquare,Piece.pawn * eigeneFarbe});}
         }
 
         // geradeaus 2
         neuersquare = startPos+bewegungsrichtung*2;
         if((anfangsReiheAnfang <= startPos && startPos <= anfangsReiheEnde) && pSquares[neuersquare] == leeresFeld)
         {
-            moves.add(new int[]{startPos,neuersquare,Piece.pawn});
+            moves.add(new int[]{startPos,neuersquare,Piece.pawn * eigeneFarbe});
         }
 
         return moves.toArray(new int[0][0]);
@@ -534,13 +551,13 @@ public class Board {
     /**
      * Diese Version führt einen Move aus, AUF DEM HAUPTBOARD NICHT FUER MINIMAX
      * @param pPieceValue der Figur Value der Figur die gezogen werden soll
-     * @param move
+     * @param
      */
-    public void execMove(int pPieceValue,int[] move)
+    public void execMove(int pStartPosition, int pEndPosition,int pPieceValue)
     {
         int color = pPieceValue / Math.abs(pPieceValue);
-        int startPosition = move[0];
-        int endPosition = move[1];
+        int startPosition = pStartPosition;
+        int endPosition = pEndPosition;
 
 
 
@@ -560,7 +577,7 @@ public class Board {
 
 
         LinkedList<Integer> positions = color == Piece.white ? whitePositions : blackPositions;
-        positions.remove((Integer) startPosition);
+        positions.removeFirstOccurrence(/*(Integer)*/ startPosition);
         positions.add(endPosition);
 
 
