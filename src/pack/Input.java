@@ -76,7 +76,6 @@ public class Input extends MouseAdapter {
                 board.execMove(legalMoves[i][0],legalMoves[i][1],legalMoves[i][2]);
                 int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
                 board.view.c.dran =  pieceColor == Piece.white ? Piece.black : Piece.white;
-                System.out.println(board.view.c.dran);
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
 
