@@ -175,10 +175,8 @@ public class Board {
         }
         else if(attacksOnKing.size() == 1)
         {
-            System.out.println("SCHACH1");
             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
             LinkedList<int[]> legalMoves = new LinkedList<>();
-            System.out.println("SCHACH");
             int[] allowedSquares = generateAllowedSquares(attacksOnKing.get(0));
 
             for (int i = 0; i < moves.length; i++) {
