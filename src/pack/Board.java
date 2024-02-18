@@ -556,39 +556,27 @@ public class Board {
     public void execMove(int pStartPosition, int pEndPosition,int pPieceValue)
     {
         int color = pPieceValue / Math.abs(pPieceValue);
-        int startPosition = pStartPosition;
-        int endPosition = pEndPosition;
-
-
-
-
-
         LinkedList<int[]> ownAttackedPositions = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
-        //System.out.println("Entfernt");
+        LinkedList<int[]> enemyAttackedPositions = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
+        LinkedList<Integer> ownPositions = color == Piece.white ? whitePositions : blackPositions;
+        LinkedList<Integer> enemyPositions = color == Piece.black ? whitePositions : blackPositions;
+
         for (int i = 0; i < ownAttackedPositions.size(); i++) {
-            if(ownAttackedPositions.get(i)[0] == startPosition)
+            if(ownAttackedPositions.get(i)[0] == pStartPosition || (ownAttackedPositions.get(i)[1] == pStartPosition))//bisherige AttackedPositions der bewegten Figur entfernen
             {
                 //(ownAttackedPositions.get(i));
                 ownAttackedPositions.remove(i);
                 i-=1; //ein element weniger -> index muss ein weniger sein
             }
+
         }
-
-
-
-        LinkedList<Integer> positions = color == Piece.white ? whitePositions : blackPositions;
-        positions.removeFirstOccurrence(/*(Integer)*/ startPosition);
-        positions.add(endPosition);
-
-
-
-        LinkedList<int[]> enemyAttackedPositions = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
-        if(Square[endPosition] != leeresFeld)
+        //falls eine gegnerische Figur geschlagen wird, werden ihre AttackedPositionsEntfernt
+        if(Square[pEndPosition] != leeresFeld)
         {
             //Wenn es eine Figur nicht mehr gibt, kann sie auch keine Felder mehr angreifen
 
             for (int i = 0; i < enemyAttackedPositions.size(); i++) {
-                if(enemyAttackedPositions.get(i)[0] == endPosition)
+                if(enemyAttackedPositions.get(i)[0] == pEndPosition)
                 {
                     enemyAttackedPositions.remove(i);
                     i-=1;
@@ -596,16 +584,60 @@ public class Board {
             }
 
             //Figur wird aus den Positionen rausgenommen
-            LinkedList<Integer> Position = color == Piece.black ? whitePositions : blackPositions;
-            Position.remove((Integer) endPosition); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
+            enemyPositions.remove((Integer) pEndPosition); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
         }
-        Square[endPosition] = pPieceValue;
-        Square[startPosition] = leeresFeld;
+        //Zug im Square array eintragen
+        Square[pEndPosition] = pPieceValue;
+        Square[pStartPosition] = leeresFeld;
+        //Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
+        outerloop: for (int i = 0; i < ownPositions.size(); i++) {
+            int ownPosition = ownPositions.get(i);
+            int absPieceValue = Math.abs(Square[ownPosition]);
+            if(ownPosition != pStartPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
+            {
+                int attackDirection = pStartPosition - ownPositions.get(i);
+                int vorzeichen = attackDirection / Math.abs(attackDirection);
+                int[] attackDirections;
+                switch (Math.abs(Square[ownPositions.get(i)]))
+                {
+                    case(Piece.rook):attackDirections = new int[]{8,1};break;
+                    case(Piece.bishop):attackDirections = new int[]{9,7};break;
+                    default:attackDirections = new int[]{9,8,7,1};break;
+                }
 
-        generateLegalMoves(endPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,positions);
+                for (int j = 0; j < attackDirections.length; j++) {
+                    if(attackDirection % attackDirections[j] == 0)
+                    {
+                        if(Math.abs(attackDirections[j])!=1 || (Math.abs(attackDirections[j]) == 1 && ownPosition/8 == pStartPosition /8)) {
+                            if (Math.abs(attackDirection) != Math.abs(attackDirections[j])) {
+                                attackDirection /= attackDirections[j];
+                                //attackDirection *= vorzeichen;
+                            }
+                            for (int k = ownPosition + attackDirection; k != pStartPosition; k += attackDirection) {
+                                System.out.println(k);
+                                if (Square[k] != leeresFeld) {
+                                    continue outerloop;
+                                }
+                            }
+                            int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
+                            for (int k = 0; k < neugeneriert.length; k++) {
+                                System.out.print("neu");
+                                printMove(neugeneriert[k]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ownPositions.removeFirstOccurrence(/*(Integer)*/ pStartPosition);
+        ownPositions.add(pEndPosition);
+
+        generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions);
+
 
         //auskommentiert weils endlosschleife iwie macht
-      /*  for (int i = 0; i < ownAttackedPositions.size(); i++) {
+      /*  for (int i = 0; i < ownAttackedPositions.siz
+      e(); i++) {
             if(ownAttackedPositions.get(i)[1] == startPosition && ownAttackedPositions.get(i)[2]!= Piece.pawn && ownAttackedPositions.get(i)[2]!= Piece.knight && ownAttackedPositions.get(i)[2]!= Piece.king)
             {
                 generateLegalMoves(ownAttackedPositions.get(i)[0],pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,positions);
