@@ -13,7 +13,9 @@ public class View extends JFrame implements ActionListener, WindowListener {
     JTextArea taChat;
     JTextField tbEnter;
     JScrollPane scrollPane;
-    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame;
+    JComboBox<String> dropdown;
+
+    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame;
     //   frames, die auf buttonclick lokal und online entstehen
     Controller c;
     int promotionValue;
@@ -70,6 +72,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
         if(pickedMode==0) {
             c.createBoard();
             //fenster: lokaler gegner
+            addPromoWindow(6);
             if (e.getSource() == bVsLokal) {
                 pickedMode = 1; //modus:1,2 oder 3
 
@@ -105,7 +108,6 @@ public class View extends JFrame implements ActionListener, WindowListener {
                 chatFrame.add(scrollPane);
                 chatFrame.add(tbEnter);
 
-                addPromoWindow(6);
                 chatFrame.setVisible(true);
             }
             if (e.getSource() == bVsBot) {
@@ -191,17 +193,31 @@ public class View extends JFrame implements ActionListener, WindowListener {
     }
 
     public void addPromoWindow(int pieceValue){
-        JFrame promFrame = new JFrame();
+        promFrame = new JFrame();
         promFrame.setTitle("Promotion");
-        promFrame.setBounds(200,200,200,200);
+        promFrame.setBounds(200,200,500,200);
         promFrame.setLocationRelativeTo(null);
         promFrame.setLayout(null);
         promFrame.addWindowListener(this);
 
-        Image i = this.c.board.boardgui.piece.getImage(pieceValue);
-        JLabel label = new JLabel(new ImageIcon(i));
-        promFrame.add(label);
+        String[] options = {"Dame", "Turm", "Läufer", "Springer"};
+        dropdown = new JComboBox<>(options);
+        dropdown.addActionListener(this);
+        dropdown.setBounds(50,50,300,30);
+        dropdown.setVisible(true);
+
+        promFrame.add(dropdown);
         promFrame.setVisible(true);
+        }
+        public int getPromotionInt()
+        {
+            switch ((String)dropdown.getSelectedItem())
+            {
+                case("Springer"):return Piece.knight;
+                case("Turm"):return Piece.rook;
+                case("Läufer"):return Piece.bishop;
+                default: return Piece.queen;
+            }
         }
 }
 

@@ -466,7 +466,7 @@ public class Board {
             {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
                 {
-                    moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                    moves.add(new int[]{startPos, neuersquare,view.getPromotionInt() * eigeneFarbe});
                 }
                 else
                 {moves.add(new int[]{startPos, neuersquare,Piece.pawn * eigeneFarbe});}
@@ -481,7 +481,7 @@ public class Board {
             {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
                 {
-                    moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                    moves.add(new int[]{startPos, neuersquare,view.getPromotionInt() * eigeneFarbe});
                 }
                 else
                 {moves.add(new int[]{startPos, neuersquare,Piece.pawn * eigeneFarbe});}
@@ -497,7 +497,7 @@ public class Board {
         {
             if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
             {
-                moves.add(new int[]{startPos, neuersquare,Piece.queen * eigeneFarbe});
+                moves.add(new int[]{startPos, neuersquare,view.getPromotionInt() * eigeneFarbe});
             }
             else
             {moves.add(new int[]{startPos, neuersquare,Piece.pawn * eigeneFarbe});}
@@ -619,11 +619,11 @@ public class Board {
                                     continue outerloop;
                                 }
                             }
-                            int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
+                            /*int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
                             for (int k = 0; k < neugeneriert.length; k++) {
                                 System.out.print("neu");
                                 printMove(neugeneriert[k]);
-                            }
+                            }*/
                         }
                     }
                 }

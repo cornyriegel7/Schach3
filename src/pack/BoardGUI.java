@@ -28,11 +28,20 @@ public class BoardGUI extends JPanel {
             Graphics2D g2d = (Graphics2D) g;
 
             for(int r = 0; r < 8; r++){
-                for(int c = 0; c < 8; c++){
+                outerloop:for(int c = 0; c < 8; c++){
                     g2d.setColor((c+r) % 2 == 0 ? new Color(205, 133, 63) : new Color(101, 67, 33));
+                    for (int i = 0; i < input.legalMoves.length; i++) {
+                        if(board.xyToSquare(r,c) == input.legalMoves[i][1])
+                        {
+                            paintSquare(input.legalMoves[i][1]);
+                            continue outerloop;
+                        }
+                    }
                     g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
                 }
             }
+
+
 
             for(int i = 0; (i < Square.length); i++) {
                 squareIndex = i;
@@ -49,6 +58,7 @@ public class BoardGUI extends JPanel {
 
         //Bestimmtes Feld(pSquare Index) färben(um z.B. available Moves anzuzeigen)
         public void paintSquare(int pSquareInt) {
+        System.out.println("wRAAAAH MALEN");
             Graphics g = getGraphics();
             Graphics2D g2d = (Graphics2D) g;
 

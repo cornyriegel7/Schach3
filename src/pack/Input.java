@@ -14,7 +14,7 @@ public class Input extends MouseAdapter {
     public int startSquare;  //Index Startposition vom Move
     public static int xE, yE;//Koordinaten der Maus zum Abrufen fürs board
 
-    private int[][] legalMoves;
+    public int[][] legalMoves;
     private int endSquare;
 
     public Input(Board pBoard){
@@ -74,13 +74,14 @@ public class Input extends MouseAdapter {
             if(legalMoves[i][1] == endSquare)
             {
                 board.execMove(legalMoves[i][0],legalMoves[i][1],legalMoves[i][2]);
+                //legalMoves = null;
                 int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
                 board.view.c.dran =  pieceColor == Piece.white ? Piece.black : Piece.white;
                 selectedPieceValue = 0;
                 board.boardgui.repaint();
 
                 //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
-                return;
+
             }
         }
       // figur wird an die stelle zurückgesetzt und repaint
