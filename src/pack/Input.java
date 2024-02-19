@@ -14,7 +14,7 @@ public class Input extends MouseAdapter {
     public int startSquare;  //Index Startposition vom Move
     public static int xE, yE;//Koordinaten der Maus zum Abrufen fürs board
 
-    public int[][] legalMoves;
+    public static int[][] legalMoves;
     private int endSquare;
 
     public Input(Board pBoard){

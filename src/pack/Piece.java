@@ -32,6 +32,7 @@ public class Piece {
         return sheet.getSubimage(XImagePiece,YImagePiece,sheetScale,sheetScale).getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH); //Die ersten beiden legen den Teil des Bildes fest, der ausgeschnitten wird und die letzten beiden die Größe
     }
 
+
     public Image getImage(int pValue) {
         //gibt bild für schwarz/weiß
         if(pValue>0)
