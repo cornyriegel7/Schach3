@@ -718,7 +718,7 @@ public class Board {
     /**
      * setter-methode um das square-array zu verändern mit
      * @param pIndex an welchem square-index
-     * @param pValue welchen wert (Piece)
+     * @param //Value welchen wert (Piece)
      */
     public int getSquare(int pIndex){
         return Square[pIndex];
