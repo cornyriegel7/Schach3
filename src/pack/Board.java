@@ -213,7 +213,7 @@ public class Board {
                         int moveDirection = newSquare - startPosition;
                         for (int k = 0; k < attacksOnKing.length; k++) {
                             int attackDirection = attacksOnKing[k][0] - startPosition;
-                            if(attackDirection == moveDirection)
+                            if(attackDirection == moveDirection && newSquare != attacksOnKing[k][0])
                             {
                                 continue outerloop;
                             }
