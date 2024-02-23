@@ -220,8 +220,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
     {
         //Prüft ob die Textfelder empty sind
         if(ipField.getText().equals("") == false && portField.getText().equals("") == false) {
-           //Prüft ob im Port-Textfield nur Zahlen stehen
-            if(portField.getText().matches("\\d")) {
+           //Prüft ob im Port-Textfield nur Zahlen stehen  (hoffe es klappt :( )
+            if(isNumeric(portField.getText()) == true) {
                 pickedMode = 2;
                 ip = ipField.getText();
                 port = Integer.parseInt(portField.getText());
@@ -260,6 +260,15 @@ public class View extends JFrame implements ActionListener, WindowListener {
         else
         {
             System.out.println("Gib eine IP und einen Port ein du Knecht");
+        }
+    }
+
+    public static boolean isNumeric(String value) {
+        try {
+            int number = Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
