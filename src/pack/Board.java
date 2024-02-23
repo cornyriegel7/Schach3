@@ -624,8 +624,8 @@ public class Board {
                                     continue outerloop;
                                 }
                             }
-                            /*int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
-                            for (int k = 0; k < neugeneriert.length; k++) {
+                            int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
+                            /*for (int k = 0; k < neugeneriert.length; k++) {
                                 System.out.print("neu");
                                 printMove(neugeneriert[k]);
                             }*/
@@ -634,9 +634,40 @@ public class Board {
                 }
             }
         }
+
+        //Angriffe, die daurch verhindert werden, dass das Feld besetzt wird loeschen
+        LinkedList<int[]> blockedMoves = new LinkedList<>();
+        for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+            int attackEndPosition = enemyAttackedPositions.get(i)[1];
+            int absAttackPieceValue = Math.abs(enemyAttackedPositions.get(i)[2]);
+            if(absAttackPieceValue == Piece.queen || absAttackPieceValue== Piece.rook|| absAttackPieceValue == Piece.bishop)
+            {
+                if(attackEndPosition == pEndPosition)
+                {
+                    blockedMoves.add(enemyAttackedPositions.get(i));
+                }
+            }
+        }
+        for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+            for (int j = 0; j < blockedMoves.size(); j++) {
+                if(blockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0] )
+                {
+                    System.out.println("remove");
+                    printMove(enemyAttackedPositions.get(i));
+                    enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
+                    i -= 1;
+                }
+            }
+        }
+        for (int i = 0; i < blockedMoves.size(); i++) {
+            generateLegalMoves(blockedMoves.get(i)[0],Square[blockedMoves.get(i)[0]],Square,enemyAttackedPositions,ownAttackedPositions,enemyPositions);
+        }
+
+
         ownPositions.removeFirstOccurrence(/*(Integer)*/ pStartPosition);
         ownPositions.add(pEndPosition);
 
+        //neue Legalmoves von der neuen Figur vom neuen Feld saus
         generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions);
 
 
