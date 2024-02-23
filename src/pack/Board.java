@@ -247,6 +247,11 @@ public class Board {
                 attackDirection /= (attackDirection /= 7);
                 attackDirection *= vorzeichen;
             }
+            else
+            {
+                attackDirection /= (attackDirection /= 1);
+                attackDirection *= vorzeichen;
+            }
             for(int i = attackOnKing[0] + attackDirection;i != attackOnKing[1]; i += attackDirection)
             {
                 squares.add(i);
@@ -614,7 +619,7 @@ public class Board {
                                 //attackDirection *= vorzeichen;
                             }
                             for (int k = ownPosition + attackDirection; k != pStartPosition; k += attackDirection) {
-                                System.out.println(k);
+                                //System.out.println(k);
                                 if (Square[k] != leeresFeld) {
                                     continue outerloop;
                                 }
