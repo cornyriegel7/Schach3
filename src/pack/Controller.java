@@ -9,8 +9,15 @@ public class Controller {
         view = pView;
         dran = Piece.white;
         //todo: noch nicht final ,sowohl client als auch server brauchen noch args. außerdem server als interface hinzufügen
-        //chatServer = new Chatserver();
-        //chatClient = new ChatClient();
+        createChatClient();
+    }
+
+    public void createChatClient()
+    {
+        if(view.getPickedMode() == 2){
+            //chatServer = new Chatserver();
+            chatClient = new ChatClient(view.getIp(), view.getPort(), this);
+        }
     }
     public void createBoard() {
         board = new Board(view);

@@ -8,25 +8,28 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class View extends JFrame implements ActionListener, WindowListener {
-    JButton bVsBot, bVsLokal, bVsOnline, bSend;
+    JButton bVsBot, bVsLokal, bVsOnline, bSend, submitButton;
     JLabel lTitle;
     JTextArea taChat;
     JTextField tbEnter;
     JScrollPane scrollPane;
     JComboBox<String> dropdown;
 
-    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame;
+    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, portFrame;
     //   frames, die auf buttonclick lokal und online entstehen
-    Controller c;
+    static Controller c;
     int promotionValue;
-    private int pickedMode=0; //fake wert nur um if anweisung zu passen
+    private int pickedMode=0;//fake wert nur um if anweisung zu passen
+    private String ip = "";
+    private int port = 0;
 
     Image pieceImage;
 
+    private JTextField ipField;
+    private JTextField portField;
+
     public View(){
         super("Schachprogramm");
-
-        c = new Controller(this);
 
         setSize(500,400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,6 +62,10 @@ public class View extends JFrame implements ActionListener, WindowListener {
         bSend.setBounds(110,625,100,30);
         bSend.addActionListener(this);
 
+        submitButton = new JButton("Submit");
+        //submitButton.setBounds(x,y,width,height); falls schöner machen
+        submitButton.addActionListener(this);
+
         taChat = new JTextArea();
         taChat.setEditable(false);
 
@@ -70,65 +77,38 @@ public class View extends JFrame implements ActionListener, WindowListener {
     }
     public void actionPerformed(ActionEvent e) {
         if(pickedMode==0) {
-            c.createBoard();
+
             //fenster: lokaler gegner
-            addPromoWindow(6);
+
             if (e.getSource() == bVsLokal) {
-                pickedMode = 1; //modus:1,2 oder 3
-
-                fVsLokal = new JFrame();
-                fVsLokal.setTitle("Gegen Lokalen Gegner");
-                fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
-                fVsLokal.setLayout(new GridBagLayout());
-                fVsLokal.setMinimumSize(new Dimension(1000, 1000));
-                fVsLokal.setLocationRelativeTo(null);
-                fVsLokal.add(c.board.boardgui);
-                fVsLokal.addWindowListener(this);
-                fVsLokal.setVisible(true);
+                createVsLokal();
+                addPromoWindow(6);
             }
+
+            //Für Onlinespiel
             if (e.getSource() == bVsOnline) {
-                pickedMode = 2;
-
-                fVsOnline = new JFrame();
-                fVsOnline.setTitle("Gegen Online Gegner");
-                fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
-                fVsOnline.setLayout(new GridBagLayout());
-                fVsOnline.setMinimumSize(new Dimension(1000, 1000));
-                fVsOnline.setLocationRelativeTo(null);
-                fVsOnline.add(c.board.boardgui);
-                fVsOnline.addWindowListener(this);
-                fVsOnline.setVisible(true);
-
-                chatFrame = new JFrame();
-                chatFrame.setTitle("Chat");
-                chatFrame.setBounds(1275, 20, 250, 700);
-                chatFrame.setLayout(null);
-
-                chatFrame.add(bSend);
-                chatFrame.add(scrollPane);
-                chatFrame.add(tbEnter);
-
-                chatFrame.setVisible(true);
+                addPortWindow();
             }
+
+            if (e.getSource() == submitButton) {
+                submitButtonClicked();
+            }
+
+            //Für Spiel gegen Bot
             if (e.getSource() == bVsBot) {
-                pickedMode = 3;
-
-                fVsBot = new JFrame();
-                fVsBot.setTitle("Gegen Bot");
-                fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
-                fVsBot.setLayout(new GridBagLayout());
-                fVsBot.setMinimumSize(new Dimension(1000, 1000));
-                fVsBot.setLocationRelativeTo(null);
-                fVsBot.addWindowListener(this);
-                fVsBot.add(c.board.boardgui);
-                fVsBot.setVisible(true);
+               createVsBot();
+                addPromoWindow(6);
             }
+
         }
+
 
         if(e.getSource()==bSend) {
             this.appendToArea(tbEnter.getText());
         }
-        }
+    }
+
+
 
     @Override
     public void windowOpened(WindowEvent e) {
@@ -166,6 +146,142 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
     }
 
+    //Createt das promframe
+    public void addPromoWindow(int pieceValue){
+        promFrame = new JFrame();
+        promFrame.setTitle("Promotion");
+        promFrame.setBounds(200,200,500,200);
+        promFrame.setLocationRelativeTo(null);
+        promFrame.setLayout(null);
+        promFrame.addWindowListener(this);
+
+        String[] options = {"Dame", "Turm", "Läufer", "Springer"};
+        dropdown = new JComboBox<>(options);
+        dropdown.addActionListener(this);
+        dropdown.setBounds(50,50,300,30);
+        dropdown.setVisible(true);
+
+        promFrame.add(dropdown);
+        promFrame.setVisible(true);
+    }
+
+    //Createt das lokale Spielfeld
+    public void createVsLokal()
+    {
+        pickedMode = 1; //modus:1,2 oder 3
+
+        c = new Controller(this);
+        c.createBoard();
+
+        fVsLokal = new JFrame();
+        fVsLokal.setTitle("Gegen Lokalen Gegner");
+        fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
+        fVsLokal.setLayout(new GridBagLayout());
+        fVsLokal.setMinimumSize(new Dimension(1000, 1000));
+        fVsLokal.setLocationRelativeTo(null);
+        fVsLokal.add(c.board.boardgui);
+        fVsLokal.addWindowListener(this);
+        fVsLokal.setVisible(true);
+    }
+
+    //createt das Porteingabeframe
+    public void addPortWindow(){
+
+        portFrame = new JFrame();
+        portFrame.setTitle("IP und Port Eingabe");
+        portFrame.setSize(300, 200);
+        portFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        portFrame.setLocationRelativeTo(null);
+
+        // Layout setzen
+        portFrame.setLayout(new GridLayout(3, 2));
+
+        // IP Label und Textfeld hinzufügen
+        portFrame.add(new JLabel("IP: "));
+        ipField = new JTextField();
+        ipField.setText(null);
+        portFrame.add(ipField);
+
+        // Port Label und Textfeld hinzufügen
+        portFrame.add(new JLabel("Port: "));
+        portField = new JTextField();
+        portField.setText(null);
+        portFrame.add(portField);
+
+        // Submit Button hinzufügen
+        submitButton.addActionListener(this);
+        portFrame.add(submitButton);
+
+        portFrame.setVisible(true);
+    }
+
+    //createt das Onlinespielfeld
+    public void submitButtonClicked()
+    {
+        //Prüft ob die Textfelder empty sind
+        if(ipField.getText().equals("") == false && portField.getText().equals("") == false) {
+           //Prüft ob im Port-Textfield nur Zahlen stehen
+            if(portField.getText().matches("\\d")) {
+                pickedMode = 2;
+                ip = ipField.getText();
+                port = Integer.parseInt(portField.getText());
+                portFrame.dispose();
+
+                c = new Controller(this);
+                c.createBoard();
+
+                fVsOnline = new JFrame();
+                fVsOnline.setTitle("Gegen Online Gegner");
+                fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
+                fVsOnline.setLayout(new GridBagLayout());
+                fVsOnline.setMinimumSize(new Dimension(1000, 1000));
+                fVsOnline.setLocationRelativeTo(null);
+                fVsOnline.add(c.board.boardgui);
+                fVsOnline.addWindowListener(this);
+                fVsOnline.setVisible(true);
+
+                chatFrame = new JFrame();
+                chatFrame.setTitle("Chat");
+                chatFrame.setBounds(1275, 20, 250, 700);
+                chatFrame.setLayout(null);
+
+                chatFrame.add(bSend);
+                chatFrame.add(scrollPane);
+                chatFrame.add(tbEnter);
+
+                chatFrame.setVisible(true);
+
+                addPromoWindow(6);
+            }
+            else {
+                System.out.println("Es dürfen NUR Zahlen im Port stehen du Knecht");
+            }
+        }
+        else
+        {
+            System.out.println("Gib eine IP und einen Port ein du Knecht");
+        }
+    }
+
+    //createt das Botspielfeld
+    public void createVsBot()
+    {
+        pickedMode = 3;
+
+        c = new Controller(this);
+        c.createBoard();
+
+        fVsBot = new JFrame();
+        fVsBot.setTitle("Gegen Bot");
+        fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
+        fVsBot.setLayout(new GridBagLayout());
+        fVsBot.setMinimumSize(new Dimension(1000, 1000));
+        fVsBot.setLocationRelativeTo(null);
+        fVsBot.addWindowListener(this);
+        fVsBot.add(c.board.boardgui);
+        fVsBot.setVisible(true);
+    }
+
     public void appendToArea(String pText) {
             taChat.append("Du: " + pText + "\n");
         }
@@ -184,7 +300,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
 //         pframe.setVisible(true);
 //    }
 
-        public int getPickedMode() { return pickedMode; }
+    //Get-Methoden
+    public int getPickedMode() { return pickedMode; }
     public void setPromotionValue(int pValue){
         promotionValue = pValue;
     }
@@ -192,24 +309,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
         return promotionValue;
     }
 
-    public void addPromoWindow(int pieceValue){
-        promFrame = new JFrame();
-        promFrame.setTitle("Promotion");
-        promFrame.setBounds(200,200,500,200);
-        promFrame.setLocationRelativeTo(null);
-        promFrame.setLayout(null);
-        promFrame.addWindowListener(this);
-
-        String[] options = {"Dame", "Turm", "Läufer", "Springer"};
-        dropdown = new JComboBox<>(options);
-        dropdown.addActionListener(this);
-        dropdown.setBounds(50,50,300,30);
-        dropdown.setVisible(true);
-
-        promFrame.add(dropdown);
-        promFrame.setVisible(true);
-        }
-        public int getPromotionInt()
+    public int getPromotionInt()
         {
             switch ((String)dropdown.getSelectedItem())
             {
@@ -219,5 +319,12 @@ public class View extends JFrame implements ActionListener, WindowListener {
                 default: return Piece.queen;
             }
         }
+
+    public String getIp(){
+        return ip;
+    }
+    public int getPort(){
+        return port;
+    }
 }
 

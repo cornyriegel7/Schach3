@@ -1,8 +1,11 @@
 package pack;
+import java.util.Arrays;
 
 //todo: ich denk ist es am besten hier int[]s zu verschicken, weil die eigene spielinstanz ja checkt ob der move lagal is.
 // dann muss das array an den anderen server verschickt werden, der gibt das an den anderen controller weiter und das board wird aktualisiert.
 public class ChatClient extends Client {
+
+    public Controller c;
     private int[] toBeSentArray;
 
     //das ist alles kopiert, //todo: braucht man das überhaupt alles
@@ -18,12 +21,40 @@ public class ChatClient extends Client {
 
     private boolean gewaehrt;
     private String currentServerText;
-    public ChatClient(String pServerIP, int pServerPort)
-    {
+
+    public ChatClient(String pServerIP, int pServerPort, Controller pController){
         super(pServerIP, pServerPort);
-        // receive braucht es nicht mehr, da es die neue Methode
-        // processMasage gibt, die automatisch empfängt
     }
+
+   //Array wird zu einem String konvertiert, welches durch ein Komma getrennt werden
+    public String convertSquareArrayToString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("SERVERNACHRICHT");
+
+        for (int i = 0; i < c.board.getSquareLength(); i++) {
+            stringBuilder.append(",");
+            stringBuilder.append(c.board.getSquare(i));
+        }
+
+        return stringBuilder.toString();
+    }
+
+    //(hoffentlich das richtige) Array wird auf das empfangene String gesetzt
+    public void convertStringToSquareArray(String squareString) {
+        String[] values = squareString.split(",");
+
+        // Check if the string starts with "SERVERNACHRICHT"
+        if (squareString.startsWith("SERVERNACHRICHT")) {
+            values = Arrays.copyOfRange(values, 1, values.length);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            c.board.setSquare(i, Integer.parseInt(values[i]));
+        }
+    }
+
+
 
     /**
      * Die Methode dient zum Senden von Nachrichten an den Server

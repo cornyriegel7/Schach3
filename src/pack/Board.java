@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 
 public class Board {
     //Gameplay Zeug
-    private final int[] Square;
+    public final int[] Square;
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
     BoardGUI boardgui;
@@ -720,8 +720,16 @@ public class Board {
      * @param pIndex an welchem square-index
      * @param pValue welchen wert (Piece)
      */
+    public int getSquare(int pIndex){
+        return Square[pIndex];
+    }
     public void setSquare(int pIndex, int pValue){
         Square[pIndex] = pValue;
+    }
+
+    public int getSquareLength()
+    {
+        return Square.length;
     }
 
 
