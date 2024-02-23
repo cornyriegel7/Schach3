@@ -42,7 +42,6 @@ public class Input extends MouseAdapter {
                 LinkedList<int[]> vonEigenenAngegriffen = pieceColor == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
                 legalMoves = board.generateLegalMoves( startSquare,selectedPieceValue, board.giveBoard(),vonEigenenAngegriffen, vonAnderenAngegriffen,  eigenePositionen);
                 board.setSquare(startSquare, 0);
-
             }
             else{
                 selectedPieceValue = 0;

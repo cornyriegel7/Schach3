@@ -652,8 +652,6 @@ public class Board {
             for (int j = 0; j < blockedMoves.size(); j++) {
                 if(blockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0] )
                 {
-                    System.out.println("remove");
-                    printMove(enemyAttackedPositions.get(i));
                     enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
                     i -= 1;
                 }
