@@ -43,8 +43,6 @@ public class BoardGUI extends JPanel {
                     }
                 }
 
-
-
                 //paint highlights
 
                 //Führe aus WENN ein Piece ausgewählt ist
