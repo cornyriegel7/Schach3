@@ -166,7 +166,7 @@ public class Board {
         }
         int[][] moves = new int[0][0];
         if (Math.abs(pPieceValue) == Piece.king) {
-            moves =  generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy);
+            moves =  generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy,attacksOnKing.toArray(new int[0][0]));
         }
         else if(attacksOnKing.size() == 0)
         {
@@ -194,9 +194,10 @@ public class Board {
         return moves;
     }
 
-    public int[][] generateLegalKingMoves(int startPosition, int color, int[] pSquares,LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy)
+    public int[][] generateLegalKingMoves(int startPosition, int color, int[] pSquares,LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy,int[][] attacksOnKing)
     {
         LinkedList<int[]> moves = new LinkedList<>();
+
         outerloop: for (int i = 0; i < directions.length; i++) {
             int newSquare = startPosition + directions[i];
             if((newSquare >= 0 && newSquare < pSquares.length) && (pSquares[newSquare] == leeresFeld || pSquares[newSquare] / Math.abs(pSquares[newSquare]) != color))
@@ -204,15 +205,18 @@ public class Board {
                 for (int j = 0; j < attackedByEnemy.size(); j++) {
                     if(newSquare == attackedByEnemy.get(j)[1])
                     {
-                        //System.out.println(newSquare + "is nd ok("+i+")");
                         continue outerloop;
                     }
-                    else if(Math.abs(attackedByEnemy.get(j)[1] - startPosition) < 10 && (attackedByEnemy.get(j)[2] == Piece.queen || attackedByEnemy.get(j)[2] == Piece.rook|| attackedByEnemy.get(j)[2] == Piece.bishop))
+                    if(attacksOnKing.length != 0)
                     {
-                        int attackDirection = startPosition - attackedByEnemy.get(j)[0];
-                        if(attackDirection % (newSquare - startPosition) == 0)
-                        {
-                            continue outerloop;
+                        //wenn der Koenig angegriffen ist, darf er sich nicht in die Richtung des Angriffs zurückziehen
+                        int moveDirection = newSquare - startPosition;
+                        for (int k = 0; k < attacksOnKing.length; k++) {
+                            int attackDirection = attacksOnKing[k][0] - startPosition;
+                            if(attackDirection == moveDirection)
+                            {
+                                continue outerloop;
+                            }
                         }
                     }
                 }
@@ -350,10 +354,6 @@ public class Board {
         else if(absPieceValue == Piece.knight)
         {
             return generateKnightMoves(startPosition,pPieceValue,pSquares,attackedByOwn);
-        }
-        else if(absPieceValue == Piece.king)
-        {
-            return generateLegalKingMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
         }
         return generateSlidingPieceMoves(startPosition,pPieceValue,pSquares,attackedByOwn);
     }
@@ -682,11 +682,6 @@ public class Board {
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)
     {
-        //System.out.println("n");
-
-
-            //printMove(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});
-
         pAttackedPositions.add(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});
     }
 
