@@ -15,13 +15,9 @@ public class BenutzerKonto
 
     public boolean isEqual(BenutzerKonto pBenutzerKonto)
     {
-        if(benutzerName.equals(pBenutzerKonto.gibBenutzerName())
-                &&passwort.equals(pBenutzerKonto.gibPasswort())
-                &&ePost.equals(pBenutzerKonto.gibEmail()))
-        {
-            return true;
-        }
-        return false;
+        return benutzerName.equals(pBenutzerKonto.gibBenutzerName())
+                && passwort.equals(pBenutzerKonto.gibPasswort())
+                && ePost.equals(pBenutzerKonto.gibEmail());
     }
 
     public void setzeBenutzername(String pName) {

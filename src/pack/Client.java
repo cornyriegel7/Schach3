@@ -26,11 +26,11 @@ import java.net.Socket;
 
 public abstract class Client
 {
-    private MessageHandler messageHandler;
+    private final MessageHandler messageHandler;
 
     private class MessageHandler extends Thread
     {
-        private SocketWrapper socketWrapper;
+        private final SocketWrapper socketWrapper;
         private boolean active;
 
         private class SocketWrapper

@@ -89,9 +89,7 @@ public class ChatClient extends Client {
 
         char[] ersteVierZeichen = new char[4];
         if(pMessage.length()>3) {
-            for (int i = 0; i < 4; i++) {
-                ersteVierZeichen[i] = messageArray[i];
-            }
+            System.arraycopy(messageArray, 0, ersteVierZeichen, 0, 4);
             String command = String.valueOf(ersteVierZeichen);
 
 

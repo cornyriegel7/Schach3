@@ -19,7 +19,7 @@ public class Chatserver extends Server
 
     ChatRaum Alle;
 
-    private ArrayList<ChatRaum> raumList;
+    private final ArrayList<ChatRaum> raumList;
     private ArrayList<BenutzerKonto> konten; // die Liste von allen bekannten Konten
 
     public class ChatRaum{
@@ -94,9 +94,7 @@ public class Chatserver extends Server
             messageArray = pMessage.toCharArray();
             char[] ersteVierZeichen = new char[4];
             if (pMessage.length() > 3) {
-                for (int i = 0; i < 4; i++) {
-                    ersteVierZeichen[i] = messageArray[i];
-                }
+                System.arraycopy(messageArray, 0, ersteVierZeichen, 0, 4);
                 String command = String.valueOf(ersteVierZeichen);
 
                 switch (command) {
@@ -139,10 +137,8 @@ public class Chatserver extends Server
 
         char[] ersteVierZeichen = new char[4];
         if (nachricht.length() > 3) {
-            for (int i = 0; i < 4; i++) {
-                //Fehler bei einem Zeichen
-                ersteVierZeichen[i] = nachricht.toCharArray()[i];
-            }
+            //Fehler bei einem Zeichen
+            System.arraycopy(nachricht.toCharArray(), 0, ersteVierZeichen, 0, 4);
             String command = String.valueOf(ersteVierZeichen);
 
             switch (command) // befehle die über die Nachrichten übergeben werden
@@ -213,8 +209,8 @@ public class Chatserver extends Server
 
         //aus den gegebenen Konto erstellen
         String a = pAnmeldeString.split(Chatserver.eMailAdresse)[1];
-        String b[] = a.split(Chatserver.benutzerName);
-        String c[] = b[1].split(Chatserver.passwort);
+        String[] b = a.split(Chatserver.benutzerName);
+        String[] c = b[1].split(Chatserver.passwort);
 
         kZuVergleichen = new BenutzerKonto(b[0],c[0],c[1]);
 

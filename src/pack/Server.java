@@ -17,8 +17,8 @@ import java.io.*;
  */
 public abstract class Server
 {
-    private NewConnectionHandler connectionHandler;
-    private List<ClientMessageHandler> messageHandlers;
+    private final NewConnectionHandler connectionHandler;
+    private final List<ClientMessageHandler> messageHandlers;
 
     private class NewConnectionHandler extends Thread
     {
@@ -84,7 +84,7 @@ public abstract class Server
 
     private class ClientMessageHandler extends Thread
     {
-        private ClientSocketWrapper socketWrapper;
+        private final ClientSocketWrapper socketWrapper;
         private boolean active;
 
         private class ClientSocketWrapper

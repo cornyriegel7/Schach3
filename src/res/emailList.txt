@@ -1,0 +1,6 @@
+runkelruebe3003@gmail.com
+a
+cornyriegel@outlook.com
+alvarosoler@gmail.com
+test
+ACHTUNG der Reader funktioniert nur wenn am ende der Zeile der zugangsdaten ein zeilenumbruch ist, also alles da oben geht aber diese zeile nicht

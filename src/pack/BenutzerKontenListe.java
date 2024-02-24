@@ -3,7 +3,7 @@ package pack;
 import java.util.ArrayList;
 public class BenutzerKontenListe
 {
-    private ArrayList<BenutzerKonto> konten;
+    private final ArrayList<BenutzerKonto> konten;
 
     private TextReader emailReader;
     private TextReader usernameReader;

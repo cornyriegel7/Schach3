@@ -15,6 +15,9 @@ public class View extends JFrame implements ActionListener, WindowListener {
     JScrollPane scrollPane;
     JComboBox<String> dropdown;
 
+    JLabel IPLabel, portLabel;
+    JTextField tbIP, tbPort;
+
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, portFrame;
     //   frames, die auf buttonclick lokal und online entstehen
     static Controller c;
@@ -195,20 +198,20 @@ public class View extends JFrame implements ActionListener, WindowListener {
         portFrame.setLayout(null);
 
         // IP Label und TB
-        JLabel ipLabel = new JLabel("IP:");
-        ipLabel.setBounds(10,10,100,30);
-        portFrame.add(ipLabel);
+        IPLabel = new JLabel("IP:");
+        IPLabel.setBounds(10,10,100,30);
+        portFrame.add(IPLabel);
 
-        JTextField tbIP = new JTextField();
+        tbIP = new JTextField();
         tbIP.setBounds(150,10,100,30);
         portFrame.add(tbIP);
 
         // Port &  TB
-        JLabel portLabel = new JLabel("Port:");
+        portLabel = new JLabel("Port:");
         portLabel.setBounds(10,50,100,30);
         portFrame.add(portLabel);
 
-        JTextField tbPort = new JTextField();
+        tbPort = new JTextField();
         tbPort.setBounds(150,50,100,30);
         portFrame.add(tbPort);
 
@@ -324,6 +327,56 @@ public class View extends JFrame implements ActionListener, WindowListener {
     }
     public int getPort(){
         return port;
+    }
+
+    /**
+     * Hier kommt an, was der Client empfängt. (Client ruft diese Methode auf).
+     * Anhand von 4-Buchstaben-Codewörtern am Anfang kann verschiedenes gemacht werden, das kann man aber ändern.
+     */
+
+    //Todo: Verschiedene Möglichkeiten behandeln: 1. Neue Verbindung, 2. Verbindung getrennt, 3. Chatnachricht wird empfangen, 4. Schachbrett wird empfangen
+    public void getString(String text){
+
+        if(text.equals("OKOK")){
+            text = "Server: Verbindung gewährt!";
+            taChat.append("Sie sind Verbunden!");
+
+        }
+        char[] ersteVierZeichen = new char[4];
+        if (text.length() > 3) {
+            //Fehler bei einem Zeichen
+            System.arraycopy(text.toCharArray(), 0, ersteVierZeichen, 0, 4);
+            String command = String.valueOf(ersteVierZeichen);
+
+//            switch (command)
+//            {
+//
+//                case("MSSG"):
+//                    text = text.replace("MSSG","");
+//                    String[] a = text.split("RNAM");
+//
+//                    String nachricht = a[0];
+//                    String tmpRaumName = a[1];
+//
+//                    if(tmpRaumName.equals(cbChatNamenList.get(cbChats.getSelectedIndex())))
+//                    {
+//                        tAchatText.append( nachricht + "\r\n");
+//                        return;
+//                    }
+//                    else
+//                    {
+//                        tAchatText.append(nachricht + " (in Raum " + tmpRaumName + ")\r\n");
+//                        return;
+//                    }
+//                case("RLEV"):
+//                    text = text.replace("RLEV","");
+//                    cbChats.removeItem(cbChats.getItemAt(cbChats.getSelectedIndex()));
+//                    cbChatNamenList.remove(text);
+//                    return;
+//            }
+        }
+//        if(text.equals("DELG")) { tAchatText.setText(""); return;}
+//        tAchatText.append(text + "\r\n");
     }
 }
 

@@ -1,11 +1,10 @@
 package pack;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class TextReader {
-    private FileReader fileReader;
+    private final FileReader fileReader;
 
     public TextReader(String fileName) throws IOException {
         fileReader = new FileReader(fileName);
