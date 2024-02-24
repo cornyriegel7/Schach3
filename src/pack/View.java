@@ -8,28 +8,18 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class View extends JFrame implements ActionListener, WindowListener {
+    static Controller c;
+    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, connectionFrame;
+    //   alle frames
     JButton bVsBot, bVsLokal, bVsOnline, bSend, submitButton;
-    JLabel lTitle;
+    JLabel lTitle, IPLabel, portLabel;
     JTextArea taChat;
-    JTextField tbEnter;
+    JTextField tbEnter, tbIP, tbPort;
     JScrollPane scrollPane;
     JComboBox<String> dropdown;
 
-    JLabel IPLabel, portLabel;
-    JTextField tbIP, tbPort;
-
-    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, portFrame;
-    //   frames, die auf buttonclick lokal und online entstehen
-    static Controller c;
-    int promotionValue;
-    private int pickedMode=0;//fake wert nur um if anweisung zu passen
     private String ip = "";
-    private int port = 0;
-
-    Image pieceImage;
-
-    private JTextField ipField;
-    private JTextField portField;
+    private int port = 0, promotionValue, pickedMode=0;//fake wert nur um if anweisung zu passen
 
     public View(){
         super("Schachprogramm");
@@ -90,7 +80,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
             //Für Onlinespiel
             if (e.getSource() == bVsOnline) {
-                addPortWindow();
+                addIpPortWindow();
             }
 
             if (e.getSource() == submitButton) {
@@ -187,52 +177,52 @@ public class View extends JFrame implements ActionListener, WindowListener {
         fVsLokal.setVisible(true);
     }
 
-    //createt das Porteingabeframe
-    public void addPortWindow(){
+    //createt das IP und Porteingabeframe
+    public void addIpPortWindow(){
 
-        portFrame = new JFrame();
-        portFrame.setTitle("IP & Port Eingabe");
-        portFrame.setSize(300, 200);
-        portFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        portFrame.setLocationRelativeTo(null);
-        portFrame.setLayout(null);
+        connectionFrame = new JFrame();
+        connectionFrame.setTitle("IP & Port Eingabe");
+        connectionFrame.setSize(300, 200);
+        connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //dann geht aber alles zu, ist nicht gewollt imo
+        connectionFrame.setLocationRelativeTo(null);
+        connectionFrame.setLayout(null);
 
         // IP Label und TB
         IPLabel = new JLabel("IP:");
         IPLabel.setBounds(10,10,100,30);
-        portFrame.add(IPLabel);
+        connectionFrame.add(IPLabel);
 
         tbIP = new JTextField();
         tbIP.setBounds(150,10,100,30);
-        portFrame.add(tbIP);
+        connectionFrame.add(tbIP);
 
         // Port &  TB
         portLabel = new JLabel("Port:");
         portLabel.setBounds(10,50,100,30);
-        portFrame.add(portLabel);
+        connectionFrame.add(portLabel);
 
         tbPort = new JTextField();
         tbPort.setBounds(150,50,100,30);
-        portFrame.add(tbPort);
+        connectionFrame.add(tbPort);
 
         // Submit Button hinzufügen
         submitButton.addActionListener(this);
-        portFrame.add(submitButton);
+        connectionFrame.add(submitButton);
 
-        portFrame.setVisible(true);
+        connectionFrame.setVisible(true);
     }
 
     //createt das Onlinespielfeld
     public void submitButtonClicked()
     {
         //Prüft ob die Textfelder empty sind
-        if(ipField.getText().equals("") == false && portField.getText().equals("") == false) {
+        if(!tbIP.getText().equals("") && !tbPort.getText().equals("")) {
            //Prüft ob im Port-Textfield nur Zahlen stehen  (hoffe es klappt :( )
-            if(isNumeric(portField.getText()) == true) {
+            if(isNumeric(tbPort.getText())) {
                 pickedMode = 2;
-                ip = ipField.getText();
-                port = Integer.parseInt(portField.getText());
-                portFrame.dispose();
+                ip = tbIP.getText();
+                port = Integer.parseInt(tbPort.getText());
+                connectionFrame.dispose();
 
                 c = new Controller(this);
                 c.createBoard();
