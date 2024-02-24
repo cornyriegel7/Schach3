@@ -63,7 +63,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
         bSend.addActionListener(this);
 
         submitButton = new JButton("Submit");
-        //submitButton.setBounds(x,y,width,height); falls schöner machen
+        submitButton.setBounds(100,100,100,30);
         submitButton.addActionListener(this);
 
         taChat = new JTextArea();
@@ -188,25 +188,29 @@ public class View extends JFrame implements ActionListener, WindowListener {
     public void addPortWindow(){
 
         portFrame = new JFrame();
-        portFrame.setTitle("IP und Port Eingabe");
+        portFrame.setTitle("IP & Port Eingabe");
         portFrame.setSize(300, 200);
         portFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         portFrame.setLocationRelativeTo(null);
+        portFrame.setLayout(null);
 
-        // Layout setzen
-        portFrame.setLayout(new GridLayout(3, 2));
+        // IP Label und TB
+        JLabel ipLabel = new JLabel("IP:");
+        ipLabel.setBounds(10,10,100,30);
+        portFrame.add(ipLabel);
 
-        // IP Label und Textfeld hinzufügen
-        portFrame.add(new JLabel("IP: "));
-        ipField = new JTextField();
-        ipField.setText(null);
-        portFrame.add(ipField);
+        JTextField tbIP = new JTextField();
+        tbIP.setBounds(150,10,100,30);
+        portFrame.add(tbIP);
 
-        // Port Label und Textfeld hinzufügen
-        portFrame.add(new JLabel("Port: "));
-        portField = new JTextField();
-        portField.setText(null);
-        portFrame.add(portField);
+        // Port &  TB
+        JLabel portLabel = new JLabel("Port:");
+        portLabel.setBounds(10,50,100,30);
+        portFrame.add(portLabel);
+
+        JTextField tbPort = new JTextField();
+        tbPort.setBounds(150,50,100,30);
+        portFrame.add(tbPort);
 
         // Submit Button hinzufügen
         submitButton.addActionListener(this);
@@ -294,20 +298,6 @@ public class View extends JFrame implements ActionListener, WindowListener {
     public void appendToArea(String pText) {
             taChat.append("Du: " + pText + "\n");
         }
-
-//    public void createScrollPanel(JFrame pframe)
-//    {
-//        JTextArea textArea = new JTextArea();
-//        for (int i = 0; i < 100; i++) {
-//            textArea.append("Zeile " + (i + 1) + "\n");
-//        }
-//
-//        JScrollPane scrollPane = new JScrollPane(textArea);
-//        //scrollPane.add(send); was soll denn diese line hier
-//        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//         pframe.add(scrollPane);
-//         pframe.setVisible(true);
-//    }
 
     //Get-Methoden
     public int getPickedMode() { return pickedMode; }
