@@ -1,5 +1,4 @@
 package pack;
-//hier ist die GUI
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,8 +9,7 @@ import java.awt.event.WindowListener;
 public class View extends JFrame implements ActionListener, WindowListener {
     static Controller c;
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, connectionFrame;
-    //   alle frames
-    JButton bVsBot, bVsLokal, bVsOnline, bSend, submitButton;
+    JButton bVsBot, bVsLokal, bVsOnline, bSend, bSubmit;
     JLabel lTitle, IPLabel, portLabel;
     JTextArea taChat;
     JTextField tbEnter, tbIP, tbPort;
@@ -48,16 +46,16 @@ public class View extends JFrame implements ActionListener, WindowListener {
         bVsOnline.addActionListener(this);
         add(bVsOnline);
 
-        //das ist der main frame
         this.setVisible(true);
 
+        //alle elemente, die nicht auf dem hauptframe sind
         bSend = new JButton("Senden");
         bSend.setBounds(110,625,100,30);
         bSend.addActionListener(this);
 
-        submitButton = new JButton("Submit");
-        submitButton.setBounds(100,100,100,30);
-        submitButton.addActionListener(this);
+        bSubmit = new JButton("Submit");
+        bSubmit.setBounds(100,100,100,30);
+        bSubmit.addActionListener(this);
 
         taChat = new JTextArea();
         taChat.setEditable(false);
@@ -72,7 +70,6 @@ public class View extends JFrame implements ActionListener, WindowListener {
         if(pickedMode==0) {
 
             //fenster: lokaler gegner
-
             if (e.getSource() == bVsLokal) {
                 createVsLokal();
                 addPromoWindow(6);
@@ -83,8 +80,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
                 addIpPortWindow();
             }
 
-            if (e.getSource() == submitButton) {
-                submitButtonClicked();
+            if (e.getSource() == bSubmit) {
+                createVsOnline();
             }
 
             //Für Spiel gegen Bot
@@ -139,7 +136,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
     }
 
-    //Createt das promframe
+    //Createt das Promotion-Menü
     public void addPromoWindow(int pieceValue){
         promFrame = new JFrame();
         promFrame.setTitle("Promotion");
@@ -177,47 +174,31 @@ public class View extends JFrame implements ActionListener, WindowListener {
         fVsLokal.setVisible(true);
     }
 
-    //createt das IP und Porteingabeframe
-    public void addIpPortWindow(){
+    //createt das Botspielfeld
+    public void createVsBot()
+    {
+        pickedMode = 3;
 
-        connectionFrame = new JFrame();
-        connectionFrame.setTitle("IP & Port Eingabe");
-        connectionFrame.setSize(300, 200);
-        connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //dann geht aber alles zu, ist nicht gewollt imo
-        connectionFrame.setLocationRelativeTo(null);
-        connectionFrame.setLayout(null);
+        c = new Controller(this);
+        c.createBoard();
 
-        // IP Label und TB
-        IPLabel = new JLabel("IP:");
-        IPLabel.setBounds(10,10,100,30);
-        connectionFrame.add(IPLabel);
-
-        tbIP = new JTextField();
-        tbIP.setBounds(150,10,100,30);
-        connectionFrame.add(tbIP);
-
-        // Port &  TB
-        portLabel = new JLabel("Port:");
-        portLabel.setBounds(10,50,100,30);
-        connectionFrame.add(portLabel);
-
-        tbPort = new JTextField();
-        tbPort.setBounds(150,50,100,30);
-        connectionFrame.add(tbPort);
-
-        // Submit Button hinzufügen
-        submitButton.addActionListener(this);
-        connectionFrame.add(submitButton);
-
-        connectionFrame.setVisible(true);
+        fVsBot = new JFrame();
+        fVsBot.setTitle("Gegen Bot");
+        fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
+        fVsBot.setLayout(new GridBagLayout());
+        fVsBot.setMinimumSize(new Dimension(1000, 1000));
+        fVsBot.setLocationRelativeTo(null);
+        fVsBot.addWindowListener(this);
+        fVsBot.add(c.boardGUI);
+        fVsBot.setVisible(true);
     }
 
     //createt das Onlinespielfeld
-    public void submitButtonClicked()
+    public void createVsOnline()
     {
         //Prüft ob die Textfelder empty sind
         if(!tbIP.getText().equals("") && !tbPort.getText().equals("")) {
-           //Prüft ob im Port-Textfield nur Zahlen stehen  (hoffe es klappt :( )
+            //Prüft ob im Port-Textfield nur Zahlen stehen  (hoffe es klappt :( )
             if(isNumeric(tbPort.getText())) {
                 pickedMode = 2;
                 ip = tbIP.getText();
@@ -260,71 +241,39 @@ public class View extends JFrame implements ActionListener, WindowListener {
         }
     }
 
-    public static boolean isNumeric(String value) {
-        try {
-            int number = Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
+    //createt das IP und Porteingabeframe
+    public void addIpPortWindow(){
 
-    //createt das Botspielfeld
-    public void createVsBot()
-    {
-        pickedMode = 3;
+        connectionFrame = new JFrame();
+        connectionFrame.setTitle("IP & Port Eingabe");
+        connectionFrame.setSize(300, 200);
+        connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //dann geht aber alles zu, ist nicht gewollt imo
+        connectionFrame.setLocationRelativeTo(null);
+        connectionFrame.setLayout(null);
 
-        c = new Controller(this);
-        c.createBoard();
+        // IP Label und TB
+        IPLabel = new JLabel("IP:");
+        IPLabel.setBounds(10,10,100,30);
+        connectionFrame.add(IPLabel);
 
-        fVsBot = new JFrame();
-        fVsBot.setTitle("Gegen Bot");
-        fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
-        fVsBot.setLayout(new GridBagLayout());
-        fVsBot.setMinimumSize(new Dimension(1000, 1000));
-        fVsBot.setLocationRelativeTo(null);
-        fVsBot.addWindowListener(this);
-        fVsBot.add(c.boardGUI);
-        fVsBot.setVisible(true);
-    }
+        tbIP = new JTextField();
+        tbIP.setBounds(150,10,100,30);
+        connectionFrame.add(tbIP);
 
-    public void appendToArea(String pText) {
-            taChat.append("Du: " + pText + "\n");
-        }
+        // Port &  TB
+        portLabel = new JLabel("Port:");
+        portLabel.setBounds(10,50,100,30);
+        connectionFrame.add(portLabel);
 
-    //Get-Methoden
-    public int getPickedMode() { return pickedMode; }
-    public void setPromotionValue(int pValue){
-        promotionValue = pValue;
-    }
-    public int getPromotionValue(){
-        return promotionValue;
-    }
+        tbPort = new JTextField();
+        tbPort.setBounds(150,50,100,30);
+        connectionFrame.add(tbPort);
 
-    public int getPromotionInt()
-        {
-            switch ((String)dropdown.getSelectedItem())
-            {
-                case("Springer"):return Piece.knight;
-                case("Turm"):return Piece.rook;
-                case("Läufer"):return Piece.bishop;
-                default: return Piece.queen;
-            }
-        }
+        // Submit Button hinzufügen
+        bSubmit.addActionListener(this);
+        connectionFrame.add(bSubmit);
 
-    public String getIp(){
-        return ip;
-    }
-    public int getPort(){
-        return port;
-    }
-
-    public void checkMateMessage(boolean hasWhiteLost)
-    {
-        if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
-        else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
-        c.input.setActive(false);
-        //todo: außer betrieb setzen!
+        connectionFrame.setVisible(true);
     }
 
     /**
@@ -375,6 +324,56 @@ public class View extends JFrame implements ActionListener, WindowListener {
         }
 //        if(text.equals("DELG")) { tAchatText.setText(""); return;}
 //        tAchatText.append(text + "\r\n");
+    }
+
+    //sonstiges
+
+    public int getPromotionInt()
+        {
+            switch ((String)dropdown.getSelectedItem())
+            {
+                case("Springer"):return Piece.knight;
+                case("Turm"):return Piece.rook;
+                case("Läufer"):return Piece.bishop;
+                default: return Piece.queen;
+            }
+        }
+
+    public String getIp(){
+        return ip;
+    }
+    public int getPort(){
+        return port;
+    }
+
+    public static boolean isNumeric(String value) {
+        try {
+            int number = Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public void appendToArea(String pText) {
+        taChat.append("Du: " + pText + "\n");
+    }
+
+    //Get-Methoden
+    public int getPickedMode() { return pickedMode; }
+    public void setPromotionValue(int pValue){
+        promotionValue = pValue;
+    }
+    public int getPromotionValue(){
+        return promotionValue;
+    }
+
+    public void checkMateMessage(boolean hasWhiteLost)
+    {
+        if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
+        else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
+        c.input.setActive(false);
+        //todo: außer betrieb setzen!
     }
 }
 
