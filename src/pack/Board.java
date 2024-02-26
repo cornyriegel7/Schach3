@@ -193,7 +193,7 @@ public class Board {
             }
             moves = legalMoves.toArray(new int[0][0]);
         }
-        int[] allowedAfterPin = isPinned(startPosition,kingPosition,Square,attackedByEnemy);
+        /*int[] allowedAfterPin = isPinned(startPosition,kingPosition,Square,attackedByEnemy);
         if(allowedAfterPin!= null) {
             System.out.println(Arrays.toString(allowedAfterPin));
             LinkedList<int[]> allowedMoves = new LinkedList<>();
@@ -205,10 +205,22 @@ public class Board {
                 }
             }
             return allowedMoves.toArray(new int[0][0]);
-        }
+        }*/
         return moves;
     }
 
+    public boolean isCheckMate(int color)
+    {
+        LinkedList<Integer> positions = color == Piece.white ? whitePositions : blackPositions;
+        LinkedList<int[]> attackedByOwn = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
+        LinkedList<int[]> attackedByEnemy = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
+        for (int i = 0; i < positions.size(); i++) {
+            if(generateLegalMoves(positions.get(i),Square[positions.get(i)],Square,attackedByOwn,attackedByEnemy,positions).length != 0) {
+            return false;
+            }
+            }
+        return true;
+    }
     public int[][] generateLegalKingMoves(int startPosition, int color, int[] pSquares,LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy,int[][] attacksOnKing)
     {
         LinkedList<int[]> moves = new LinkedList<>();
@@ -514,7 +526,7 @@ public class Board {
         }
         //schraeg links
         neuersquare = startPos+bewegungsrichtung-1;
-        if(neuersquare+1 % 8 != 0 && (0 <= neuersquare && neuersquare < 64)) {
+        if(neuersquare / 8 == (startPos+bewegungsrichtung) / 8 && (0 <= neuersquare && neuersquare < 64)) {
             addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach links ein Gegner
             {
@@ -658,7 +670,6 @@ public class Board {
                                     continue outerloop;
                                 }
                             }
-                            System.out.print("QUATSCH");
                             int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
                             /*for (int k = 0; k < neugeneriert.length; k++) {
                                 System.out.print("neu");
@@ -693,7 +704,6 @@ public class Board {
             }
         }
         for (int i = 0; i < blockedMoves.size(); i++) {
-            System.out.print("QUATSCH");
             generateLegalMoves(blockedMoves.get(i)[0],Square[blockedMoves.get(i)[0]],Square,enemyAttackedPositions,ownAttackedPositions,enemyPositions);
         }
 

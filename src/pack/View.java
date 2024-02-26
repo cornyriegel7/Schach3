@@ -319,6 +319,14 @@ public class View extends JFrame implements ActionListener, WindowListener {
         return port;
     }
 
+    public void checkMateMessage(boolean hasWhiteLost)
+    {
+        if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
+        else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
+        c.board.boardgui.input.setActive(false);
+        //todo: außer betrieb setzen!
+    }
+
     /**
      * Hier kommt an, was der Client empfängt. (Client ruft diese Methode auf).
      * Anhand von 4-Buchstaben-Codewörtern am Anfang kann verschiedenes gemacht werden, das kann man aber ändern.
