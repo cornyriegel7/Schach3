@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public class Input extends MouseAdapter {
 
-    Board board;
+    Controller c;
     private static int selectedPieceValue;
     public int startSquare;  //Index Startposition vom Move
     public static int xE, yE;//Koordinaten der Maus zum Abrufen fürs board
@@ -19,8 +19,8 @@ public class Input extends MouseAdapter {
 
     boolean active;
 
-    public Input(Board pBoard){
-        this.board = pBoard;
+    public Input(Controller pController){
+        c = pController;
         selectedPieceValue = 0;
         int xE = 0, yE = 0;
         startSquare = -1;// -1 weil 0 ein Index vom Array ist und startSquare ja erstmal nichts sein soll
@@ -36,20 +36,20 @@ public class Input extends MouseAdapter {
         if(active) {
             xE = e.getX();  //Zum Abrufen fürs Board
             yE = e.getY();
-            startSquare = board.xyToSquare(xE, yE);
-            if (board.getPieceFromSquare(startSquare) != 0) {
-                selectedPieceValue = board.getPieceFromSquare(startSquare);
+            startSquare = c.board.xyToSquare(xE, yE);
+            if (c.board.getPieceFromSquare(startSquare) != 0) {
+                selectedPieceValue = c.board.getPieceFromSquare(startSquare);
                 int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
-                if (pieceColor == board.view.c.dran) {
-                    LinkedList<Integer> eigenePositionen = pieceColor == Piece.white ? board.whitePositions : board.blackPositions;
-                    LinkedList<int[]> vonAnderenAngegriffen = pieceColor == Piece.white ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-                    LinkedList<int[]> vonEigenenAngegriffen = pieceColor == Piece.black ? board.attackedByBlackPositions : board.attackedByWhitePositions;
-                    legalMoves = board.generateLegalMoves(startSquare, selectedPieceValue, board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen);
-                    if (legalMoves.length == 0 && board.isCheckMate(board.view.c.dran)) {
-                        boolean hasWhiteLost = board.view.c.dran == Piece.white;
-                        this.board.view.checkMateMessage(hasWhiteLost);
+                if (pieceColor == c.dran) {
+                    LinkedList<Integer> eigenePositionen = pieceColor == Piece.white ? c.board.whitePositions : c.board.blackPositions;
+                    LinkedList<int[]> vonAnderenAngegriffen = pieceColor == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                    LinkedList<int[]> vonEigenenAngegriffen = pieceColor == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                    legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen);
+                    if (legalMoves.length == 0 && c.board.isCheckMate(c.dran)) {
+                        boolean hasWhiteLost = c.dran == Piece.white;
+                        c.view.checkMateMessage(hasWhiteLost);
                     }
-                    board.setSquare(startSquare, 0);
+                    c.board.setSquare(startSquare, 0);
                 } else {
                     selectedPieceValue = 0;
                     startSquare = -1;
@@ -68,7 +68,7 @@ public class Input extends MouseAdapter {
                 yE = e.getY();
 
                 if (startSquare != 0) {
-                    board.boardgui.repaint();     // Swing sagen, dass es repainten soll
+                    c.boardGUI.repaint();     // Swing sagen, dass es repainten soll
                     // aber das hauptproblem ist, dass mouseDragged zu wenig oft aufgerufen wird
                 }
             }
@@ -82,15 +82,15 @@ public class Input extends MouseAdapter {
             if (selectedPieceValue != 0) {
                 xE = e.getX();  //Zum Abrufen fürs Board
                 yE = e.getY();
-                endSquare = board.xyToSquare(xE, yE);
+                endSquare = c.board.xyToSquare(xE, yE);
                 for (int i = 0; i < legalMoves.length; i++) {
                     if (legalMoves[i][1] == endSquare) {
-                        board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
+                        c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
                         //legalMoves = null;
                         int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
-                        board.view.c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
+                        c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
                         selectedPieceValue = 0;
-                        board.boardgui.repaint();
+                        c.boardGUI.repaint();
                         return;
                         //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
 
@@ -98,9 +98,9 @@ public class Input extends MouseAdapter {
                 }
                 if (startSquare != -1) {
                     // figur wird an die stelle zurückgesetzt und repaint
-                    board.setSquare(startSquare, selectedPieceValue);
+                    c.board.setSquare(startSquare, selectedPieceValue);
                     selectedPieceValue = 0;
-                    board.boardgui.repaint(0, 0, 3000, 3000);
+                    c.boardGUI.repaint(0, 0, 3000, 3000);
                 }
             }
         }

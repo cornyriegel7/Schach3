@@ -5,19 +5,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class BoardGUI extends JPanel {
-    public static int titleSize = 100;
-    public Board board;
-    public int squareIndex = 0;
+    Controller c;
+
     Piece piece;
     Input input;
+    public static int titleSize = 100;
+    public int squareIndex = 0;
     public int[] Square;
 
-    public BoardGUI(Board pBoard) {
-        piece = new Piece();
-        board = pBoard;
-        input = new Input(board);
+    public BoardGUI(Controller pController) {
+
+        c = pController;
+
         this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
-        Square = pBoard.giveBoard();
+        Square = c.board.giveBoard();
         // Hinzufügen des Input-Listeners zum Board
         this.addMouseListener(input);
         this.addMouseMotionListener(input);
@@ -107,12 +108,12 @@ public class BoardGUI extends JPanel {
         int farbe = pPieceInt / absolutFigurInt;
 
         return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == Piece.black ? piece.getSubImage(0*piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(0*piece.getSheetScale(), 0);
-            case (Piece.pawn) -> farbe == Piece.black ? piece.getSubImage(5 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(5 * piece.getSheetScale(), 0);
-            case (Piece.knight) -> farbe == Piece.black ? piece.getSubImage(3 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(3 * piece.getSheetScale(), 0);
-            case (Piece.bishop) -> farbe == Piece.black ? piece.getSubImage(2 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(2 * piece.getSheetScale(), 0);
-            case (Piece.rook) -> farbe == Piece.black ? piece.getSubImage(4 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(4 * piece.getSheetScale(), 0);
-            case (Piece.queen) -> farbe == Piece.black ? piece.getSubImage(1 * piece.getSheetScale(), piece.getSheetScale()) : piece.getSubImage(1 * piece.getSheetScale(), 0);
+            case (Piece.king) -> farbe == c.piece.black ? c.piece.getSubImage(0* c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(0*c.piece.getSheetScale(), 0);
+            case (Piece.pawn) -> farbe == c.piece.black ? c.piece.getSubImage(5 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(5 * c.piece.getSheetScale(), 0);
+            case (Piece.knight) -> farbe == c.piece.black ? c.piece.getSubImage(3 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(3 * c.piece.getSheetScale(), 0);
+            case (Piece.bishop) -> farbe == c.piece.black ? c.piece.getSubImage(2 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(2 * c.piece.getSheetScale(), 0);
+            case (Piece.rook) -> farbe == c.piece.black ? c.piece.getSubImage(4 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(4 * c.piece.getSheetScale(), 0);
+            case (Piece.queen) -> farbe == c.piece.black ? c.piece.getSubImage(1 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(1 * c.piece.getSheetScale(), 0);
             default -> null;
         };
 

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Piece {
+    Controller c;
     // Figur kann an einem int erkannt werden denn: Farbe * FigurTyp
     static final int black = -1, white = 1;
     static final int pawn = 1, knight = 2, bishop = 3, rook = 4, queen = 5, king = 6;
@@ -14,7 +15,8 @@ public class Piece {
     BufferedImage sheet;
     public int sheetScale;
 
-    public Piece() {
+    public Piece(Controller pController) {
+        c = pController;
         try {
             sheet = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("pieces.png")));
             sheetScale = sheet.getWidth() / 6;

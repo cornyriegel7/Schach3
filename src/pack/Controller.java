@@ -1,7 +1,13 @@
 package pack;
+
+import javax.swing.plaf.InputMapUIResource;
+
 public class Controller {
     View view;
+    Piece piece;
     Board board;
+    Input input;
+    BoardGUI boardGUI;
     Chatserver chatServer;
     ChatClient chatClient;
     public int dran;
@@ -20,7 +26,10 @@ public class Controller {
         }
     }
     public void createBoard() {
-        board = new Board(view);
+        piece = new Piece(this);
+        board = new Board(this);
+        input = new Input(this);
+        boardGUI = new BoardGUI(this);
     }
     public void setDran(int color)
     {

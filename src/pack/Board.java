@@ -6,11 +6,13 @@ import java.util.stream.IntStream;
 import static pack.Piece.pawn;
 
 public class Board {
+
+    Controller c;
     //Gameplay Zeug
     public final int[] Square;
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
-    BoardGUI boardgui;
+
     static int oben = -8, unten = 8,  rechts = 1, links = -1, obenrechts = -7, untenlinks = 7, obenlinks = -9, untenrechts = 9;
     
     static final int[] directions = {oben, unten,
@@ -19,25 +21,25 @@ public class Board {
             untenrechts, obenlinks};
     LinkedList<int[]> attackedByWhitePositions, attackedByBlackPositions;
     LinkedList<Integer>  whitePositions, blackPositions;
-    View view;
-    public Board(View pView){
+
+    public Board(Controller pController){
+
+        c = pController;
+
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
         initalizeSquare();
-        boardgui = new BoardGUI(this);
 
         distancesToEdge = getDistanceToEdges();
-        whitePositions=getPositions(Piece.white, Square);
+        whitePositions= getPositions(Piece.white, Square);
         blackPositions = getPositions(Piece.black, Square);
         attackedByWhitePositions = new LinkedList<>();
         attackedByBlackPositions = new LinkedList<>();
-        for (int i = 0; i < whitePositions.size(); i++) {
-            this.generateMoves(whitePositions.get(i),Square[whitePositions.get(i)],Square,attackedByWhitePositions,attackedByBlackPositions);
-        }
-        for (int i = 0; i < blackPositions.size(); i++) {
-            this.generateMoves(blackPositions.get(i),Square[blackPositions.get(i)],Square,attackedByBlackPositions,attackedByWhitePositions);
-        }
-
-        view = pView;
+            for (int i = 0; i < whitePositions.size(); i++) {
+                 this.generateMoves(whitePositions.get(i),Square[whitePositions.get(i)],Square,attackedByWhitePositions,attackedByBlackPositions);
+            }
+             for (int i = 0; i < blackPositions.size(); i++) {
+                 this.generateMoves(blackPositions.get(i),Square[blackPositions.get(i)],Square,attackedByBlackPositions,attackedByWhitePositions);
+            }
         }
 
 
@@ -517,7 +519,7 @@ public class Board {
             {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
                 {
-                    moves.add(new int[]{startPos, neuersquare,view.getPromotionInt() * eigeneFarbe});
+                    moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
                 }
                 else
                 {moves.add(new int[]{startPos, neuersquare, pawn * eigeneFarbe});}
@@ -532,7 +534,7 @@ public class Board {
             {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
                 {
-                    moves.add(new int[]{startPos, neuersquare,view.getPromotionInt() * eigeneFarbe});
+                    moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
                 }
                 else
                 {moves.add(new int[]{startPos, neuersquare, pawn * eigeneFarbe});}
@@ -548,7 +550,7 @@ public class Board {
         {
             if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
             {
-                moves.add(new int[]{startPos, neuersquare,view.getPromotionInt() * eigeneFarbe});
+                moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
             }
             else
             {moves.add(new int[]{startPos, neuersquare, pawn * eigeneFarbe});}

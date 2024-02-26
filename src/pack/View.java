@@ -172,7 +172,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
         fVsLokal.setLayout(new GridBagLayout());
         fVsLokal.setMinimumSize(new Dimension(1000, 1000));
         fVsLokal.setLocationRelativeTo(null);
-        fVsLokal.add(c.board.boardgui);
+        fVsLokal.add(c.boardGUI);
         fVsLokal.addWindowListener(this);
         fVsLokal.setVisible(true);
     }
@@ -233,7 +233,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
                 fVsOnline.setLayout(new GridBagLayout());
                 fVsOnline.setMinimumSize(new Dimension(1000, 1000));
                 fVsOnline.setLocationRelativeTo(null);
-                fVsOnline.add(c.board.boardgui);
+                fVsOnline.add(c.boardGUI);
                 fVsOnline.addWindowListener(this);
                 fVsOnline.setVisible(true);
 
@@ -284,7 +284,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
         fVsBot.setMinimumSize(new Dimension(1000, 1000));
         fVsBot.setLocationRelativeTo(null);
         fVsBot.addWindowListener(this);
-        fVsBot.add(c.board.boardgui);
+        fVsBot.add(c.boardGUI);
         fVsBot.setVisible(true);
     }
 
@@ -323,7 +323,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
     {
         if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
         else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
-        c.board.boardgui.input.setActive(false);
+        c.input.setActive(false);
         //todo: außer betrieb setzen!
     }
 
