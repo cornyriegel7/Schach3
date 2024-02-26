@@ -20,8 +20,8 @@ public class BoardGUI extends JPanel {
         this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
         Square = c.board.giveBoard();
         // Hinzufügen des Input-Listeners zum Board
-        this.addMouseListener(input);
-        this.addMouseMotionListener(input);
+        this.addMouseListener(c.input);
+        this.addMouseMotionListener(c.input);
     }
         //Zum Painten des kompletten Felds
         //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
@@ -47,7 +47,7 @@ public class BoardGUI extends JPanel {
                 //paint highlights
 
                 //Führe aus WENN ein Piece ausgewählt ist
-               if(Input.getSelectedPieceValue() != 0) {
+               if(c.input.getSelectedPieceValue() != 0) {
 
                    int i;
 
@@ -57,7 +57,7 @@ public class BoardGUI extends JPanel {
                        //paintComponent auf Grün setzen fürs painten der availableMoves
                        g2d.setColor(new Color(46, 217, 27, 202));
                        //Wandle den Index des Squares (gegeben vom LegalMovesArray) in Koordinaten um und painte es quasi genau über die andere Farbe des Feldes
-                       g2d.fillRect(squareToX(Input.legalMoves[i][1]), squareToY(Input.legalMoves[i][1]), titleSize, titleSize);
+                       g2d.fillRect(squareToX(c.input.legalMoves[i][1]), squareToY(c.input.legalMoves[i][1]), titleSize, titleSize);
                    }
                }
 
@@ -69,10 +69,10 @@ public class BoardGUI extends JPanel {
                     g2d.drawImage(img, squareToX(squareIndex), squareToY(squareIndex), null);
                 }
 
-                if(Input.getSelectedPieceValue() != 0) {
+                if(c.input.getSelectedPieceValue() != 0) {
                     //selectedPieces werden größer angezeigt!!!
-                    Image selectedPiece = pieceIntToImage(Input.getSelectedPieceValue()).getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
-                    g2d.drawImage(selectedPiece, Input.getxE() - titleSize / 2, Input.getyE() - titleSize / 2, null);
+                    Image selectedPiece = pieceIntToImage(c.input.getSelectedPieceValue()).getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
+                    g2d.drawImage(selectedPiece, c.input.getxE() - titleSize / 2, c.input.getyE() - titleSize / 2, null);
                 }
 
             }
@@ -108,12 +108,12 @@ public class BoardGUI extends JPanel {
         int farbe = pPieceInt / absolutFigurInt;
 
         return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == c.piece.black ? c.piece.getSubImage(0* c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(0*c.piece.getSheetScale(), 0);
-            case (Piece.pawn) -> farbe == c.piece.black ? c.piece.getSubImage(5 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(5 * c.piece.getSheetScale(), 0);
-            case (Piece.knight) -> farbe == c.piece.black ? c.piece.getSubImage(3 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(3 * c.piece.getSheetScale(), 0);
-            case (Piece.bishop) -> farbe == c.piece.black ? c.piece.getSubImage(2 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(2 * c.piece.getSheetScale(), 0);
-            case (Piece.rook) -> farbe == c.piece.black ? c.piece.getSubImage(4 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(4 * c.piece.getSheetScale(), 0);
-            case (Piece.queen) -> farbe == c.piece.black ? c.piece.getSubImage(1 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(1 * c.piece.getSheetScale(), 0);
+            case (Piece.king) -> farbe == Piece.black ? c.piece.getSubImage(0* c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(0*c.piece.getSheetScale(), 0);
+            case (Piece.pawn) -> farbe == Piece.black ? c.piece.getSubImage(5 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(5 * c.piece.getSheetScale(), 0);
+            case (Piece.knight) -> farbe == Piece.black ? c.piece.getSubImage(3 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(3 * c.piece.getSheetScale(), 0);
+            case (Piece.bishop) -> farbe == Piece.black ? c.piece.getSubImage(2 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(2 * c.piece.getSheetScale(), 0);
+            case (Piece.rook) -> farbe == Piece.black ? c.piece.getSubImage(4 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(4 * c.piece.getSheetScale(), 0);
+            case (Piece.queen) -> farbe == Piece.black ? c.piece.getSubImage(1 * c.piece.getSheetScale(), c.piece.getSheetScale()) : c.piece.getSubImage(1 * c.piece.getSheetScale(), 0);
             default -> null;
         };
 
