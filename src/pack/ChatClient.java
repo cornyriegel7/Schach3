@@ -9,12 +9,9 @@ public class ChatClient extends Client {
     private int[] toBeSentArray;
 
     //das ist alles kopiert, //todo: braucht man das überhaupt alles
-    public final static String zuRaumHinzufügen = "ADDC";
-    public final static String ausRaumEntfernen = "REMC";
     public final static String verbindungGewaehrt = "OKOK";
     public final static String verbindungVerweigert = "NONO";
-    public final static  String neuenRaumErstellen = "NEWW";
-
+    public final static  String spielZuende = "GMOV";
     public final static String guiLoeschen = "DELG";
 
     public StringListener StringEmpfangen;
@@ -53,9 +50,6 @@ public class ChatClient extends Client {
             c.board.setSquare(i, Integer.parseInt(values[i]));
         }
     }
-
-
-
     /**
      * Die Methode dient zum Senden von Nachrichten an den Server
      */
@@ -98,8 +92,11 @@ public class ChatClient extends Client {
                 case (guiLoeschen):
                     pMessage = guiLoeschen;
                     break;
-                case ("NONO"):
-                    pMessage = "Anmeldung fehlgeschlagen  \n(Anmeldedaten falsch/Account bereits online)";
+                case (verbindungVerweigert):
+                    pMessage = "Anmeldung fehlgeschlagen  \n(Digga bist du dumm hier gibts nicht mal ne Anmeldung und es funktioniert trotzdem nicht bei dir)";
+                    break;
+                case (verbindungGewaehrt):
+                    pMessage = "Super du bist verbunden";
                     break;
 
             }
