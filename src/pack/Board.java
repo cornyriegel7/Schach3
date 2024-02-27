@@ -197,7 +197,6 @@ public class Board {
         }
         int[] allowedAfterPin = isPinned(startPosition,kingPosition,Square,attackedByEnemy);
         if(allowedAfterPin!= null) {
-            System.out.println(Arrays.toString(allowedAfterPin));
             LinkedList<int[]> allowedMoves = new LinkedList<>();
             for (int i = 0; i < moves.length; i++) {
                 for (int j = 0; j < allowedAfterPin.length; j++) {
@@ -720,7 +719,6 @@ public class Board {
         ownPositions.add(pEndPosition);
 
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
-        System.out.print("QUATSCH");
         generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions);
 
 
