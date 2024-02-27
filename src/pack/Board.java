@@ -195,7 +195,7 @@ public class Board {
             }
             moves = legalMoves.toArray(new int[0][0]);
         }
-        /*int[] allowedAfterPin = isPinned(startPosition,kingPosition,Square,attackedByEnemy);
+        int[] allowedAfterPin = isPinned(startPosition,kingPosition,Square,attackedByEnemy);
         if(allowedAfterPin!= null) {
             System.out.println(Arrays.toString(allowedAfterPin));
             LinkedList<int[]> allowedMoves = new LinkedList<>();
@@ -207,7 +207,7 @@ public class Board {
                 }
             }
             return allowedMoves.toArray(new int[0][0]);
-        }*/
+        }
         return moves;
     }
 
@@ -242,9 +242,11 @@ public class Board {
                         int moveDirection = newSquare - startPosition;
                         for (int k = 0; k < attacksOnKing.length; k++) {
                             int attackDirection = attacksOnKing[k][0] - startPosition;
-                            if(attackDirection == moveDirection && newSquare != attacksOnKing[k][0])
-                            {
-                                continue outerloop;
+                            int absAttackingPieceValue = Math.abs(attacksOnKing[k][2]);
+                            if(absAttackingPieceValue == Piece.queen || absAttackingPieceValue == Piece.rook|| absAttackingPieceValue == Piece.bishop) {
+                                if (attackDirection % moveDirection == 0 && (Math.abs(moveDirection) != 1 || (Math.abs(moveDirection) == 1 && attacksOnKing[k][0] / 8 == attacksOnKing[k][1] / 8)) && newSquare != attacksOnKing[k][0]) {
+                                    continue outerloop;
+                                }
                             }
                         }
                     }
@@ -303,6 +305,10 @@ public class Board {
      */
     private int[] isPinned(int ownPosition,int kingPosition, int[] pSquare,LinkedList<int[]> attackedByEnemy)
     {
+        if(ownPosition==kingPosition)
+        {
+            return null;
+        }
         int directionToKing = ownPosition - kingPosition;
         if(directionToKing % 9 == 0)
         {
@@ -358,7 +364,7 @@ public class Board {
                 {
                     if(!(Square[ownPosition] == Piece.knight || (Square[ownPosition] == Piece.pawn && Math.abs(attackedSquare) == 1)))
                     {
-                    allowedSquares = new int[((ownPosition + attackDirection) - attackBeginSquare) / attackDirection + 1];
+                    allowedSquares = new int[Math.abs(((ownPosition + attackDirection) - attackBeginSquare) / attackDirection) + 1];
                     for (int j = ownPosition + attackDirection; j != attackBeginSquare; j+= attackDirection) {
                         int index = (j -(ownPosition + attackDirection)) / attackDirection;
                         allowedSquares[index] = j;
