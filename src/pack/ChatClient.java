@@ -23,7 +23,7 @@ public class ChatClient extends Client {
         super(pServerIP, pServerPort);
     }
 
-   //Array wird zu einem String konvertiert, welches durch ein Komma getrennt werden
+    //Array wird zu einem String konvertiert, welches durch ein Komma getrennt werden (das encrypten braucht man hier in der view)
     public String convertSquareArrayToString() {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -35,20 +35,6 @@ public class ChatClient extends Client {
         }
 
         return stringBuilder.toString();
-    }
-
-    //(hoffentlich das richtige) Array wird auf das empfangene String gesetzt
-    public void convertStringToSquareArray(String squareString) {
-        String[] values = squareString.split(",");
-
-        // Check if the string starts with "SERVERNACHRICHT"
-        if (squareString.startsWith("SERVERNACHRICHT")) {
-            values = Arrays.copyOfRange(values, 1, values.length);
-        }
-
-        for (int i = 0; i < values.length; i++) {
-            c.board.setSquare(i, Integer.parseInt(values[i]));
-        }
     }
     /**
      * Die Methode dient zum Senden von Nachrichten an den Server

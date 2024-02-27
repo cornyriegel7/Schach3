@@ -9,7 +9,7 @@ public class Chatserver extends Server
     //interne Schlüsselwörter
     public static final String Abmeldung = "*bye", Anmeldung = "ABCD";
     public static final String eMailAdresse = "MAIL", benutzerName = "USER", passwort = "PASS";
-    public static final String anmeldungErfolgreich = "OKOK", anmeldungFehlgeschlagen = "NONO";
+    public static final String neueVerbindung = "CONN", verbindungsAbbruch = "DISC";
     public static final String nachricht = "MSSG";
     public final static  String neuenRaumErstellen = "NEWW";
     public final static String raumName = "RNAM";
@@ -225,10 +225,10 @@ public class Chatserver extends Server
                 konten.get(i).setzePortal(clientPort);
 
                 Alle.addTeilnehmer(konten.get(i));
-                return anmeldungErfolgreich;
+                return neueVerbindung;
             }
         }
-        return anmeldungFehlgeschlagen;
+        return null;
     }
 
     public void abmeldungsBehandlung(int pClientPort)

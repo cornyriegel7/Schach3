@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Arrays;
 
 import static javax.swing.JOptionPane.NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
@@ -269,46 +270,44 @@ public class View extends JFrame implements ActionListener, WindowListener {
     public void getString(String text){
         System.out.println("Da kommt vom server" + text);
 
-        if(text.equals("OKOK")){
-            text = "Server: Verbindung gewährt!";
-            taChat.append("Sie sind Verbunden!");
-
+        if(text.equals("CONN")){
+            taChat.append("Server: Verbindung gewährt!" + "\r\n" + "Sie sind Verbunden!");
         }
-        char[] ersteVierZeichen = new char[4];
-        if (text.length() > 3) {
-            //Fehler bei einem Zeichen
-            System.arraycopy(text.toCharArray(), 0, ersteVierZeichen, 0, 4);
-            String command = String.valueOf(ersteVierZeichen);
-
-//            switch (command)
-//            {
-//
-//                case("MSSG"):
-//                    text = text.replace("MSSG","");
-//                    String[] a = text.split("RNAM");
-//
-//                    String nachricht = a[0];
-//                    String tmpRaumName = a[1];
-//
-//                    if(tmpRaumName.equals(cbChatNamenList.get(cbChats.getSelectedIndex())))
-//                    {
-//                        tAchatText.append( nachricht + "\r\n");
-//                        return;
-//                    }
-//                    else
-//                    {
-//                        tAchatText.append(nachricht + " (in Raum " + tmpRaumName + ")\r\n");
-//                        return;
-//                    }
-//                case("RLEV"):
-//                    text = text.replace("RLEV","");
-//                    cbChats.removeItem(cbChats.getItemAt(cbChats.getSelectedIndex()));
-//                    cbChatNamenList.remove(text);
-//                    return;
-//            }
+        else if(text.equals("DISC")) {
+            taChat.append("Server: Verbindung zum Spielpartner getrennt.");
         }
-//        if(text.equals("DELG")) { tAchatText.setText(""); return;}
-//        tAchatText.append(text + "\r\n");
+
+
+        //sonst: nachricht oder board
+
+        String firstChars = text.substring(0, Math.min(text.length(), 4));
+        String rest = text.substring(4);
+        switch (firstChars){
+
+            case "MSSG": taChat.append("Gegner:" + rest);
+            case "BORD": changeBoard(rest);
+        }
+
+    }
+
+    public void changeBoard(String boardString) {
+        //int[] newBoard =
+        //HIer kommt ein String rein und das Board wird anhand diesem verändert
+    }
+
+
+    //(hoffentlich das richtige) Array wird auf das empfangene String gesetzt, hier braucht man aber ein int[] und kein string[] als rückgabe
+    public void convertStringToSquareArray(String squareString) {
+        String[] values = squareString.split(",");
+
+        // Check if the string starts with "SERVERNACHRICHT"
+        if (squareString.startsWith("SERVERNACHRICHT")) {
+            values = Arrays.copyOfRange(values, 1, values.length);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            c.board.setSquare(i, Integer.parseInt(values[i]));
+        }
     }
 
     //sonstiges
