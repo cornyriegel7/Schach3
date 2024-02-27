@@ -1,7 +1,5 @@
 package pack;
 
-import javax.swing.plaf.InputMapUIResource;
-
 public class Controller {
     View view;
     Piece piece;
@@ -15,16 +13,28 @@ public class Controller {
         view = pView;
         dran = Piece.white;
         //todo: noch nicht final ,sowohl client als auch server brauchen noch args. außerdem server als interface hinzufügen
-        createChatClient();
+        //createChatClient();
+    }
+
+    public void restart() {
+
     }
 
     public void createChatClient()
     {
         if(view.getPickedMode() == 2){
-            //chatServer = new Chatserver();
             chatClient = new ChatClient(view.getIp(), view.getPort(), this);
+            System.out.println("f");
         }
     }
+
+    public void createChatServer()
+    {
+        if(view.getPickedMode() == 2){
+            chatServer = new Chatserver(view.getPort());
+        }
+    }
+
     public void createBoard() {
         piece = new Piece(this);
         board = new Board(this);

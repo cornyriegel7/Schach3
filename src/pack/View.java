@@ -6,18 +6,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import static javax.swing.JOptionPane.NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
+
 public class View extends JFrame implements ActionListener, WindowListener {
     static Controller c;
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, connectionFrame;
-    JButton bVsBot, bVsLokal, bVsOnline, bSend, bSubmit;
+    JButton bVsBot, bVsLokal, bVsOnline, bSend, bJoin, bHost;
     JLabel lTitle, IPLabel, portLabel;
     JTextArea taChat;
     JTextField tbEnter, tbIP, tbPort;
     JScrollPane scrollPane;
     JComboBox<String> dropdown;
 
+    boolean host = false;
     private String ip = "";
-    private int port = 0, promotionValue, pickedMode=0;//fake wert nur um if anweisung zu passen
+    private int port, promotionValue, pickedMode;
 
     public View(){
         super("Schachprogramm");
@@ -53,9 +57,13 @@ public class View extends JFrame implements ActionListener, WindowListener {
         bSend.setBounds(110,625,100,30);
         bSend.addActionListener(this);
 
-        bSubmit = new JButton("Submit");
-        bSubmit.setBounds(100,100,100,30);
-        bSubmit.addActionListener(this);
+        bJoin = new JButton("Join");
+        bJoin.setBounds(40,100,100,30);
+        bJoin.addActionListener(this);
+
+        bHost = new JButton("Host");
+        bHost.setBounds(160,100,100,30);
+        bHost.addActionListener(this);
 
         taChat = new JTextArea();
         taChat.setEditable(false);
@@ -80,8 +88,15 @@ public class View extends JFrame implements ActionListener, WindowListener {
                 addIpPortWindow();
             }
 
-            if (e.getSource() == bSubmit) {
-                createVsOnline();
+            if (e.getSource() == bJoin) {
+                createVsOnline(false);
+                c.createChatClient();
+            }
+
+            if (e.getSource() == bHost) {
+                createVsOnline(true);
+                c.createChatServer();
+                c.createChatClient();
             }
 
             //Für Spiel gegen Bot
@@ -89,51 +104,17 @@ public class View extends JFrame implements ActionListener, WindowListener {
                createVsBot();
                 addPromoWindow(6);
             }
-
         }
-
 
         if(e.getSource()==bSend) {
             this.appendToArea(tbEnter.getText());
         }
     }
 
-
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-
-    }
-
     @Override
     public void windowClosing(WindowEvent e) {
         pickedMode = 0;
         System.out.println("EEEEE");
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-
     }
 
     //Createt das Promotion-Menü
@@ -174,27 +155,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
         fVsLokal.setVisible(true);
     }
 
-    //createt das Botspielfeld
-    public void createVsBot()
-    {
-        pickedMode = 3;
-
-        c = new Controller(this);
-        c.createBoard();
-
-        fVsBot = new JFrame();
-        fVsBot.setTitle("Gegen Bot");
-        fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
-        fVsBot.setLayout(new GridBagLayout());
-        fVsBot.setMinimumSize(new Dimension(1000, 1000));
-        fVsBot.setLocationRelativeTo(null);
-        fVsBot.addWindowListener(this);
-        fVsBot.add(c.boardGUI);
-        fVsBot.setVisible(true);
-    }
-
     //createt das Onlinespielfeld
-    public void createVsOnline()
+    public void createVsOnline(boolean isHost)
     {
         //Prüft ob die Textfelder empty sind
         if(!tbIP.getText().equals("") && !tbPort.getText().equals("")) {
@@ -241,13 +203,32 @@ public class View extends JFrame implements ActionListener, WindowListener {
         }
     }
 
+
+    //createt das Botspielfeld
+    public void createVsBot()
+    {
+        pickedMode = 3;
+
+        c = new Controller(this);
+        c.createBoard();
+
+        fVsBot = new JFrame();
+        fVsBot.setTitle("Gegen Bot");
+        fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
+        fVsBot.setLayout(new GridBagLayout());
+        fVsBot.setMinimumSize(new Dimension(1000, 1000));
+        fVsBot.setLocationRelativeTo(null);
+        fVsBot.addWindowListener(this);
+        fVsBot.add(c.boardGUI);
+        fVsBot.setVisible(true);
+    }
+
     //createt das IP und Porteingabeframe
     public void addIpPortWindow(){
 
         connectionFrame = new JFrame();
         connectionFrame.setTitle("IP & Port Eingabe");
         connectionFrame.setSize(300, 200);
-        connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //dann geht aber alles zu, ist nicht gewollt imo
         connectionFrame.setLocationRelativeTo(null);
         connectionFrame.setLayout(null);
 
@@ -269,9 +250,10 @@ public class View extends JFrame implements ActionListener, WindowListener {
         tbPort.setBounds(150,50,100,30);
         connectionFrame.add(tbPort);
 
-        // Submit Button hinzufügen
-        bSubmit.addActionListener(this);
-        connectionFrame.add(bSubmit);
+        connectionFrame.add(bJoin);
+        bJoin.addActionListener(this);
+        connectionFrame.add(bHost);
+        bHost.addActionListener(this);
 
         connectionFrame.setVisible(true);
     }
@@ -283,6 +265,7 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
     //Todo: Verschiedene Möglichkeiten behandeln: 1. Neue Verbindung, 2. Verbindung getrennt, 3. Chatnachricht wird empfangen, 4. Schachbrett wird empfangen
     public void getString(String text){
+        System.out.println("Da kommt vom server" + text);
 
         if(text.equals("OKOK")){
             text = "Server: Verbindung gewährt!";
@@ -339,13 +322,6 @@ public class View extends JFrame implements ActionListener, WindowListener {
             }
         }
 
-    public String getIp(){
-        return ip;
-    }
-    public int getPort(){
-        return port;
-    }
-
     public static boolean isNumeric(String value) {
         try {
             int number = Integer.parseInt(value);
@@ -355,25 +331,65 @@ public class View extends JFrame implements ActionListener, WindowListener {
         }
     }
 
+    public void checkMateMessage(boolean hasWhiteLost)
+    {
+        if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
+        else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
+        c.input.setActive(false);
+        Integer a = JOptionPane.showOptionDialog(null, "Spiel neustarten?","AOEUO", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"JA", "NEIN"}, "JA");
+
+        if(a==YES_OPTION) {
+            this.disposeAFrame();
+            switch (getPickedMode()) {
+                case 1: this.createVsLokal(); break;
+                //case 2: this.createVsOnline(); break; muss man schaun
+                case 3: this.createVsBot(); break;
+            }
+        }
+        if(a==NO_OPTION) {this.disposeAFrame(); setPickedMode(0);}
+    }
+
+    public void disposeAFrame(){
+        switch (getPickedMode()){
+            case 1: this.fVsLokal.dispose(); break;
+            case 2: this.fVsOnline.dispose(); break;
+            case 3: this.fVsBot.dispose(); break;
+        }
+        promFrame.dispose();
+    }
+    //Getter, setter-Methoden
+    public String getIp(){
+        return ip;
+    }
+    public int getPort(){
+        return port;
+    }
     public void appendToArea(String pText) {
         taChat.append("Du: " + pText + "\n");
     }
-
-    //Get-Methoden
     public int getPickedMode() { return pickedMode; }
+    public void setPickedMode(int pPickedMode) {this.pickedMode = pPickedMode;}
     public void setPromotionValue(int pValue){
         promotionValue = pValue;
     }
     public int getPromotionValue(){
         return promotionValue;
     }
+    @Override
+    public void windowOpened(WindowEvent e) {}
+    @Override
+    public void windowClosed(WindowEvent e) {}
 
-    public void checkMateMessage(boolean hasWhiteLost)
-    {
-        if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
-        else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
-        c.input.setActive(false);
-        //todo: außer betrieb setzen!
-    }
+    @Override
+    public void windowIconified(WindowEvent e) {}
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+
+    @Override
+    public void windowActivated(WindowEvent e) {}
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
 }
 
