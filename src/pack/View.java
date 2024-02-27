@@ -134,6 +134,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
         promFrame.add(dropdown);
         promFrame.setVisible(true);
+
+        promFrame.toBack();
     }
 
     //Createt das lokale Spielfeld
