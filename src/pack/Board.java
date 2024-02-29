@@ -13,6 +13,7 @@ public class Board {
     private static final int leeresFeld = 0;
     static int[][] distancesToEdge;
 
+    static final int enPassantInt = 11;
     static int oben = -8, unten = 8,  rechts = 1, links = -1, obenrechts = -7, untenlinks = 7, obenlinks = -9, untenrechts = 9;
     
     static final int[] directions = {oben, unten,
@@ -21,6 +22,7 @@ public class Board {
             untenrechts, obenlinks};
     LinkedList<int[]> attackedByWhitePositions, attackedByBlackPositions;
     LinkedList<Integer>  whitePositions, blackPositions;
+    ArrayList<Integer> specialMovePositions;
 
     public Board(Controller pController){
 
@@ -34,11 +36,18 @@ public class Board {
         blackPositions = getPositions(Piece.black, Square);
         attackedByWhitePositions = new LinkedList<>();
         attackedByBlackPositions = new LinkedList<>();
+        //Positionen an denen Specialmoves theorethisch moeglich waeren -> Rochade und spaeter En passant
+        specialMovePositions = new ArrayList<>();
+        specialMovePositions.add(2);
+        specialMovePositions.add(6);
+        specialMovePositions.add(62);
+        specialMovePositions.add(58);
+
             for (int i = 0; i < whitePositions.size(); i++) {
-                 this.generateMoves(whitePositions.get(i),Square[whitePositions.get(i)],Square,attackedByWhitePositions,attackedByBlackPositions);
+                 this.generateMoves(whitePositions.get(i),Square[whitePositions.get(i)],Square,attackedByWhitePositions,attackedByBlackPositions,specialMovePositions);
             }
              for (int i = 0; i < blackPositions.size(); i++) {
-                 this.generateMoves(blackPositions.get(i),Square[blackPositions.get(i)],Square,attackedByBlackPositions,attackedByWhitePositions);
+                 this.generateMoves(blackPositions.get(i),Square[blackPositions.get(i)],Square,attackedByBlackPositions,attackedByWhitePositions,specialMovePositions);
             }
         }
 
@@ -143,7 +152,7 @@ public class Board {
         return rdistancesToEdge;
     }
 
-    public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy,LinkedList<Integer> pPositions)
+    public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy,LinkedList<Integer> pPositions,ArrayList<Integer> pSpecialMovePositions)
     {
 
         int color = pPieceValue / Math.abs(pPieceValue);
@@ -175,12 +184,12 @@ public class Board {
         }
         else if(attacksOnKing.size() == 0)
         {
-             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
 
         }
         else if(attacksOnKing.size() == 1)
         {
-            moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy);
+            moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
             LinkedList<int[]> legalMoves = new LinkedList<>();
             int[] allowedSquares = generateAllowedSquares(attacksOnKing.get(0));
 
@@ -216,7 +225,7 @@ public class Board {
         LinkedList<int[]> attackedByOwn = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
         LinkedList<int[]> attackedByEnemy = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
         for (int i = 0; i < positions.size(); i++) {
-            if(generateLegalMoves(positions.get(i),Square[positions.get(i)],Square,attackedByOwn,attackedByEnemy,positions).length != 0) {
+            if(generateLegalMoves(positions.get(i),Square[positions.get(i)],Square,attackedByOwn,attackedByEnemy,positions,specialMovePositions).length != 0) {
             return false;
             }
             }
@@ -393,7 +402,7 @@ public class Board {
      * @param startPosition startPosition auf dem brett
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
-   public  int[][] generateMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy)
+   public  int[][] generateMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy,ArrayList<Integer> pSpecialMovePositions)
     {
 
         //int figurInt = pSquares[startPosition]; -> waere theorethisch auch moeglich
@@ -402,7 +411,7 @@ public class Board {
         int absPieceValue = Math.abs(pPieceValue);
         if(absPieceValue == pawn)
         {
-            return generatePawnMoves(startPosition,pPieceValue,pSquares,attackedByOwn);
+            return generatePawnMoves(startPosition,pPieceValue,pSquares,attackedByOwn,pSpecialMovePositions);
         }
         else if(absPieceValue == Piece.knight)
         {
@@ -499,7 +508,7 @@ public class Board {
         return moves.toArray(new int[0][0]);
     }
 
-    public int[][] generatePawnMoves(int startPos,int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByColorPositions)
+    public int[][] generatePawnMoves(int startPos,int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions,ArrayList<Integer> pSpecialMovePositions)
     {
         LinkedList<int[]> moves = new LinkedList<>();
 
@@ -510,6 +519,8 @@ public class Board {
         int anfangsReiheEnde = anfangsReiheAnfang + 7;
         int endReiheAnfang = eigeneFarbe == Piece.white ? 8 : 48;
         int endReiheEnde = endReiheAnfang + 7;
+        int enPassantReiheAnfang = eigeneFarbe == Piece.white ? 24:32;
+        int enPassantReiheEnde = enPassantReiheAnfang + 7;
 
 
         /*Dadurch dass Zuerst nach moves gesucht wird, bei denen Bauern andere schlagen (ist immer mindestens ein gleichwertiger Trade),
@@ -519,7 +530,7 @@ public class Board {
         //schraeg rechts
         int neuersquare = startPos+bewegungsrichtung+1;
         if(neuersquare % 8 != 0 && (0 <= neuersquare && neuersquare < 64)) {
-            addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
+            addToAttackedPositions(startPos, neuersquare,absPieceValue,ownAttackedPositions);
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach rechts ein Gegner
             {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
@@ -534,7 +545,7 @@ public class Board {
         //schraeg links
         neuersquare = startPos+bewegungsrichtung-1;
         if(neuersquare / 8 == (startPos+bewegungsrichtung) / 8 && (0 <= neuersquare && neuersquare < 64)) {
-            addToAttackedPositions(startPos, neuersquare,absPieceValue,attackedByColorPositions);
+            addToAttackedPositions(startPos, neuersquare,absPieceValue,ownAttackedPositions);
             if (pSquares[neuersquare] != leeresFeld && pSquares[neuersquare] / Math.abs(pSquares[neuersquare]) == eigeneFarbe * -1) // Ist vorne und 1 nach links ein Gegner
             {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
@@ -547,7 +558,32 @@ public class Board {
 
             }
         }
-
+        //En passant
+        if(enPassantReiheAnfang <= startPos && startPos <= enPassantReiheEnde)
+        {
+            if((startPos+1) / 8 == startPos / 8 && pSquares[startPos+1] != leeresFeld && Math.abs(pSquares[startPos+1]) == pawn)
+            {
+                for (int i = 0; i < specialMovePositions.size(); i++) {
+                    if(specialMovePositions.get(i) == startPos+1)
+                    {
+                        addToAttackedPositions(startPos,startPos+1, enPassantInt,ownAttackedPositions);
+                        moves.add(new int[]{startPos,startPos+1+bewegungsrichtung,enPassantInt*eigeneFarbe});
+                        break;
+                    }
+                }
+            }
+            if((startPos-1) / 8 == startPos / 8 && pSquares[startPos-1] != leeresFeld && Math.abs(pSquares[startPos-1]) == pawn)
+            {
+                for (int i = 0; i < specialMovePositions.size(); i++) {
+                    if(specialMovePositions.get(i) == startPos-1)
+                    {
+                        addToAttackedPositions(startPos,startPos-1, enPassantInt,ownAttackedPositions);
+                        moves.add(new int[]{startPos,startPos-1+bewegungsrichtung,enPassantInt*eigeneFarbe});
+                        break;
+                    }
+                }
+            }
+        }
 
         //geradeaus 1
         neuersquare = startPos+bewegungsrichtung;
@@ -619,6 +655,7 @@ public class Board {
         LinkedList<Integer> ownPositions = color == Piece.white ? whitePositions : blackPositions;
         LinkedList<Integer> enemyPositions = color == Piece.black ? whitePositions : blackPositions;
 
+        // Die Position, die Figur vorher angegriffen hat werden entfernt
         for (int i = 0; i < ownAttackedPositions.size(); i++) {
             if(ownAttackedPositions.get(i)[0] == pStartPosition || (ownAttackedPositions.get(i)[1] == pStartPosition))//bisherige AttackedPositions der bewegten Figur entfernen
             {
@@ -628,7 +665,8 @@ public class Board {
             }
 
         }
-        //falls eine gegnerische Figur geschlagen wird, werden ihre AttackedPositionsEntfernt
+
+        //falls eine gegnerische Figur geschlagen wird, werden ihre AttackedPositions entfernt
         if(Square[pEndPosition] != leeresFeld)
         {
             //Wenn es eine Figur nicht mehr gibt, kann sie auch keine Felder mehr angreifen
@@ -644,8 +682,16 @@ public class Board {
             //Figur wird aus den Positionen rausgenommen
             enemyPositions.remove((Integer) pEndPosition); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
         }
+
         //Zug im Square array eintragen
-        Square[pEndPosition] = pPieceValue;
+        if(Math.abs(pPieceValue)!=enPassantInt) {
+            Square[pEndPosition] = pPieceValue;
+        }
+        else
+        {
+            Square[pEndPosition] = pawn * color;
+            Square[pEndPosition + color * 8] = leeresFeld;
+        }
         Square[pStartPosition] = leeresFeld;
         //Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
         outerloop: for (int i = 0; i < ownPositions.size(); i++) {
@@ -654,7 +700,6 @@ public class Board {
             if(ownPosition != pStartPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
             {
                 int attackDirection = pStartPosition - ownPositions.get(i);
-                int vorzeichen = attackDirection / Math.abs(attackDirection);
                 int[] attackDirections;
                 switch (Math.abs(Square[ownPositions.get(i)]))
                 {
@@ -669,7 +714,6 @@ public class Board {
                         if(Math.abs(attackDirections[j])!=1 || (Math.abs(attackDirections[j]) == 1 && ownPosition/8 == pStartPosition /8)) {
                             if (Math.abs(attackDirection) != Math.abs(attackDirections[j])) {
                                 attackDirection /= attackDirections[j];
-                                //attackDirection *= vorzeichen;
                             }
                             for (int k = ownPosition + attackDirection; k != pStartPosition; k += attackDirection) {
                                 //System.out.println(k);
@@ -677,7 +721,7 @@ public class Board {
                                     continue outerloop;
                                 }
                             }
-                            int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions);
+                            int[][] neugeneriert = generateLegalMoves(ownPosition, Square[ownPosition], Square, ownAttackedPositions, enemyAttackedPositions, ownPositions,specialMovePositions);
                             /*for (int k = 0; k < neugeneriert.length; k++) {
                                 System.out.print("neu");
                                 printMove(neugeneriert[k]);
@@ -688,7 +732,7 @@ public class Board {
             }
         }
 
-        //Angriffe, die daurch verhindert werden, dass das Feld besetzt wird loeschen
+        //Angriffe(des Gegners), die dadurch verhindert werden, dass das Feld besetzt wird loeschen
         LinkedList<int[]> blockedMoves = new LinkedList<>();
         for (int i = 0; i < enemyAttackedPositions.size(); i++) {
             int attackEndPosition = enemyAttackedPositions.get(i)[1];
@@ -711,26 +755,31 @@ public class Board {
             }
         }
         for (int i = 0; i < blockedMoves.size(); i++) {
-            generateLegalMoves(blockedMoves.get(i)[0],Square[blockedMoves.get(i)[0]],Square,enemyAttackedPositions,ownAttackedPositions,enemyPositions);
+            generateLegalMoves(blockedMoves.get(i)[0],Square[blockedMoves.get(i)[0]],Square,enemyAttackedPositions,ownAttackedPositions,enemyPositions,specialMovePositions);
         }
 
 
+        //Figur aus Positionen loeschen
         ownPositions.removeFirstOccurrence(/*(Integer)*/ pStartPosition);
         ownPositions.add(pEndPosition);
 
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
-        generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions);
+        generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
 
-
-        //auskommentiert weils endlosschleife iwie macht
-      /*  for (int i = 0; i < ownAttackedPositions.siz
-      e(); i++) {
-            if(ownAttackedPositions.get(i)[1] == startPosition && ownAttackedPositions.get(i)[2]!= Piece.pawn && ownAttackedPositions.get(i)[2]!= Piece.knight && ownAttackedPositions.get(i)[2]!= Piece.king)
+        //En-Passant ist immer nur einen Zug lang moeglich
+        for (int i = 0; i < specialMovePositions.size(); i++) {
+            int position = specialMovePositions.get(i);
+            if(position!=2&&position!=6&&position!=62&&position!=58)
             {
-                generateLegalMoves(ownAttackedPositions.get(i)[0],pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,positions);
+                specialMovePositions.remove(i);
+                i-=1;
             }
         }
-        System.out.println("f");*/
+        //Falls neue Specialmoves entstanden sind, diese eintragen
+        if(Math.abs(pPieceValue) == Piece.pawn && Math.abs(pStartPosition - pEndPosition) == 16)
+        {
+            specialMovePositions.add(pEndPosition);
+        }
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)
