@@ -62,6 +62,8 @@ public class ChatClient extends Client {
      */
     public void processMessage(String pMessage)
     {
+        StringEmpfangen.getString(pMessage);
+        System.out.println(pMessage);
         //Vorgehen bei schlüsselwort
         String neueNachricht ="";
         char[] messageArray = new char[0];
@@ -89,7 +91,7 @@ public class ChatClient extends Client {
         }
 
         //vorgehen ohne schlüsselwort
-        StringEmpfangen.getString(pMessage);
+
         // for(int i=0;i<pMessage.length();i++) {
         // neueNachricht = neueNachricht + messageArray[i];
         // }

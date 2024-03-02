@@ -23,15 +23,14 @@ public class Controller {
     public void createChatClient()
     {
         if(view.getPickedMode() == 2){
-            chatClient = new ChatClient(view.getIp(), view.getPort(), this);
-            System.out.println("f");
+            chatClient = new ChatClient(view.getIp(), view.getPickedPort(), this);
         }
     }
 
-    public void createChatServer()
+    public void createChatServer(int pPort)
     {
         if(view.getPickedMode() == 2){
-            chatServer = new Chatserver(view.getPort());
+            chatServer = new Chatserver(pPort);
         }
     }
 

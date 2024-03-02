@@ -10,7 +10,7 @@ import java.util.Arrays;
 import static javax.swing.JOptionPane.NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
 
-public class View extends JFrame implements ActionListener, WindowListener {
+public class View extends JFrame implements ActionListener, WindowListener, StringListener {
     static Controller c;
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, connectionFrame;
     JButton bVsBot, bVsLokal, bVsOnline, bSend, bJoin, bHost;
@@ -21,8 +21,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
     JComboBox<String> dropdown;
 
     boolean host = false;
-    private String ip = "";
-    private int port, promotionValue, pickedMode;
+    private String ip = "127.0.0.1";
+    private int pickedPort, promotionValue, pickedMode;
 
     public View(){
         super("Schachprogramm");
@@ -96,8 +96,10 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
             if (e.getSource() == bHost) {
                 createVsOnline(true);
-                c.createChatServer();
+                //erst server erstellen
+                c.createChatServer(getPickedPort());
                 c.createChatClient();
+                c.chatClient.StringEmpfangen = this;
             }
 
             //Für Spiel gegen Bot
@@ -162,12 +164,11 @@ public class View extends JFrame implements ActionListener, WindowListener {
     public void createVsOnline(boolean isHost)
     {
         //Prüft ob die Textfelder empty sind
-        if(!tbIP.getText().equals("") && !tbPort.getText().equals("")) {
-            //Prüft ob im Port-Textfield nur Zahlen stehen  (hoffe es klappt :( )
+        //if(!tbIP.getText().equals("") && !tbPort.getText().equals("")) {
             if(isNumeric(tbPort.getText())) {
                 pickedMode = 2;
                 ip = tbIP.getText();
-                port = Integer.parseInt(tbPort.getText());
+                pickedPort = Integer.parseInt(tbPort.getText());
                 connectionFrame.dispose();
 
                 c = new Controller(this);
@@ -196,15 +197,14 @@ public class View extends JFrame implements ActionListener, WindowListener {
 
                 addPromoWindow(6);
             }
-            else {
-                System.out.println("Es dürfen NUR Zahlen im Port stehen du Knecht");
-            }
+//            else {
+//                System.out.println("Es dürfen NUR Zahlen im Port stehen du Knecht");
+//            }
+//        }
+//        else
+//        {
+//            System.out.println("Gib eine IP und einen Port ein du Knecht");
         }
-        else
-        {
-            System.out.println("Gib eine IP und einen Port ein du Knecht");
-        }
-    }
 
 
     //createt das Botspielfeld
@@ -362,8 +362,8 @@ public class View extends JFrame implements ActionListener, WindowListener {
     public String getIp(){
         return ip;
     }
-    public int getPort(){
-        return port;
+    public int getPickedPort(){
+        return pickedPort;
     }
     public void appendToArea(String pText) {
         taChat.append("Du: " + pText + "\n");
