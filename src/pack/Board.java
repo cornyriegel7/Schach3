@@ -259,18 +259,18 @@ public class Board {
 
         outerloop:for (int i = 0; i < directions.length; i++) {
             int newSquare = startPosition + directions[i];
-            if((newSquare >= 0 && newSquare < pSquares.length) && (pSquares[newSquare] == emptySquare || pSquares[newSquare] / Math.abs(pSquares[newSquare]) != color)) {
+            if((newSquare >= 0 && newSquare < pSquares.length) && distancesToEdge[startPosition][i] != 0 && (pSquares[newSquare] == emptySquare || pSquares[newSquare] / Math.abs(pSquares[newSquare]) != color)) {
                 addToAttackedPositions(startPosition,newSquare,Piece.king,attackedByOwn);
            for (int j = 0; j < attackedByEnemy.size(); j++) {
                         int attackedSquare = attackedByEnemy.get(j)[1];
                         if (newSquare == attackedSquare) // ist ein moegliches Feld angegriffen
                         {
-                            if(!(KingSidePossible||QueenSidePossible) && i!=0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
-                                continue outerloop;
+                            if((KingSidePossible||QueenSidePossible) && i==0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
+                                removeFirstIndex = true;
                             }
                             else
                             {
-                                removeFirstIndex = true;
+                                continue outerloop;
                             }
                         }
 
@@ -282,12 +282,12 @@ public class Board {
                                 int absAttackingPieceValue = Math.abs(attacksOnKing[k][2]);
                                 if (absAttackingPieceValue == Piece.queen || absAttackingPieceValue == Piece.rook || absAttackingPieceValue == Piece.bishop) {
                                     if (attackDirection % moveDirection == 0 && (Math.abs(moveDirection) != 1 || (Math.abs(moveDirection) == 1 && attacksOnKing[k][0] / 8 == attacksOnKing[k][1] / 8)) && newSquare != attacksOnKing[k][0]) {
-                                        if(!(KingSidePossible||QueenSidePossible) && i!=0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
-                                            continue outerloop;
+                                        if((KingSidePossible||QueenSidePossible) && i==0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
+                                            removeFirstIndex = true;
                                         }
                                         else
                                         {
-                                            removeFirstIndex = true;
+                                            continue outerloop;
                                         }
                                     }
                                 }
@@ -907,6 +907,10 @@ public class Board {
                 specialMovePositions.remove((Integer) 62);
             }
         }
+        /*System.out.println("AA");
+        for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+            printMove(enemyAttackedPositions.get(i));
+        }*/
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)
