@@ -263,6 +263,7 @@ public class Board {
                 addToAttackedPositions(startPosition,newSquare,Piece.king,attackedByOwn);
            for (int j = 0; j < attackedByEnemy.size(); j++) {
                         int attackedSquare = attackedByEnemy.get(j)[1];
+
                         if (newSquare == attackedSquare) // ist ein moegliches Feld angegriffen
                         {
                             if((KingSidePossible||QueenSidePossible) && i==0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
@@ -803,30 +804,54 @@ public class Board {
 
         if(pPieceValue!=castleInt) { // Es ist wenn gecastlet wird nicht moeglich, dass ein gegnerischer Zug verhindert wird
             //Angriffe(des Gegners), die dadurch verhindert werden, dass das Feld besetzt wird loeschen
-            LinkedList<int[]> blockedMoves = new LinkedList<>();
+            LinkedList<int[]> enemyBlockedMoves = new LinkedList<>();
             for (int i = 0; i < enemyAttackedPositions.size(); i++) {
                 int attackEndPosition = enemyAttackedPositions.get(i)[1];
                 int absAttackPieceValue = Math.abs(enemyAttackedPositions.get(i)[2]);
                 if (absAttackPieceValue == Piece.queen || absAttackPieceValue == Piece.rook || absAttackPieceValue == Piece.bishop) {
                     if (attackEndPosition == pEndPosition) {
-                        blockedMoves.add(enemyAttackedPositions.get(i));
+                        enemyBlockedMoves.add(enemyAttackedPositions.get(i));
                     }
                 }
             }
             for (int i = 0; i < enemyAttackedPositions.size(); i++) {
-                for (int j = 0; j < blockedMoves.size(); j++) {
-                    if (blockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0]) {
+                for (int j = 0; j < enemyBlockedMoves.size(); j++) {
+                    if (enemyBlockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0]) {
                         enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
                         i -= 1;
                     }
                 }
             }
-            for (int i = 0; i < blockedMoves.size(); i++) {
-                generateLegalMoves(blockedMoves.get(i)[0], Square[blockedMoves.get(i)[0]], Square, enemyAttackedPositions, ownAttackedPositions, enemyPositions, specialMovePositions);
+            for (int i = 0; i < enemyBlockedMoves.size(); i++) {
+                generateLegalMoves(enemyBlockedMoves.get(i)[0], Square[enemyBlockedMoves.get(i)[0]], Square, enemyAttackedPositions, ownAttackedPositions, enemyPositions, specialMovePositions);
+            }
+
+
+            // Eigene Angriffe, die dadurch verhindert dass das Feld besetzt wird
+            LinkedList<int[]> ownBlockedMoves = new LinkedList<>();
+            for (int i = 0; i < ownAttackedPositions.size(); i++) {
+                int ownEndPosition = ownAttackedPositions.get(i)[1];
+                int absAttackPieceValue = Math.abs(ownAttackedPositions.get(i)[2]);
+                if (absAttackPieceValue == Piece.queen || absAttackPieceValue == Piece.rook || absAttackPieceValue == Piece.bishop) {
+                    if (ownEndPosition == pEndPosition) {
+                        ownBlockedMoves.add(ownAttackedPositions.get(i));
+                    }
+                }
+            }
+            for (int i = 0; i < ownAttackedPositions.size(); i++) {
+                for (int j = 0; j < ownBlockedMoves.size(); j++) {
+                    if (ownBlockedMoves.get(j)[0] == ownAttackedPositions.get(i)[0]) {
+                        ownAttackedPositions.remove(ownAttackedPositions.get(i));
+                        i -= 1;
+                    }
+                }
+            }
+            for (int i = 0; i < ownBlockedMoves.size(); i++) {
+                generateLegalMoves(ownBlockedMoves.get(i)[0], Square[ownBlockedMoves.get(i)[0]], Square,ownAttackedPositions, enemyAttackedPositions, ownPositions, specialMovePositions);
             }
         }
 
-        //Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
+        // eigene Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
         outerloop: for (int i = 0; i < ownPositions.size(); i++) {
             int ownPosition = ownPositions.get(i);
             int absPieceValue = Math.abs(Square[ownPosition]);
@@ -862,6 +887,49 @@ public class Board {
                                 }
                             }
                             generateLegalMoves(ownPosition,Square[ownPosition],Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+                            break;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        // gegnerische Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
+        outerloop: for (int i = 0; i < enemyPositions.size(); i++) {
+            int piecePosition = enemyPositions.get(i);
+            int absPieceValue = Math.abs(Square[piecePosition]);
+            if(piecePosition != pStartPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
+            {
+                int attackDirection = pStartPosition - enemyPositions.get(i);
+                int[] attackDirections;
+                switch (Math.abs(Square[enemyPositions.get(i)]))
+                {
+                    case(Piece.rook):attackDirections = new int[]{8,1};break;
+                    case(Piece.bishop):attackDirections = new int[]{9,7};break;
+                    default:attackDirections = new int[]{9,8,7,1};break;
+                }
+
+                for (int j = 0; j < attackDirections.length; j++) {
+                    if(attackDirection % attackDirections[j] == 0)
+                    {
+                        if(Math.abs(attackDirections[j])!=1 || (Math.abs(attackDirections[j]) == 1 && piecePosition/8 == pStartPosition /8)) {
+                            if (Math.abs(attackDirection) != Math.abs(attackDirections[j])) {
+                                attackDirection /= attackDirections[j];
+                            }
+                            for (int k = piecePosition + attackDirection; k != pStartPosition; k += attackDirection) { // ueberpruefe ob es freie bahn zwischen den beiden Figuren gibt
+                                if (Square[k] != emptySquare) {
+                                    continue outerloop;
+                                }
+                            }
+                            for (int k = 0; k < enemyAttackedPositions.size(); k++) {
+                                if(piecePosition == enemyAttackedPositions.get(k)[0])
+                                {
+                                    enemyAttackedPositions.remove(k);
+                                    k-=1;
+                                }
+                            }
+                            generateLegalMoves(piecePosition,Square[piecePosition],Square,enemyAttackedPositions,ownAttackedPositions,enemyPositions,specialMovePositions);
                             break;
                         }
 
@@ -907,14 +975,16 @@ public class Board {
                 specialMovePositions.remove((Integer) 62);
             }
         }
-        /*System.out.println("AA");
+        System.out.println("AA");
         for (int i = 0; i < enemyAttackedPositions.size(); i++) {
             printMove(enemyAttackedPositions.get(i));
-        }*/
+        }
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)
     {
+        /*if(pAttackedSquare == 46)
+            printMove(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});*/
         pAttackedPositions.add(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});
     }
 
