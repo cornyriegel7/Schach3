@@ -945,6 +945,10 @@ public class Board {
 
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
         generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+        if(pPieceValue == castleInt)
+        {
+            generateLegalMoves(rookEndPos,Square[rookEndPos],Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+        }
 
         //En-Passant ist immer nur einen Zug lang moeglich, danach muss der specialmove dementsprechend geloescht werden
         for (int i = 0; i < specialMovePositions.size(); i++) {
