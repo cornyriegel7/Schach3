@@ -13,7 +13,7 @@ public class Controller {
     public Controller(View pView) {
         view = pView;
         dran = Piece.white;
-        bot = new Bot();
+
         //todo: noch nicht final ,sowohl client als auch server brauchen noch args. außerdem server als interface hinzufügen
         //createChatClient();
     }
@@ -41,6 +41,7 @@ public class Controller {
         board = new Board(this);
         input = new Input(this);
         boardGUI = new BoardGUI(this);
+        bot = new Bot(board);
     }
     public void setDran(int color)
     {

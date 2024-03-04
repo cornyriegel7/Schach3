@@ -1,5 +1,6 @@
 package pack;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Bot {
@@ -76,9 +77,10 @@ public class Bot {
     };
 
     double gameStatus; // soll null sein wenn das Spiel anfängt und sich gegen 1 bewegen desto weiter das Spiel fortschreitet
-    public Bot() {
+    Board board;
+    public Bot(Board board) {
         gameStatus = 0;
-
+        this.board = board;
     }
     public int evaluation(int[] pSquares, LinkedList<Integer> whitePositions, LinkedList<Integer> blackPositions){
         int balancing = 20;
@@ -92,11 +94,11 @@ public class Bot {
         int blackMaterial = 0;
         for (int i = 0; i < blackPositions.size(); i++) {
             pos = blackPositions.get(i);
-            blackMaterial += pSquares[pos] * balancing;
+            blackMaterial += pSquares[pos] * balancing * -1;
             int PosIndexReversed = 63 - pos;
-            blackMaterial -= positionEvaluation(gameStatus,PosIndexReversed,pSquares);
+            blackMaterial += positionEvaluation(gameStatus,PosIndexReversed,pSquares);
         }
-        return whiteMaterial + blackMaterial;
+        return blackMaterial - whiteMaterial;
     }
     public int positionEvaluation(double pGameStatus, int index, int[] pSquares)
     {
@@ -110,6 +112,14 @@ public class Bot {
             default: return pawnPosRating[index];
 
         }
+    }
+    public int[] getMove(int pSquares, int pDran, LinkedList<Integer> ownPos, LinkedList<Integer> enemyPos, LinkedList<int[]> ownAttacked, LinkedList<int[]> enemyAttacked, ArrayList<Integer> spezialMoves)
+    {
+        return new int[]{0,0,0};
+    }
+    public int minimax(int pSquares, int pDran, LinkedList<Integer> ownPos, LinkedList<Integer> enemyPos, LinkedList<int[]> ownAttacked, LinkedList<int[]> enemyAttacked, ArrayList<Integer> spezialMoves, int alpha, int beta)
+    {
+        return 0;
     }
 
 }
