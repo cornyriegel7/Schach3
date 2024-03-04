@@ -473,7 +473,7 @@ public class Board {
      */
     public void printMove(int[] move)
     {
-        System.out.println(pieceIntToChar(move[2])+" von "+move[0]+" nach "+move[1]);
+        //System.out.println(pieceIntToChar(move[2])+" von "+move[0]+" nach "+move[1]);
     }
 
     /**

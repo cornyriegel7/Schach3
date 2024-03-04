@@ -39,19 +39,18 @@ public class Input extends MouseAdapter {
             //Koords updaten
             xE = e.getX();
             yE = e.getY();
-            //Startsquare = koords
-            int pKoords = c.board.xyToSquare(xE, yE);
 
             //Ist ein Piece selected?
             if(selectedPieceValue == 0){
                 //KEIN PIECE SELECTED
 
+                startSquare = c.board.xyToSquare(xE, yE);
+
                 //IST DAS FELD ÜBERHAUPT BELEGT????
-                if (c.board.getPieceFromSquare(pKoords) != 0) {
+                if (c.board.getPieceFromSquare(startSquare) != 0) {
                     //DANN AKTUALISIER    !!!VORERST!!! MAL DAS SELECTED PIECE
                     //ALSO STARTSQUARE VOM PIECE UND DEN VALUE
-                    selectedPieceValue = c.board.getPieceFromSquare(pKoords);
-                    startSquare = pKoords;
+                    selectedPieceValue = c.board.getPieceFromSquare(startSquare);
 
                     //SOOOO MAL GUCKEN OB DAS PIECE AUCH DIE RICHTIGE FARBE HAT BZW. DRAN IST
                     int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
@@ -73,7 +72,7 @@ public class Input extends MouseAdapter {
                         }
 
                         //SETZE SCHONMAL DAS STARTSQUARE AUF 0 DAMIT KEINE FIGUR MEHR DRAUF IST (muss aber in dragged eig)
-                        c.board.setSquare(startSquare, 0);
+                        //c.board.setSquare(startSquare, 0);
                     } else {
                         //FUCK ES HAT DIE FALSCHE FARBE DANN HABEN WIR QUASI KEIN PIECE
                         selectedPieceValue = 0;
@@ -82,26 +81,54 @@ public class Input extends MouseAdapter {
                 } else {
                     //ES IST KEINE FIGUR DA DU DUMBO
                     //vorher
-                    //startSquare = -1;
-                    pKoords = -1;
+                    startSquare = -1;
                 }
 
             }
             else if(selectedPieceValue != 0)
             {
-                //FUCK EIN PIECE IST SELECTED
+                //FUCK EIN PIECE IST SCHON SELECTED!!! IST EINS DRAUF? MÜSSEN WIR EIN ANDERES AUSWÄHLEN ODER IST ES EIN GEGNERISCHES DRAUF?
+                //(GEGNERISCHE JUCKEN NICHT, WEIL DI SPÄTER BEI MOUSE RELEASED EH GESCHLAGEN WERDEN)
+                //HOL DIR DAS PIECE AUF DEM FElD
+                int tempSelectedPieceValue = c.board.getPieceFromSquare(c.board.xyToSquare(xE, yE));
 
-                int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+                //IST AUF DEM GEKLICKTEN FELD EIN PIECE
+                if(tempSelectedPieceValue != 0){
+                    //JA DA IST EINS
+                    int selectedPieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+                    int tempPieceColour = tempSelectedPieceValue / Math.abs(tempSelectedPieceValue);
+                    //IST ES IN UNSEREM TEAM?
+                    if(selectedPieceColor == tempPieceColour)
+                    {
+                        //JAAA IST ES...
+                        //DANN SETZE DAS ALTE PIECE ZURÜCk (das "fliegt" nämlich grad nur überm Feld bzw. ist nur in Input gespeichert. Muss also wieder in board gespeichert werden)
+                        c.board.setSquare(startSquare, selectedPieceValue);
 
-                //IST AUF DEM GEKLICKTEN FELD EIN PIECE UNSERES TEAMS??????
-                if (c.board.getPieceFromSquare(pKoords) != 0 && pieceColor == c.dran) {
-                    //JAAA???? DANN WÄHLE NUN DAS PIECE AUS
-                    //PIECE VALUE AKTuALISIEREN
-                    selectedPieceValue = c.board.getPieceFromSquare(pKoords);
-                    //STARTSQUARE AKTUALISIEREN
-                    startSquare = pKoords;
+                        //DANN WÄHLE NUN DAS PIECE AUS
+                        System.out.println("NEUES PIECE SELELELELLELECTED");
+
+                        //WÄHLE DAS NEUE PIECE AUSUUUSSUSUUSSSS
+                        //STARTSQUARE AKTUALISIEREN
+                        startSquare = c.board.xyToSquare(xE, yE);
+                        //PIECE VALUE AKTuALISIEREN (mit Startsquare)
+                        selectedPieceValue = c.board.getPieceFromSquare(startSquare);
+                        //STARTSQUARE AKTUALISIEREN
+
+
+                        //BERECHNE DIE LEGAL MOVESSSS DES NEU AUSGEWÄHLTEN PIECESS
+                        LinkedList<Integer> eigenePositionen = tempPieceColour == Piece.white ? c.board.whitePositions : c.board.blackPositions;
+                        LinkedList<int[]> vonAnderenAngegriffen = tempPieceColour == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                        LinkedList<int[]> vonEigenenAngegriffen = tempPieceColour == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                        legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen,c.board.specialMovePositions);
+                        //CHECKMATE??!??!?!?!
+                        if (legalMoves.length == 0 && c.board.isCheckMate(c.dran)) {
+                            boolean hasWhiteLost = c.dran == Piece.white;
+                            c.view.checkMateMessage(hasWhiteLost);
+                        }
+
+                        c.boardGUI.repaint();
+                    }
                 }
-                //NEIN? dann juckt nicht.. (glaub ich)
             }
         }
     }
@@ -117,6 +144,8 @@ public class Input extends MouseAdapter {
 
                 //ES WIRD !!!!EIN PIECE!!! GEDRAGGTTT
                 dragpiece = true;
+                //SETZE SCHONMAL STARTSQUARE AUF 0 (sonst wird beim draggen ein altes piece angezeigt :( )
+                c.board.setSquare(startSquare, 0);
 
 //                if (startSquare != 0) {
                     c.boardGUI.repaint();     // Swing sagen, dass es repainten soll
@@ -142,6 +171,7 @@ public class Input extends MouseAdapter {
 
                 //JA????? DURCH KLICKEN ODER DRAGGEN??
                 if (dragpiece == true) {
+                    //System.out.println("DRAGRELEASED UND MOVED");
                     //DURCH DRAGGEN ALSO...
                     //JA DRAGGEN KANN SCHONMAL WIEDER FALSE SEIN
                     dragpiece = false;
@@ -156,7 +186,7 @@ public class Input extends MouseAdapter {
 
                             //Resette alles, weil der Move ausgeführt wurde
                             selectedPieceValue = 0;
-                            System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE");
+                            //System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE");
                             startSquare = -1; //???????????????????????????????????????????????????????????????? EIG MÜSSTE
 
 
@@ -175,7 +205,7 @@ public class Input extends MouseAdapter {
                         // figur wird an die stelle zurückgesetzt und repaint
                         c.board.setSquare(startSquare, selectedPieceValue);
                         selectedPieceValue = 0;
-                        System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE DURCH");
+                        //System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE DURCH");
                         c.boardGUI.repaint();
                     }
                 }
@@ -188,7 +218,10 @@ public class Input extends MouseAdapter {
                     // --> START UND ENDSQUARE SIND GLEICH RICHTIG?
 
                     if(startSquare != endSquare){
+
+                        //METHODEN FÜR MOVEN DURCH KLICKEN
                         //SIE SIND NICHT GLEICH --> DU WILLST ZU ENDSQUARE MOVEN
+                        //System.out.println("KLICKRELEASED UND MOVED");
                         for (int i = 0; i < legalMoves.length; i++) {
                             //WENN DAS ENDSQUARE EIN LEGALMOVE IST DANN MACHE DEN MOVE
                             if (legalMoves[i][1] == endSquare) {
@@ -199,7 +232,8 @@ public class Input extends MouseAdapter {
 
                                 //Resette alles, weil der Move ausgeführt wurde
                                 selectedPieceValue = 0;
-                                System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE");
+                                startSquare = -1;
+                                //System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE");
 
 
                                 //REPAINTE DU ...
@@ -222,16 +256,22 @@ public class Input extends MouseAdapter {
                             c.boardGUI.repaint();
                         }
                     }
+
+
+                    //METHODEN FÜR NUR AUSWÄHLEN DURCH KLICKEN
                     else{
-                        // DU HAST ES GRADE ERST AUSGEWÄHLT mhm.
+                        //SETZE DAS STARTSQUARE SCHONMAL 0 damit kein PIECE MEHR DRAUF IST
+                        c.board.setSquare(startSquare, 0);
+                        //System.out.println("KLICKRELEASED UND AUSGEWÄHLT");
+                        //UM DIE PIECES ZU IN DIE MITTE ZU PAINTEN
+                        //System.out.println("STARTSQUARE: " + startSquare + "    X: " + xE + "    Y: " + yE);
+                        xE = c.boardGUI.squareToX(startSquare) + 40;
+                        yE = c.boardGUI.squareToY(startSquare) + 40;
+                        //System.out.println("STARTSQUARE: " + startSquare + "    X: " + xE + "    Y: " + yE);
+                        c.boardGUI.repaint();
                     }
-
                 }
-
-
-
             }
-            else{}
         }
     }
 
