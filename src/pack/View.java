@@ -20,6 +20,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     JScrollPane scrollPane;
     JComboBox<String> dropdown;
 
+    public final static String verbindungGewaehrt = "OKOK", verbindungAbgebrochen = "CCUT", spielZuende = "GMOV", brettEmpfangen = "BOAR";
+
     boolean host = false;
     private String ip = "127.0.0.1";
     private int pickedPort, promotionValue, pickedMode;
@@ -68,6 +70,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
         taChat = new JTextArea();
         taChat.setEditable(false);
+        taChat.setLineWrap(true);
+        taChat.setWrapStyleWord(true);
 
         scrollPane = new JScrollPane(taChat);
         scrollPane.setBounds(10,10,200,550);
@@ -110,14 +114,15 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         }
 
         if(e.getSource()==bSend) {
-            this.appendToArea(tbEnter.getText());
+            String text = tbEnter.getText();
+            taChat.append("Du: " + text + "\r\n");
+            sendMessage(text);
         }
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
         pickedMode = 0;
-        System.out.println("EEEEE");
     }
 
     //Createt das Promotion-Menü
@@ -197,13 +202,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
                 addPromoWindow(6);
             }
-//            else {
-//                System.out.println("Es dürfen NUR Zahlen im Port stehen du Knecht");
-//            }
-//        }
-//        else
-//        {
-//            System.out.println("Gib eine IP und einen Port ein du Knecht");
         }
 
 
@@ -268,49 +266,53 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     //Todo: Verschiedene Möglichkeiten behandeln: 1. Neue Verbindung, 2. Verbindung getrennt, 3. Chatnachricht wird empfangen, 4. Schachbrett wird empfangen
     public void getString(String text){
-        taChat.append(text);
 
-        if(text.equals("CONN")){
-            taChat.append("Server: Verbindung gewährt!" + "\r\n" + "Sie sind Verbunden!");
+        String neueNachricht ="";
+        //Kommandowort rausfinden
+        String command = text.substring(0, Math.min(text.length(), 4));
+
+
+            switch (command) {
+                case (verbindungGewaehrt):
+                    neueNachricht = "Du bist connected \uD83D\uDE0E";
+                    break;
+                case (verbindungAbgebrochen):
+                    neueNachricht = "Verbindung zum Spielpartner getrennt";
+                    break;
+                //case (spielZuende):
+                case (brettEmpfangen):
+                    neuesBrett(text.substring(4));
+                    return;
+            }
+        taChat.append("Server: " + text + "\r\n");
         }
-        else if(text.equals("DISC")) {
-            taChat.append("Server: Verbindung zum Spielpartner getrennt.");
-        }
 
-
-        //sonst: nachricht oder board
-
-        String firstChars = text.substring(0, Math.min(text.length(), 4));
-        String rest = text.substring(4);
-        switch (firstChars){
-
-            case "MSSG": taChat.append("Gegner:" + rest);
-            case "BORD": changeBoard(rest);
-        }
-
+    public void neuesBrett(String boardString) {
+        convertStringToSquareArray(boardString);
     }
 
-    public void changeBoard(String boardString) {
-        //int[] newBoard =
-        //HIer kommt ein String rein und das Board wird anhand diesem verändert
-    }
 
-
-    //(hoffentlich das richtige) Array wird auf das empfangene String gesetzt, hier braucht man aber ein int[] und kein string[] als rückgabe
+    //todo: die untere hier gibt ein String zurück, wir brauchen aber ein int[]. generell brauchen wir hier eine korrekte umwandlung von einem boardstring zu
+    //todo: einem Square[], dann aktualisierung des Boardes
     public void convertStringToSquareArray(String squareString) {
         String[] values = squareString.split(",");
-
-        // Check if the string starts with "SERVERNACHRICHT"
-        if (squareString.startsWith("SERVERNACHRICHT")) {
-            values = Arrays.copyOfRange(values, 1, values.length);
-        }
 
         for (int i = 0; i < values.length; i++) {
             c.board.setSquare(i, Integer.parseInt(values[i]));
         }
     }
 
-    //sonstiges
+    //Array wird zu einem String konvertiert, welches durch ein Komma getrennt werden (das encrypten braucht man hier in der view)
+    public String convertSquareArrayToString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < c.board.getSquareLength(); i++) {
+            stringBuilder.append(",");
+            stringBuilder.append(c.board.getSquare(i));
+        }
+
+        return stringBuilder.toString();
+    }
 
     public int getPromotionInt()
         {
@@ -330,6 +332,10 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public void sendMessage(String message){
+        c.chatClient.send(message);
     }
 
     public void checkMateMessage(boolean hasWhiteLost)
@@ -380,7 +386,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     public void windowOpened(WindowEvent e) {}
     @Override
     public void windowClosed(WindowEvent e) {}
-
     @Override
     public void windowIconified(WindowEvent e) {}
 
