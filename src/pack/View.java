@@ -240,7 +240,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         IPLabel.setBounds(10,10,100,30);
         connectionFrame.add(IPLabel);
 
-        tbIP = new JTextField();
+        tbIP = new JTextField("127.0.0.1");
         tbIP.setBounds(150,10,100,30);
         connectionFrame.add(tbIP);
 
@@ -249,7 +249,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         portLabel.setBounds(10,50,100,30);
         connectionFrame.add(portLabel);
 
-        tbPort = new JTextField();
+        tbPort = new JTextField("4000");
         tbPort.setBounds(150,50,100,30);
         connectionFrame.add(tbPort);
 
@@ -268,7 +268,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     //Todo: Verschiedene Möglichkeiten behandeln: 1. Neue Verbindung, 2. Verbindung getrennt, 3. Chatnachricht wird empfangen, 4. Schachbrett wird empfangen
     public void getString(String text){
-        System.out.println("Da kommt vom server" + text);
+        taChat.append(text);
 
         if(text.equals("CONN")){
             taChat.append("Server: Verbindung gewährt!" + "\r\n" + "Sie sind Verbunden!");
