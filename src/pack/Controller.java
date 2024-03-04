@@ -8,10 +8,12 @@ public class Controller {
     BoardGUI boardGUI;
     Chatserver chatServer;
     ChatClient chatClient;
+    Bot bot;
     public int dran;
     public Controller(View pView) {
         view = pView;
         dran = Piece.white;
+        bot = new Bot();
         //todo: noch nicht final ,sowohl client als auch server brauchen noch args. außerdem server als interface hinzufügen
         //createChatClient();
     }

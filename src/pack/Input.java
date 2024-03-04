@@ -91,6 +91,7 @@ public class Input extends MouseAdapter {
                         c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
                         selectedPieceValue = 0;
                         c.boardGUI.repaint();
+                        System.out.println(c.bot.evaluation(c.board.Square,c.board.whitePositions,c.board.blackPositions));
                         return;
                         //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
 
@@ -102,6 +103,7 @@ public class Input extends MouseAdapter {
                     selectedPieceValue = 0;
                     c.boardGUI.repaint(0, 0, 3000, 3000);
                 }
+
             }
         }
     }
