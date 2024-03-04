@@ -3,7 +3,7 @@ package pack;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
+//MANN ICH WILL PUSHENNN
 public class BoardGUI extends JPanel {
     Controller c;
 

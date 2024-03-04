@@ -70,6 +70,7 @@ public class Input extends MouseAdapter {
                 if (startSquare != 0) {
                     c.boardGUI.repaint();     // Swing sagen, dass es repainten soll
                     // aber das hauptproblem ist, dass mouseDragged zu wenig oft aufgerufen wird
+                    //HAAALLOO
                 }
             }
         }

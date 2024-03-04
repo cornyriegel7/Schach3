@@ -593,7 +593,7 @@ public class Board {
         }
         return moves.toArray(new int[0][0]);
     }
-
+//COMMITTEST DU JETZT??
     public int[][] generatePawnMoves(int startPos,int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions,ArrayList<Integer> pSpecialMovePositions)
     {
         LinkedList<int[]> moves = new LinkedList<>();
