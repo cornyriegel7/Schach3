@@ -18,6 +18,7 @@ public class Input extends MouseAdapter {
     private int endSquare;
 
     boolean active;
+    boolean dragpiece;
 
     public Input(Controller pController){
         c = pController;
@@ -27,6 +28,7 @@ public class Input extends MouseAdapter {
         endSquare = -1;
         legalMoves = new int[0][0];
         active = true;
+        dragpiece = false;
     }
 
 
@@ -34,28 +36,72 @@ public class Input extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if(active) {
-            xE = e.getX();  //Zum Abrufen fürs Board
+            //Koords updaten
+            xE = e.getX();
             yE = e.getY();
-            startSquare = c.board.xyToSquare(xE, yE);
-            if (c.board.getPieceFromSquare(startSquare) != 0) {
-                selectedPieceValue = c.board.getPieceFromSquare(startSquare);
-                int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
-                if (pieceColor == c.dran) {
-                    LinkedList<Integer> eigenePositionen = pieceColor == Piece.white ? c.board.whitePositions : c.board.blackPositions;
-                    LinkedList<int[]> vonAnderenAngegriffen = pieceColor == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
-                    LinkedList<int[]> vonEigenenAngegriffen = pieceColor == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
-                    legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen,c.board.specialMovePositions);
-                    if (legalMoves.length == 0 && c.board.isCheckMate(c.dran)) {
-                        boolean hasWhiteLost = c.dran == Piece.white;
-                        c.view.checkMateMessage(hasWhiteLost);
+            //Startsquare = koords
+            int pKoords = c.board.xyToSquare(xE, yE);
+
+            //Ist ein Piece selected?
+            if(selectedPieceValue == 0){
+                //KEIN PIECE SELECTED
+
+                //IST DAS FELD ÜBERHAUPT BELEGT????
+                if (c.board.getPieceFromSquare(pKoords) != 0) {
+                    //DANN AKTUALISIER    !!!VORERST!!! MAL DAS SELECTED PIECE
+                    //ALSO STARTSQUARE VOM PIECE UND DEN VALUE
+                    selectedPieceValue = c.board.getPieceFromSquare(pKoords);
+                    startSquare = pKoords;
+
+                    //SOOOO MAL GUCKEN OB DAS PIECE AUCH DIE RICHTIGE FARBE HAT BZW. DRAN IST
+                    int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+                    //IST ES DRAN??
+                    if (pieceColor == c.dran) {
+
+                        //JAAAAAAAA!!! DANN HABEN WIR RICHTIG AUSGEWÄHLT
+
+                        //BERECHNE DIE LEGAL MOVESSSS
+
+                        LinkedList<Integer> eigenePositionen = pieceColor == Piece.white ? c.board.whitePositions : c.board.blackPositions;
+                        LinkedList<int[]> vonAnderenAngegriffen = pieceColor == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                        LinkedList<int[]> vonEigenenAngegriffen = pieceColor == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                        legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen,c.board.specialMovePositions);
+                        //CHECKMATE??!??!?!?!
+                        if (legalMoves.length == 0 && c.board.isCheckMate(c.dran)) {
+                            boolean hasWhiteLost = c.dran == Piece.white;
+                            c.view.checkMateMessage(hasWhiteLost);
+                        }
+
+                        //SETZE SCHONMAL DAS STARTSQUARE AUF 0 DAMIT KEINE FIGUR MEHR DRAUF IST (muss aber in dragged eig)
+                        c.board.setSquare(startSquare, 0);
+                    } else {
+                        //FUCK ES HAT DIE FALSCHE FARBE DANN HABEN WIR QUASI KEIN PIECE
+                        selectedPieceValue = 0;
+                        startSquare = -1;
                     }
-                    c.board.setSquare(startSquare, 0);
                 } else {
-                    selectedPieceValue = 0;
-                    startSquare = -1;
+                    //ES IST KEINE FIGUR DA DU DUMBO
+                    //vorher
+                    //startSquare = -1;
+                    pKoords = -1;
                 }
-            } else {
-                startSquare = -1;
+
+            }
+            else if(selectedPieceValue != 0)
+            {
+                //FUCK EIN PIECE IST SELECTED
+
+                int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+
+                //IST AUF DEM GEKLICKTEN FELD EIN PIECE UNSERES TEAMS??????
+                if (c.board.getPieceFromSquare(pKoords) != 0 && pieceColor == c.dran) {
+                    //JAAA???? DANN WÄHLE NUN DAS PIECE AUS
+                    //PIECE VALUE AKTuALISIEREN
+                    selectedPieceValue = c.board.getPieceFromSquare(pKoords);
+                    //STARTSQUARE AKTUALISIEREN
+                    startSquare = pKoords;
+                }
+                //NEIN? dann juckt nicht.. (glaub ich)
             }
         }
     }
@@ -63,14 +109,19 @@ public class Input extends MouseAdapter {
     //Wenn die Maus gezogen wird
     public void mouseDragged(MouseEvent e) {
         if(active) {
+            //IST EIN PIECE AUSGEWÄHLT????
             if (selectedPieceValue != 0) {
+                //JA?? DANN AKTUALISIER DIE KOORDS
                 xE = e.getX();
                 yE = e.getY();
 
-                if (startSquare != 0) {
+                //ES WIRD !!!!EIN PIECE!!! GEDRAGGTTT
+                dragpiece = true;
+
+//                if (startSquare != 0) {
                     c.boardGUI.repaint();     // Swing sagen, dass es repainten soll
-                    // aber das hauptproblem ist, dass mouseDragged zu wenig oft aufgerufen wird
-                }
+
+//                }
             }
         }
     }
@@ -79,31 +130,113 @@ public class Input extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(active) {
-            if (selectedPieceValue != 0) {
-                xE = e.getX();  //Zum Abrufen fürs Board
-                yE = e.getY();
-                endSquare = c.board.xyToSquare(xE, yE);
-                for (int i = 0; i < legalMoves.length; i++) {
-                    if (legalMoves[i][1] == endSquare) {
-                        c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
-                        //legalMoves = null;
-                        int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
-                        c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
-                        selectedPieceValue = 0;
-                        c.boardGUI.repaint();
-                        return;
-                        //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
+            //IST EIN PIECE AUSGEWÄHLT????
+            if(selectedPieceValue != 0) {
 
+                //FÜRS BOARD MHMHM
+                xE = e.getX();
+                yE = e.getY();
+
+                //ERSTELLE EIN ENDSQUARE AN DEN KOORDS
+                endSquare = c.board.xyToSquare(xE, yE);
+
+                //JA????? DURCH KLICKEN ODER DRAGGEN??
+                if (dragpiece == true) {
+                    //DURCH DRAGGEN ALSO...
+                    //JA DRAGGEN KANN SCHONMAL WIEDER FALSE SEIN
+                    dragpiece = false;
+
+                    for (int i = 0; i < legalMoves.length; i++) {
+                        //WENN DAS ENDSQUARE EIN LEGALMOVE IST DANN MACHE DEN MOVE
+                        if (legalMoves[i][1] == endSquare) {
+                            c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
+                            //legalMoves = null;
+                            int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+                            c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
+
+                            //Resette alles, weil der Move ausgeführt wurde
+                            selectedPieceValue = 0;
+                            System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE");
+                            startSquare = -1; //???????????????????????????????????????????????????????????????? EIG MÜSSTE
+
+
+                            //REPAINTE DU ...
+                            c.boardGUI.repaint();
+                            return;
+                            //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
+
+                        }
+                    }
+
+                    //ES GAB KEINEN LEGALMOVE WEIL DIE FOR SCHLEIFE DURCH IST UND NICHT RETURNT WURDE
+
+                    if (startSquare != -1) {
+                        //DANN SETZE JETZT DIE FIGUR ZURÜCL
+                        // figur wird an die stelle zurückgesetzt und repaint
+                        c.board.setSquare(startSquare, selectedPieceValue);
+                        selectedPieceValue = 0;
+                        System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE DURCH");
+                        c.boardGUI.repaint();
                     }
                 }
-                if (startSquare != -1) {
-                    // figur wird an die stelle zurückgesetzt und repaint
-                    c.board.setSquare(startSquare, selectedPieceValue);
-                    selectedPieceValue = 0;
-                    c.boardGUI.repaint(0, 0, 3000, 3000);
+                else
+                {
+                    //DURCH KLICKEN ALSOOO!!!
+                    //DIE FRAGE IST....HAST DU ES GERADE ERST AUSGEWÄHLT ODER WILLST DU HIERHIN MOVEN??
+                    //DAS PRÜFEN WIR MAL...
+                    //SO WENN DU ES GERADE AUSGEWÄHLT HAST HAT SICH DEINE KOORDINATE NICHT VERÄNDERT
+                    // --> START UND ENDSQUARE SIND GLEICH RICHTIG?
+
+                    if(startSquare != endSquare){
+                        //SIE SIND NICHT GLEICH --> DU WILLST ZU ENDSQUARE MOVEN
+                        for (int i = 0; i < legalMoves.length; i++) {
+                            //WENN DAS ENDSQUARE EIN LEGALMOVE IST DANN MACHE DEN MOVE
+                            if (legalMoves[i][1] == endSquare) {
+                                c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
+                                //legalMoves = null;
+                                int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
+                                c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
+
+                                //Resette alles, weil der Move ausgeführt wurde
+                                selectedPieceValue = 0;
+                                System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE");
+
+
+                                //REPAINTE DU ...
+                                c.boardGUI.repaint();
+                                return;
+                                //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
+
+                            }
+                        }
+
+                        //ES GAB KEINEN LEGALMOVE WEIL DIE FOR SCHLEIFE DURCH IST UND NICHT RETURNT WURDE
+
+                        if (startSquare != -1) {
+                            //DANN SETZE JETZT DIE FIGUR ZURÜCL
+                            // figur wird an die stelle zurückgesetzt und repaint
+                            c.board.setSquare(startSquare, selectedPieceValue);
+                            selectedPieceValue = 0;
+                            System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE DURCH");
+                            startSquare = -1; //??????????????????????????????????????????????????????????? EIG MÜSSTE
+                            c.boardGUI.repaint();
+                        }
+                    }
+                    else{
+                        // DU HAST ES GRADE ERST AUSGEWÄHLT mhm.
+                    }
+
                 }
+
+
+
             }
+            else{}
         }
+    }
+
+    public void mouseClicked(MouseEvent e){
+        dragpiece = false;
     }
 
     public void setActive(boolean active) {
