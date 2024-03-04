@@ -105,7 +105,6 @@ public class Input extends MouseAdapter {
                         c.board.setSquare(startSquare, selectedPieceValue);
 
                         //DANN WÄHLE NUN DAS PIECE AUS
-                        System.out.println("NEUES PIECE SELELELELLELECTED");
 
                         //WÄHLE DAS NEUE PIECE AUSUUUSSUSUUSSSS
                         //STARTSQUARE AKTUALISIEREN
