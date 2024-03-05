@@ -88,17 +88,22 @@ public class Bot {
         int pos;
         for (int i = 0; i < whitePositions.size(); i++) {
             pos = whitePositions.get(i);
+            //System.out.print(board.pieceIntToChar(pSquares[pos]));
+            //System.out.println(positionEvaluation(gameStatus,pos,pSquares));
             whiteMaterial += pSquares[pos] * balancing;
             whiteMaterial +=positionEvaluation(gameStatus,pos,pSquares);
         }
         int blackMaterial = 0;
         for (int i = 0; i < blackPositions.size(); i++) {
             pos = blackPositions.get(i);
-            blackMaterial += pSquares[pos] * balancing * -1;
             int PosIndexReversed = 63 - pos;
+            blackMaterial += pSquares[pos] * balancing * -1;
+            //System.out.print(board.pieceIntToChar(pSquares[pos]));
+           // System.out.println(positionEvaluation(gameStatus,PosIndexReversed,pSquares));
+
             blackMaterial += positionEvaluation(gameStatus,PosIndexReversed,pSquares);
         }
-        return blackMaterial - whiteMaterial;
+        return  whiteMaterial - blackMaterial;
     }
     public int positionEvaluation(double pGameStatus, int index, int[] pSquares)
     {
