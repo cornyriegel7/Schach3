@@ -72,7 +72,7 @@ public class Board {
      * @param pPieceValue den wert einer Figur aus Farbe * FigurTyp
      * @return den Anfangsbuchstaben des Namen der Figur (klein wenn Figur == schwarz, gross wenn weiß)
      */
-    private  char pieceIntToChar(int pPieceValue)
+    public  char pieceIntToChar(int pPieceValue)
     {
         int absolutFigurInt = Math.abs(pPieceValue);
         int farbe = pPieceValue / absolutFigurInt;
@@ -155,42 +155,25 @@ public class Board {
     {
 
         int color = pPieceValue / Math.abs(pPieceValue);
+        int kingPosition = getKingPos(pSquares,pPositions);
+        int[][] attacksOnKing= getAttacksOnKing(kingPosition,pSquares,pPositions,attackedByEnemy);
 
 
-        //TODO: das koennte man Laufzeit technisch besser machen, wenn man die Positionslisten einfach nach groesse sortieren wuerde, dann koennte man sich eif ein bestimmten index holen
-        int kingPosition = 0;
-        for (int i = 0; i < pPositions.size(); i++) {
-            if(Math.abs(pSquares[pPositions.get(i)]) == Piece.king)
-            {
-                kingPosition = pPositions.get(i);
-                break;
-            }
-        }
-
-        //wenn der Koenig nicht im Schach ist
-
-        LinkedList<int[]> attacksOnKing = new LinkedList<>();
-        for (int i = 0; i < attackedByEnemy.size(); i++) {
-            if(kingPosition == attackedByEnemy.get(i)[1])
-            {
-                attacksOnKing.add(attackedByEnemy.get(i));
-            }
-        }
         int[][] moves = new int[0][0];
         if (Math.abs(pPieceValue) == Piece.king) {
-            return generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy,attacksOnKing.toArray(new int[0][0]),pSpecialMovePositions);
+            return generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy,attacksOnKing,pSpecialMovePositions);
 
         }
-        else if(attacksOnKing.size() == 0)
+        else if(attacksOnKing.length == 0)
         {
              moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
 
         }
-        else if(attacksOnKing.size() == 1)
+        else if(attacksOnKing.length == 1)
         {
             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
             LinkedList<int[]> legalMoves = new LinkedList<>();
-            int[] allowedSquares = generateAllowedSquares(attacksOnKing.get(0));
+            int[] allowedSquares = generateAllowedSquares(attacksOnKing[0]);
 
             for (int i = 0; i < moves.length; i++) {
                 for (int j = 0; j < allowedSquares.length; j++) {
@@ -216,6 +199,32 @@ public class Board {
             return allowedMoves.toArray(new int[0][0]);
         }
         return moves;
+    }
+    public int[][] getAttacksOnKing(int kingPosition,int[] pSquares,LinkedList<Integer> ownPositions, LinkedList<int[]> enemyAttacked)
+    {
+
+
+        LinkedList<int[]> attacksOnKing = new LinkedList<>();
+        for (int i = 0; i < enemyAttacked.size(); i++) {
+            if(kingPosition == enemyAttacked.get(i)[1])
+            {
+                attacksOnKing.add(enemyAttacked.get(i));
+            }
+        }
+        return attacksOnKing.toArray(new int[0][0]);
+    }
+    public int getKingPos(int[] pSquares,LinkedList<Integer> ownPositions)
+    {
+        //TODO: das koennte man Laufzeit technisch besser machen, wenn man die Positionslisten einfach nach groesse sortieren wuerde, dann koennte man sich eif ein bestimmten index holen
+        int kingPosition = 0;
+        for (int i = 0; i < ownPositions.size(); i++) {
+            if(Math.abs(pSquares[ownPositions.get(i)]) == Piece.king)
+            {
+                kingPosition = ownPositions.get(i);
+                break;
+            }
+        }
+        return kingPosition;
     }
 
     public boolean isCheckMate(int color)
@@ -949,6 +958,10 @@ public class Board {
         //Figur aus Positionen loeschen
         ownPositions.removeFirstOccurrence(/*(Integer)*/ pStartPosition);
         ownPositions.add(pEndPosition);
+        if(pPieceValue == castleInt) {
+            ownPositions.removeFirstOccurrence(rookStartPos);
+            ownPositions.add(rookEndPos);
+        }
 
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
         generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
