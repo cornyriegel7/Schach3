@@ -48,4 +48,8 @@ public class Controller {
         dran = color;
     }
 
+    public void toggleDran(){dran = dran * -1;}
+
+
 }
+

@@ -9,6 +9,8 @@ import java.util.LinkedList;
 
 public class Input extends MouseAdapter {
 
+   //Hier Richard deine Methode für den Bot:  System.out.println(c.bot.evaluation(c.board.Square,c.board.whitePositions,c.board.blackPositions));
+
     Controller c;
     private static int selectedPieceValue;
     public int startSquare;  //Index Startposition vom Move
@@ -188,6 +190,7 @@ public class Input extends MouseAdapter {
                             //System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE");
                             startSquare = -1; //???????????????????????????????????????????????????????????????? EIG MÜSSTE
 
+                            System.out.println("MOVEEEE!!");
 
                             //REPAINTE DU ...
                             c.boardGUI.repaint();
@@ -234,6 +237,7 @@ public class Input extends MouseAdapter {
                                 startSquare = -1;
                                 //System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE");
 
+                                System.out.println("MOVEEEE!!");
 
                                 //REPAINTE DU ...
                                 c.boardGUI.repaint();
@@ -250,7 +254,6 @@ public class Input extends MouseAdapter {
                             // figur wird an die stelle zurückgesetzt und repaint
                             c.board.setSquare(startSquare, selectedPieceValue);
                             selectedPieceValue = 0;
-                            System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE DURCH");
                             startSquare = -1; //??????????????????????????????????????????????????????????? EIG MÜSSTE
                             c.boardGUI.repaint();
                         }
