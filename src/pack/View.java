@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Arrays;
 
 import static javax.swing.JOptionPane.NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
@@ -13,12 +12,12 @@ import static javax.swing.JOptionPane.YES_OPTION;
 public class View extends JFrame implements ActionListener, WindowListener, StringListener {
     static Controller c;
     JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, connectionFrame;
-    JButton bVsBot, bVsLokal, bVsOnline, bSend, bJoin, bHost;
+    JButton bVsBot, bVsLokal, bVsOnline, bSend, bJoin, bHost, bApply;
     JLabel lTitle, IPLabel, portLabel;
     JTextArea taChat;
     JTextField tbEnter, tbIP, tbPort;
     JScrollPane scrollPane;
-    JComboBox<String> dropdown;
+    JComboBox<String> dropdownProm, dropdownSkins;
 
     public final static String verbindungGewaehrt = "OKOK", verbindungAbgebrochen = "CCUT", spielZuende = "GMOV", brettEmpfangen = "BOAR";
 
@@ -118,6 +117,10 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             taChat.append("Du: " + text + "\r\n");
             sendMessage(text);
         }
+        if(e.getSource()==bApply)
+        {
+            c.piece.changeSkins((String) dropdownSkins.getSelectedItem());
+        }
     }
 
     @Override
@@ -128,19 +131,32 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     //Createt das Promotion-Menü
     public void addPromoWindow(int pieceValue){
         promFrame = new JFrame();
-        promFrame.setTitle("Promotion");
-        promFrame.setBounds(200,200,500,200);
-        promFrame.setLocationRelativeTo(null);
+        promFrame.setTitle("Options:");
+        promFrame.setBounds(200,200,600,400);
+        promFrame.setLocation(20,500);
         promFrame.setLayout(null);
         promFrame.addWindowListener(this);
 
-        String[] options = {"Dame", "Turm", "Läufer", "Springer"};
-        dropdown = new JComboBox<>(options);
-        dropdown.addActionListener(this);
-        dropdown.setBounds(50,50,300,30);
-        dropdown.setVisible(true);
+        String[] proms = {"Dame", "Turm", "Läufer", "Springer"};
+        dropdownProm = new JComboBox<>(proms);
+        dropdownProm.addActionListener(this);
+        dropdownProm.setBounds(50,50,300,30);
+        dropdownProm.setVisible(true);
 
-        promFrame.add(dropdown);
+        String[] skins = {"pink-blau","pink-blau-Apo","","",""};
+        dropdownSkins = new JComboBox<>(skins);
+        dropdownSkins.addActionListener(this);
+        dropdownSkins.setBounds(50,100,300,30);
+        dropdownSkins.setVisible(true);
+
+        bApply = new JButton("Apply");
+        bApply.addActionListener(this);
+        bApply.setBounds(380, 100, 140, 30);
+        bApply.setVisible(true);
+
+        promFrame.add(dropdownProm);
+        promFrame.add(dropdownSkins);
+        promFrame.add(bApply);
         promFrame.setVisible(true);
 
         promFrame.toBack();
@@ -318,7 +334,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     public int getPromotionInt()
         {
-            switch ((String)dropdown.getSelectedItem())
+            switch ((String) dropdownProm.getSelectedItem())
             {
                 case("Springer"):return Piece.knight;
                 case("Turm"):return Piece.rook;
