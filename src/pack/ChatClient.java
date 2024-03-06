@@ -21,11 +21,6 @@ public class ChatClient extends Client {
         send(pText);
     }
 
-    public void anAlleVersenden(String pText)
-    {
-        send("ALLE" + pText);
-    }
-
     /*** Mit dieser Methode wird die aktuelle Verbindung getrennt */
     public void beenden()
     {

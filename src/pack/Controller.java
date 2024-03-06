@@ -13,9 +13,6 @@ public class Controller {
     public Controller(View pView) {
         view = pView;
         dran = Piece.white;
-
-        //todo: noch nicht final ,sowohl client als auch server brauchen noch args. außerdem server als interface hinzufügen
-        //createChatClient();
     }
 
     public void restart() {
