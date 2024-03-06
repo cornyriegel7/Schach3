@@ -22,8 +22,9 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     public final static String verbindungGewaehrt = "OKOK", verbindungAbgebrochen = "CCUT", spielZuende = "GMOV", brettEmpfangen = "BOAR";
 
     boolean host = false;
-    private String ip = "127.0.0.1";
+    private String ip;
     private int pickedPort, promotionValue, pickedMode;
+    public boolean isHost;
 
     public View(){
         super("Schachprogramm");
@@ -93,16 +94,20 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             }
 
             if (e.getSource() == bJoin) {
-                createVsOnline(false);
+                c.chatClient.setIp(tbIP.getText());
+                createVsOnline();
                 c.createChatClient();
             }
 
             if (e.getSource() == bHost) {
-                createVsOnline(true);
+                isHost=true;
+                createVsOnline();
                 //erst server erstellen
                 c.createChatServer(getPickedPort());
                 c.createChatClient();
                 c.chatClient.StringEmpfangen = this;
+
+                c.chatClient.setIp(tbIP.getText());
             }
 
             //Für Spiel gegen Bot
@@ -114,6 +119,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
         if(e.getSource()==bSend) {
             String text = tbEnter.getText();
+
             taChat.append("Du: " + text + "\r\n");
             sendMessage(text);
         }
@@ -182,10 +188,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     //createt das Onlinespielfeld
-    public void createVsOnline(boolean isHost)
+    public void createVsOnline()
     {
-        //Prüft ob die Textfelder empty sind
-        //if(!tbIP.getText().equals("") && !tbPort.getText().equals("")) {
             if(isNumeric(tbPort.getText())) {
                 pickedMode = 2;
                 ip = tbIP.getText();
@@ -353,7 +357,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     public void sendMessage(String message){
-        c.chatClient.send("MSSG" + message);
+        if(message.equals("TEST")) c.chatClient.send(message);
+        else c.chatClient.send("MSSG" + message);
     }
 
     public void checkMateMessage(boolean hasWhiteLost)

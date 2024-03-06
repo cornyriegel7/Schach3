@@ -82,7 +82,7 @@ public abstract class Server
         }
     }
 
-    private class ClientMessageHandler extends Thread
+    class ClientMessageHandler extends Thread
     {
         private final ClientSocketWrapper socketWrapper;
         private boolean active;

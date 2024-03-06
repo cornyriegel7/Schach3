@@ -7,6 +7,7 @@ public class ChatClient extends Client {
     public Controller c;
     private int[] toBeSentArray;
     public StringListener StringEmpfangen;
+    private String ip;
 
     private boolean gewaehrt;
     private String currentServerText;
@@ -35,5 +36,9 @@ public class ChatClient extends Client {
     }
     public void setIntArray(int[] pIntArray) {
         toBeSentArray = pIntArray;
+    }
+
+    public void setIp(String pIp){
+        ip = pIp;
     }
 }

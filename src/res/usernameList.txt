@@ -1,6 +1,0 @@
-Runkelruebe3003
-a
-Cornyriegel7
-Alvaro Platt
-test
-ACHTUNG der Reader funktioniert nur wenn am ende der Zeile ein zeilenumbruch ist, also alles da oben geht aber diese zeile nicht
