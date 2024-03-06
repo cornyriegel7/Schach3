@@ -713,28 +713,266 @@ public class Board {
         return positions;
     }
 
-    /**
-     * Diese Version führt einen Move aus, dafür darf die Startpos aber noch nd == 0 sein
-     * @param pStartPos Startposition des MOves
-     * @param pEndPos Endposition
-     * @param pSquare das Schachbrett auf dem gemoved wird
-     * @param pPositionlist Liste mit Positionen der selben Farbe
-     */
-    public void execMove(int pStartPos, int pEndPos, int[] pSquare, LinkedList<Integer> pPositionlist)
+
+    public void execMove(int pStartPosition, int pEndPosition,int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions, LinkedList<int[]> enemyAttackedPositions, LinkedList<Integer> ownPositions, LinkedList<Integer> enemyPositions,LinkedList<Integer> pSpecialMoves)
     {
-        int color = pSquare[pStartPos] / Math.abs(pSquare[pStartPos]);
-
-
-
-        pPositionlist.remove((Integer) pStartPos);
-        pPositionlist.add(pEndPos);
-        if(pSquare[pEndPos] != emptySquare)
+        int color = pPieceValue / Math.abs(pPieceValue);
+        int rookStartPos = -1, rookEndPos = -1;
+        if(pPieceValue == castleInt)
         {
-            LinkedList<Integer> enemylist = color == Piece.black ? whitePositions : blackPositions;
-            enemylist.remove((Integer) pEndPos); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
+            color = pStartPosition == 4 ? Piece.black : Piece.white;
+            if(pEndPosition - pStartPosition == -2) // Queenside
+            {
+                rookStartPos = pStartPosition -4;
+                rookEndPos = pStartPosition -1;
+                specialMovePositions.remove(Integer.valueOf(pStartPosition-2)); // Integer.value
+            }
+            else // KingSide
+            {
+                rookStartPos = pStartPosition +3;
+                rookEndPos = pStartPosition + 1;
+            }
         }
-        pSquare[pEndPos] = pSquare[pStartPos];
-        pSquare[pStartPos] = emptySquare;
+
+
+        // Die Position, die Figur vorher angegriffen hat werden entfernt
+        for (int i = 0; i < ownAttackedPositions.size(); i++) {
+            if(ownAttackedPositions.get(i)[0] == pStartPosition /*|| (ownAttackedPositions.get(i)[1] == pStartPosition)*/)//bisherige AttackedPositions der bewegten Figur entfernen
+            {
+                //(ownAttackedPositions.get(i));
+                ownAttackedPositions.remove(i);
+                i-=1; //ein element weniger -> index muss ein weniger sein
+            }
+            if(pPieceValue == castleInt && (ownAttackedPositions.get(i)[0] == rookStartPos)) {
+                ownAttackedPositions.remove(i);
+                i-=1; //ein element weniger -> index muss ein weniger sein
+            }
+
+        }
+
+        //falls eine gegnerische Figur geschlagen wird, werden ihre AttackedPositions entfernt
+        if(pSquares[pEndPosition] != emptySquare && pPieceValue != castleInt)
+        {
+            //Wenn es eine Figur nicht mehr gibt, kann sie auch keine Felder mehr angreifen
+
+            for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+                if(enemyAttackedPositions.get(i)[0] == pEndPosition)
+                {
+                    enemyAttackedPositions.remove(i);
+                    i-=1;
+                }
+            }
+
+            //Figur wird aus den Positionen rausgenommen
+            enemyPositions.remove((Integer) pEndPosition); // dadurch das integer verwendet wird, wird nicht der Index entfernt, sondern das Objekt mit dem Wert
+        }
+
+        //Zug im Square array eintragen
+        if(Math.abs(pPieceValue)==enPassantInt) {
+            pSquares[pEndPosition] = pawn * color;
+            pSquares[pEndPosition + color * 8] = emptySquare;
+
+        }
+        else if(pPieceValue == castleInt)
+        {
+            pSquares[rookStartPos] = emptySquare;
+            pSquares[rookEndPos] = Piece.rook * color;
+            pSquares[pEndPosition] = Piece.king * color;
+        }
+        else
+        {
+            pSquares[pEndPosition] = pPieceValue;
+        }
+        pSquares[pStartPosition] = emptySquare;
+
+
+        if(pPieceValue!=castleInt) { // Es ist wenn gecastlet wird nicht moeglich, dass ein gegnerischer Zug verhindert wird
+            //Angriffe(des Gegners), die dadurch verhindert werden, dass das Feld besetzt wird loeschen
+            LinkedList<int[]> enemyBlockedMoves = new LinkedList<>();
+            for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+                int attackEndPosition = enemyAttackedPositions.get(i)[1];
+                int absAttackPieceValue = Math.abs(enemyAttackedPositions.get(i)[2]);
+                if (absAttackPieceValue == Piece.queen || absAttackPieceValue == Piece.rook || absAttackPieceValue == Piece.bishop) {
+                    if (attackEndPosition == pEndPosition) {
+                        enemyBlockedMoves.add(enemyAttackedPositions.get(i));
+                    }
+                }
+            }
+            if(enemyBlockedMoves.size() != 0) {
+                for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+                    for (int j = 0; j < enemyBlockedMoves.size(); j++) {
+                        if (enemyBlockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0]) {
+                            enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
+                            i -= 1;
+                        }
+                    }
+                }
+                for (int i = 0; i < enemyBlockedMoves.size(); i++) {
+                    generateLegalMoves(enemyBlockedMoves.get(i)[0], enemyBlockedMoves.get(i)[2], pSquares, enemyAttackedPositions, ownAttackedPositions, enemyPositions, specialMovePositions);
+                }
+            }
+
+
+            // Eigene Angriffe, die dadurch verhindert dass das Feld besetzt wird
+            LinkedList<int[]> ownBlockedMoves = new LinkedList<>();
+            for (int i = 0; i < ownAttackedPositions.size(); i++) {
+                int ownEndPosition = ownAttackedPositions.get(i)[1];
+                int absAttackPieceValue = Math.abs(ownAttackedPositions.get(i)[2]);
+                if (absAttackPieceValue == Piece.queen || absAttackPieceValue == Piece.rook || absAttackPieceValue == Piece.bishop) {
+                    if (ownEndPosition == pEndPosition) {
+                        ownBlockedMoves.add(ownAttackedPositions.get(i));
+                    }
+                }
+            }
+            for (int i = 0; i < ownAttackedPositions.size(); i++) {
+                for (int j = 0; j < ownBlockedMoves.size(); j++) {
+                    if (ownBlockedMoves.get(j)[0] == ownAttackedPositions.get(i)[0]) {
+                        ownAttackedPositions.remove(ownAttackedPositions.get(i));
+                        i -= 1;
+                    }
+                }
+            }
+            for (int i = 0; i < ownBlockedMoves.size(); i++) {
+                generateLegalMoves(ownBlockedMoves.get(i)[0], ownBlockedMoves.get(i)[2], pSquares,ownAttackedPositions, enemyAttackedPositions, ownPositions, specialMovePositions);
+            }
+        }
+
+        // eigene Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
+        outerloop: for (int i = 0; i < ownPositions.size(); i++) {
+            int ownPosition = ownPositions.get(i);
+            int absPieceValue = Math.abs(pSquares[ownPosition]);
+            if(ownPosition != pStartPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
+            {
+                int attackDirection = pStartPosition - ownPositions.get(i);
+                int[] attackDirections;
+                switch (Math.abs(pSquares[ownPositions.get(i)]))
+                {
+                    case(Piece.rook):attackDirections = new int[]{8,1};break;
+                    case(Piece.bishop):attackDirections = new int[]{9,7};break;
+                    default:attackDirections = new int[]{9,8,7,1};break;
+                }
+
+                for (int j = 0; j < attackDirections.length; j++) {
+                    if(attackDirection % attackDirections[j] == 0)
+                    {
+                        if(Math.abs(attackDirections[j])!=1 || (Math.abs(attackDirections[j]) == 1 && ownPosition/8 == pStartPosition /8)) {
+                            if (Math.abs(attackDirection) != Math.abs(attackDirections[j])) {
+                                attackDirection /= attackDirections[j];
+                            }
+                            for (int k = ownPosition + attackDirection; k != pStartPosition; k += attackDirection) { // ueberpruefe ob es freie bahn zwischen den beiden Figuren gibt
+                                //System.out.println(k);
+                                if (pSquares[k] != emptySquare) {
+                                    continue outerloop;
+                                }
+                            }
+                            for (int k = 0; k < ownAttackedPositions.size(); k++) {
+                                if(ownPosition == ownAttackedPositions.get(k)[0])
+                                {
+                                    ownAttackedPositions.remove(k);
+                                    k-=1;
+                                }
+                            }
+                            generateLegalMoves(ownPosition,pSquares[ownPosition],pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+                            break;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        // gegnerische Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
+        outerloop: for (int i = 0; i < enemyPositions.size(); i++) {
+            int piecePosition = enemyPositions.get(i);
+            int absPieceValue = Math.abs(pSquares[piecePosition]);
+            if(piecePosition != pStartPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
+            {
+                int attackDirection = pStartPosition - enemyPositions.get(i);
+                int[] attackDirections;
+                switch (Math.abs(pSquares[enemyPositions.get(i)]))
+                {
+                    case(Piece.rook):attackDirections = new int[]{8,1};break;
+                    case(Piece.bishop):attackDirections = new int[]{9,7};break;
+                    default:attackDirections = new int[]{9,8,7,1};break;
+                }
+
+                for (int j = 0; j < attackDirections.length; j++) {
+                    if(attackDirection % attackDirections[j] == 0)
+                    {
+                        if(Math.abs(attackDirections[j])!=1 || (Math.abs(attackDirections[j]) == 1 && piecePosition/8 == pStartPosition /8)) {
+                            if (Math.abs(attackDirection) != Math.abs(attackDirections[j])) {
+                                attackDirection /= attackDirections[j];
+                            }
+                            for (int k = piecePosition + attackDirection; k != pStartPosition; k += attackDirection) { // ueberpruefe ob es freie bahn zwischen den beiden Figuren gibt
+                                if (pSquares[k] != emptySquare) {
+                                    continue outerloop;
+                                }
+                            }
+                            for (int k = 0; k < enemyAttackedPositions.size(); k++) {
+                                if(piecePosition == enemyAttackedPositions.get(k)[0])
+                                {
+                                    enemyAttackedPositions.remove(k);
+                                    k-=1;
+                                }
+                            }
+                            generateLegalMoves(piecePosition,pSquares[piecePosition],pSquares,enemyAttackedPositions,ownAttackedPositions,enemyPositions,specialMovePositions);
+                            break;
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+        //Figur aus Positionen loeschen
+        ownPositions.removeFirstOccurrence(/*(Integer)*/ pStartPosition);
+        ownPositions.add(pEndPosition);
+        if(pPieceValue == castleInt) {
+            ownPositions.removeFirstOccurrence(rookStartPos);
+            ownPositions.add(rookEndPos);
+        }
+
+        //neue Legalmoves von der neuen Figur vom neuen Feld saus
+        generateLegalMoves(pEndPosition,pPieceValue,pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+        if(pPieceValue == castleInt)
+        {
+            generateLegalMoves(rookEndPos,pSquares[rookEndPos],pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+        }
+
+        //En-Passant ist immer nur einen Zug lang moeglich, danach muss der specialmove dementsprechend geloescht werden
+        for (int i = 0; i < specialMovePositions.size(); i++) {
+            int position = specialMovePositions.get(i);
+            if(position!=2&&position!=6&&position!=62&&position!=58)
+            {
+                specialMovePositions.remove(i);
+                i-=1;
+            }
+        }
+        //Falls neue Specialmoves entstanden sind, diese eintragen
+        if(Math.abs(pPieceValue) == Piece.pawn && Math.abs(pStartPosition - pEndPosition) == 16)
+        {
+            specialMovePositions.add(pEndPosition);
+        }
+        //wenn sich der Koenig bewegt, kann danach keine Rochade mehr ausgeführt werden
+        if(Math.abs(pPieceValue) == Piece.king || Math.abs(pPieceValue) == castleInt)
+        {
+            if(pEndPosition < 8)
+            {
+                specialMovePositions.remove((Integer) 2);
+                specialMovePositions.remove((Integer) 6);
+
+            }
+            else
+            {
+                specialMovePositions.remove((Integer) 58);
+                specialMovePositions.remove((Integer) 62);
+            }
+        }
+        /*System.out.println("AA");
+        for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+            printMove(enemyAttackedPositions.get(i));
+        }*/
     }
 
     /**

@@ -89,10 +89,19 @@ public class Input extends MouseAdapter {
                         c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
                         //legalMoves = null;
                         int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
-                        c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
+
                         selectedPieceValue = 0;
                         c.boardGUI.repaint();
-                        System.out.println(c.bot.evaluation(c.board.Square,c.board.whitePositions,c.board.blackPositions));
+                        //Bot
+                        LinkedList<Integer> ownPos = pieceColor == Piece.white ? c.board.whitePositions : c.board.blackPositions;
+                        LinkedList<Integer> enemyPos = pieceColor == Piece.black ? c.board.whitePositions : c.board.blackPositions;
+                        LinkedList<int[]> enemyAttacked = pieceColor == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                        LinkedList<int[]> ownAttacked = pieceColor == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
+                        //System.out.println(c.bot.evaluation(c.board.Square,c.board.whitePositions,c.board.blackPositions));
+                        c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
+                        //c.board.printMove(c.bot.getMove(c.board.Square,c.dran,enemyPos,ownPos,enemyAttacked,ownAttacked,c.board.specialMovePositions));
+
+
                         return;
                         //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
 
