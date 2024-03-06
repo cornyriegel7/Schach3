@@ -194,9 +194,9 @@ public class Input extends MouseAdapter {
 
                             //REPAINTE DU ...
                             c.boardGUI.repaint();
+                            if(c.view.getPickedMode()==2)
+                            c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
                             return;
-                            //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
-
                         }
                     }
 

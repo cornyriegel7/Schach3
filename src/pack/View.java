@@ -250,7 +250,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         connectionFrame.setLayout(null);
 
         // IP Label und TB
-        IPLabel = new JLabel("IP:");
+        IPLabel = new JLabel("Deine IP:");
         IPLabel.setBounds(10,10,100,30);
         connectionFrame.add(IPLabel);
 
@@ -259,7 +259,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         connectionFrame.add(tbIP);
 
         // Port &  TB
-        portLabel = new JLabel("Port:");
+        portLabel = new JLabel("Port vom Server:");
         portLabel.setBounds(10,50,100,30);
         connectionFrame.add(portLabel);
 
@@ -319,7 +319,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     //Array wird zu einem String konvertiert, welches durch ein Komma getrennt werden (das encrypten braucht man hier in der view)
-    public static String intArrayToString(int[] array) {
+    public String intArrayToString(int[] array) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (int i = 0; i < array.length; i++) {
@@ -353,7 +353,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     public void sendMessage(String message){
-        c.chatClient.send(message);
+        c.chatClient.send("MSSG" + message);
     }
 
     public void checkMateMessage(boolean hasWhiteLost)
