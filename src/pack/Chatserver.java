@@ -23,7 +23,7 @@ public class Chatserver extends Server {
                         break;
                     case (Nachricht):
                         break;
-                    case (TestNachricht): this.send(pClientIP,pClientPort,"LANGERTEXTZUMTESTEN");
+                    case (TestNachricht): this.send(pClientIP,pClientPort,"BOAR[-2, -2, -3, -5, -6, -3, -4, 2, -1, -1, -1, -1, 1, -1, -1, -1, 0, 0, 0, 0, 0, 4, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 0, 1, 1, 1, -4, 1, 1, 1, 1, 4, 2, 3, 5, 6, 3, 2, 4]");
                 }
     }
 

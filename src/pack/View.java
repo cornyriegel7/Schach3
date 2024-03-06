@@ -288,30 +288,32 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         }
 
     public void neuesBrett(String boardString) {
-        convertStringToSquareArray(boardString);
+        int[] recievedBoard = stringToIntArray(boardString);
+        c.boardGUI.setSquare(recievedBoard);
+        c.boardGUI.repaint();
     }
-
-
-    //todo: die untere hier gibt ein String zurück, wir brauchen aber ein int[]. generell brauchen wir hier eine korrekte umwandlung von einem boardstring zu
-    //todo: einem Square[], dann aktualisierung des Boardes
-    public void convertStringToSquareArray(String squareString) {
-        String[] values = squareString.split(",");
-
-        for (int i = 0; i < values.length; i++) {
-            c.board.setSquare(i, Integer.parseInt(values[i]));
+    public int[] stringToIntArray(String str) {
+        // Zuerst entfernen wir die Klammern und Leerzeichen und teilen den String in Teile
+        String[] parts = str.substring(1, str.length() - 1).split(", ");
+        int[] array = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            array[i] = Integer.parseInt(parts[i]);
         }
+        return array;
     }
 
     //Array wird zu einem String konvertiert, welches durch ein Komma getrennt werden (das encrypten braucht man hier in der view)
-    public String convertSquareArrayToString() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (int i = 0; i < c.board.getSquareLength(); i++) {
-            stringBuilder.append(",");
-            stringBuilder.append(c.board.getSquare(i));
+    public static String intArrayToString(int[] array) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < array.length; i++) {
+            sb.append(array[i]);
+            if (i < array.length - 1) {
+                sb.append(", ");
+            }
         }
-
-        return stringBuilder.toString();
+        sb.append("]");
+        return sb.toString();
     }
 
     public int getPromotionInt()
