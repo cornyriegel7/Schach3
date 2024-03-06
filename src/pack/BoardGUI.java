@@ -3,7 +3,6 @@ package pack;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-//MANN ICH WILL PUSHENNN
 public class BoardGUI extends JPanel {
     Controller c;
 
@@ -143,5 +142,9 @@ public class BoardGUI extends JPanel {
             // Umgang mit ungültigen pSquare-Werten
             return -1;
         }
+    }
+
+    public void setSquare(int[] pSquare) {
+        Square = pSquare;
     }
 }

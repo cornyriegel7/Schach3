@@ -1068,8 +1068,6 @@ public class Board {
     public int getPieceFromSquare(int pIndex){
         return Square[pIndex];
     }
-
-   //Default Position vom Schach. (EInfach ganz nach unten immer packen die nervt sonst nur)
     public void initalizeSquare() {
         Square[0] = -4;
         Square[1] = -2;
@@ -1106,8 +1104,5 @@ public class Board {
         Square[61] = 3;
         Square[62] = 2;
         Square[63] = 4;
-
-        //Debugging for(int i = 0; i < Square.length; i++)
-        //{System.out.println("Square[" + i + "]: " + Square[i]);}
     }
 }
