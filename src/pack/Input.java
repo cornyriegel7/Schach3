@@ -187,16 +187,22 @@ public class Input extends MouseAdapter {
 
                             //move ausführung
                             c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
+
                             //Bot tests
                             LinkedList<Integer> ownPos = c.dran == Piece.white ? c.board.whitePositions : c.board.blackPositions;
                             LinkedList<Integer> enemyPos = c.dran == Piece.black ? c.board.whitePositions : c.board.blackPositions;
                             LinkedList<int[]> ownAttacked = c.dran == Piece.white ? c.board.attackedByWhitePositions : c.board.attackedByBlackPositions ;
                             LinkedList<int[]> enemyAttacked = c.dran == Piece.black ? c.board.attackedByWhitePositions : c.board.attackedByBlackPositions ;
-                            c.board.printMove(c.bot.getMove(c.board.Square,c.dran,ownPos,enemyPos,ownAttacked,enemyAttacked,c.board.specialMovePositions));
+                            if(c.dran == 1) {
+                                c.board.printMove(c.bot.getMove(c.board.Square, c.dran * -1, enemyPos, ownPos, enemyAttacked, ownAttacked, c.board.specialMovePositions));
+                            }
+
 
                             //legalMoves = null;
                             int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
                             c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
+
+
 
                             //Resette alles, weil der Move ausgeführt wurde
                             selectedPieceValue = 0;
