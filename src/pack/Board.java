@@ -154,7 +154,12 @@ public class Board {
     public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, LinkedList<Integer> pPositions, ArrayList<Integer> pSpecialMovePositions)
     {
 
-        int color = pPieceValue / Math.abs(pPieceValue);
+        if(pPieceValue == 0)
+        {
+            System.out.println("start:"+startPosition);
+        }
+        //int color = pPieceValue / Math.abs(pPieceValue);
+        int color = pSquares[startPosition] / Math.abs(pSquares[startPosition]);
         int kingPosition = getKingPos(pSquares,pPositions);
         int[][] attacksOnKing= getAttacksOnKing(kingPosition,pSquares,pPositions,attackedByEnemy);
 
@@ -739,20 +744,6 @@ public class Board {
         }
 
 
-        // Die Position, die Figur vorher angegriffen hat werden entfernt
-        for (int i = 0; i < ownAttackedPositions.size(); i++) {
-            if(ownAttackedPositions.get(i)[0] == pStartPosition /*|| (ownAttackedPositions.get(i)[1] == pStartPosition)*/)//bisherige AttackedPositions der bewegten Figur entfernen
-            {
-                //(ownAttackedPositions.get(i));
-                ownAttackedPositions.remove(i);
-                i-=1; //ein element weniger -> index muss ein weniger sein
-            }
-            if(pPieceValue == castleInt && (ownAttackedPositions.get(i)[0] == rookStartPos)) {
-                ownAttackedPositions.remove(i);
-                i-=1; //ein element weniger -> index muss ein weniger sein
-            }
-
-        }
 
         //falls eine gegnerische Figur geschlagen wird, werden ihre AttackedPositions entfernt
         if(pSquares[pEndPosition] != emptySquare && pPieceValue != castleInt)
@@ -789,8 +780,23 @@ public class Board {
         }
         pSquares[pStartPosition] = emptySquare;
 
+        // Die Position, die Figur vorher angegriffen hat werden entfernt
+        for (int i = 0; i < ownAttackedPositions.size(); i++) {
+            if(ownAttackedPositions.get(i)[0] == pStartPosition /*|| (ownAttackedPositions.get(i)[1] == pStartPosition)*/)//bisherige AttackedPositions der bewegten Figur entfernen
+            {
+                //(ownAttackedPositions.get(i));
+                ownAttackedPositions.remove(i);
+                i-=1; //ein element weniger -> index muss ein weniger sein
+            }
+            if(pPieceValue == castleInt && (ownAttackedPositions.get(i)[0] == rookStartPos)) {
+                ownAttackedPositions.remove(i);
+                i-=1; //ein element weniger -> index muss ein weniger sein
+            }
 
-       if(pPieceValue!=castleInt) { // Es ist wenn gecastlet wird nicht moeglich, dass ein gegnerischer Zug verhindert wird
+        }
+
+
+        if(pPieceValue!=castleInt) { // Es ist wenn gecastlet wird nicht moeglich, dass ein gegnerischer Zug verhindert wird
             //Angriffe(des Gegners), die dadurch verhindert werden, dass das Feld besetzt wird loeschen
             LinkedList<int[]> enemyBlockedMoves = new LinkedList<>();
             for (int i = 0; i < enemyAttackedPositions.size(); i++) {
@@ -806,12 +812,14 @@ public class Board {
                 for (int j = 0; j < enemyBlockedMoves.size(); j++) {
                     if (enemyBlockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0]) {
                         enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
-                        i -= 1;
+                        if(i > 0) {
+                            i -= 1;
+                        }
                     }
                 }
             }
             for (int i = 0; i < enemyBlockedMoves.size(); i++) {
-                generateLegalMoves(enemyBlockedMoves.get(i)[0], pSquares[enemyBlockedMoves.get(i)[0]], pSquares, enemyAttackedPositions, ownAttackedPositions, enemyPositions, pSpecialMoves);
+                generateLegalMoves(enemyBlockedMoves.get(i)[0], enemyBlockedMoves.get(i)[2], pSquares, enemyAttackedPositions, ownAttackedPositions, enemyPositions, pSpecialMoves);
             }
 
 
@@ -820,7 +828,7 @@ public class Board {
             for (int i = 0; i < ownAttackedPositions.size(); i++) {
                 int ownEndPosition = ownAttackedPositions.get(i)[1];
                 int absAttackPieceValue = Math.abs(ownAttackedPositions.get(i)[2]);
-                if (absAttackPieceValue == Piece.queen || absAttackPieceValue == Piece.rook || absAttackPieceValue == Piece.bishop) {
+                if ((absAttackPieceValue == Piece.queen || absAttackPieceValue == Piece.rook || absAttackPieceValue == Piece.bishop) && ownAttackedPositions.get(i)[0] != pEndPosition) {
                     if (ownEndPosition == pEndPosition) {
                         ownBlockedMoves.add(ownAttackedPositions.get(i));
                     }
@@ -830,7 +838,9 @@ public class Board {
                 for (int j = 0; j < ownBlockedMoves.size(); j++) {
                     if (ownBlockedMoves.get(j)[0] == ownAttackedPositions.get(i)[0]) {
                         ownAttackedPositions.remove(ownAttackedPositions.get(i));
-                        i -= 1;
+                        if(i > 1) {
+                            i -= 1;
+                        }
                     }
                 }
             }
@@ -843,7 +853,7 @@ public class Board {
         outerloop: for (int i = 0; i < ownPositions.size(); i++) {
             int ownPosition = ownPositions.get(i);
             int absPieceValue = Math.abs(pSquares[ownPosition]);
-            if(ownPosition != pStartPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
+            if(ownPosition != pStartPosition && ownPosition != pEndPosition && (absPieceValue == Piece.queen || absPieceValue == Piece.rook|| absPieceValue == Piece.bishop))
             {
                 int attackDirection = pStartPosition - ownPositions.get(i);
                 int[] attackDirections;
@@ -927,8 +937,6 @@ public class Board {
         }
 
 
-
-
         //Figur aus Positionen loeschen
         ownPositions.removeFirstOccurrence(/*(Integer)*/ pStartPosition);
         ownPositions.add(pEndPosition);
@@ -937,11 +945,15 @@ public class Board {
             ownPositions.add(rookEndPos);
         }
 
+
+
+
+
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
-        generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
+        generateLegalMoves(pEndPosition,pPieceValue,pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
         if(pPieceValue == castleInt)
         {
-            generateLegalMoves(rookEndPos,Square[rookEndPos],Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
+            generateLegalMoves(rookEndPos,pSquares[rookEndPos],pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
         }
 
         //En-Passant ist immer nur einen Zug lang moeglich, danach muss der specialmove dementsprechend geloescht werden

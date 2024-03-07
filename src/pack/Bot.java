@@ -144,20 +144,20 @@ public class Bot {
 
         int alpha = 0;
         int beta = 0;
-        int depth = 2;
+        int depth = 4;
 
         for (int i = 0; i < moves.size(); i++) {
 
 
-
+            //System.out.println("MINMAX:"+i);
             int[] move = moves.get(i);
             board.execMove(move[0],move[1],move[2],SquareN,ownAttackedN,enemyAttackedN,ownPosN,enemyPosN,spezialMovesN);
 
 
 
 
-            int ev = evaluation(SquareN,whitePos,blackPos);
-            //minimax(pSquares,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMoves);
+             //evaluation(SquareN,whitePos,blackPos);
+            int ev = minimax(SquareN,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMovesN);
             //System.out.println(ev);
             if((pDran == Piece.white && ev > total) || (pDran == Piece.black && ev < total))
             {
@@ -179,41 +179,56 @@ public class Bot {
     public int minimax(int[] pSquares, int pDran,int alpha, int beta, int depth,
                        LinkedList<Integer> ownPos, LinkedList<Integer> enemyPos, LinkedList<int[]> ownAttacked, LinkedList<int[]> enemyAttacked, ArrayList<Integer> spezialMoves)
     {
-        if(depth == 0)
-        {
-            LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
-            LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
-            return evaluation(pSquares,whitePos,blackPos);
-        }
-        long startTime = System.currentTimeMillis();
         LinkedList<int[]> moves = new LinkedList<>();
         int total = pDran == Piece.white ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
+        LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
+        int[] SquareN = new int[64];
+        System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
+        if(depth == 0)
+        {
+            return evaluation(SquareN,whitePos,blackPos);
+        }
+        LinkedList<Integer> ownPosN= new LinkedList<>(),enemyPosN = new LinkedList<>();
+        LinkedList<int[]> ownAttackedN= new LinkedList<>(), enemyAttackedN= new LinkedList<>();
+        ArrayList<Integer> spezialMovesN = new ArrayList<>();
+
+        ownPosN = new LinkedList<>(ownPos);
+        enemyPosN = new LinkedList<>(enemyPos);
+        ownAttackedN = new LinkedList<>(ownAttacked);
+        enemyAttackedN = new LinkedList<>(enemyAttacked);
+        spezialMovesN = new ArrayList<>(spezialMoves);
+
 
         for (int i = 0; i < ownPos.size(); i++) {
-            moves.addAll(Arrays.stream(board.generateLegalMoves(ownPos.get(i),pSquares[ownPos.get(i)],pSquares,ownAttacked,enemyAttacked,ownPos,spezialMoves)).toList());
+            moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPos.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
         }
-        int[] SquareN = new int[64];
-        LinkedList<Integer> ownPosN,enemyPosN;
-        LinkedList<int[]> ownAttackedN, enemyAttackedN;
-        ArrayList<Integer> spezialMovesN;
         for (int i = 0; i < moves.size(); i++) {
-            System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
 
-            ownPosN = new LinkedList<>(ownPos);
-            enemyPosN = new LinkedList<>(enemyPos);
-            ownAttackedN = new LinkedList<>(ownAttacked);
-            enemyAttackedN = new LinkedList<>(enemyAttacked);
-            spezialMovesN = new ArrayList<>(spezialMoves);
+
+
             int[] move = moves.get(i);
+            //System.out.println(i);
             board.execMove(move[0],move[1],move[2],SquareN,ownAttackedN,enemyAttackedN,ownPosN,enemyPosN,spezialMovesN);
 
-            int ev = minimax(pSquares,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMoves);
+
+
+
+            int ev = minimax(SquareN,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMovesN);
+            //minimax(pSquares,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMoves);
             //System.out.println(ev);
             if((pDran == Piece.white && ev > total) || (pDran == Piece.black && ev < total))
             {
                 total = ev;
             }
+            ownPosN = new LinkedList<>(ownPos);
+            enemyPosN = new LinkedList<>(enemyPos);
+            ownAttackedN = new LinkedList<>(ownAttacked);
+            enemyAttackedN = new LinkedList<>(enemyAttacked);
+            spezialMovesN = new ArrayList<>(spezialMoves);
+            System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
         }
+        // System.out.println(total);
         return total;
     }
 
