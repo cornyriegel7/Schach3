@@ -47,7 +47,7 @@ public class Piece {
         switch(pSkin){
             case("pink-blau") -> sheet = readPicture("pink-blau-ohne-apo.png");
             case("pink-blau-Apo") -> sheet = readPicture("pink-blau-mit-apo.png");
-            case("dadsadadas") -> sheet = readPicture("dadsadadas");            //Wenn wir mehr Skins haben einfach bei case den Namen im dropdown
+            case("oransch-lila") -> sheet = readPicture("oransch-lila.png");            //Wenn wir mehr Skins haben einfach bei case den Namen im dropdown
             case("adsadad") -> sheet = readPicture("adsadad");                  //Menü eintragen und rechts den Namen vom zugehörigen Skin der png
             case("adadad") -> sheet = readPicture("adadad");
             case("adadsda") -> sheet = readPicture("adadsda");

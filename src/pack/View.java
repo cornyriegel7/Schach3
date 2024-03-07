@@ -149,7 +149,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         dropdownProm.setBounds(50,50,300,30);
         dropdownProm.setVisible(true);
 
-        String[] skins = {"pink-blau","pink-blau-Apo","","",""};
+        String[] skins = {"pink-blau","pink-blau-Apo","oransch-lila","",""};
         dropdownSkins = new JComboBox<>(skins);
         dropdownSkins.addActionListener(this);
         dropdownSkins.setBounds(50,100,300,30);
