@@ -786,11 +786,15 @@ public class Board {
             {
                 //(ownAttackedPositions.get(i));
                 ownAttackedPositions.remove(i);
-                i-=1; //ein element weniger -> index muss ein weniger sein
+                if(i > 0) {
+                    i -= 1; //ein element weniger -> index muss ein weniger sein
+                }
             }
             if(pPieceValue == castleInt && (ownAttackedPositions.get(i)[0] == rookStartPos)) {
                 ownAttackedPositions.remove(i);
-                i-=1; //ein element weniger -> index muss ein weniger sein
+                if(i > 0) {
+                    i -= 1; //ein element weniger -> index muss ein weniger sein
+                }
             }
 
         }
