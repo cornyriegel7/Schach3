@@ -121,6 +121,7 @@ public class Input extends MouseAdapter {
                         LinkedList<int[]> vonAnderenAngegriffen = tempPieceColour == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
                         LinkedList<int[]> vonEigenenAngegriffen = tempPieceColour == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
                         legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen,c.board.specialMovePositions);
+
                         //CHECKMATE??!??!?!?!
                         if (legalMoves.length == 0 && c.board.isCheckMate(c.dran)) {
                             boolean hasWhiteLost = c.dran == Piece.white;
@@ -180,7 +181,19 @@ public class Input extends MouseAdapter {
                     for (int i = 0; i < legalMoves.length; i++) {
                         //WENN DAS ENDSQUARE EIN LEGALMOVE IST DANN MACHE DEN MOVE
                         if (legalMoves[i][1] == endSquare) {
+
+
+
+
+                            //move ausführung
                             c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
+                            //Bot tests
+                            LinkedList<Integer> ownPos = c.dran == Piece.white ? c.board.whitePositions : c.board.blackPositions;
+                            LinkedList<Integer> enemyPos = c.dran == Piece.black ? c.board.whitePositions : c.board.blackPositions;
+                            LinkedList<int[]> ownAttacked = c.dran == Piece.white ? c.board.attackedByWhitePositions : c.board.attackedByBlackPositions ;
+                            LinkedList<int[]> enemyAttacked = c.dran == Piece.black ? c.board.attackedByWhitePositions : c.board.attackedByBlackPositions ;
+                            c.board.printMove(c.bot.getMove(c.board.Square,c.dran,ownPos,enemyPos,ownAttacked,enemyAttacked,c.board.specialMovePositions));
+
                             //legalMoves = null;
                             int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
                             c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;

@@ -151,7 +151,7 @@ public class Board {
         return rdistancesToEdge;
     }
 
-    public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy,LinkedList<Integer> pPositions,ArrayList<Integer> pSpecialMovePositions)
+    public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, LinkedList<Integer> pPositions, ArrayList<Integer> pSpecialMovePositions)
     {
 
         int color = pPieceValue / Math.abs(pPieceValue);
@@ -169,7 +169,7 @@ public class Board {
              moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
 
         }
-        else if(attacksOnKing.length == 1)
+        else
         {
             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
             LinkedList<int[]> legalMoves = new LinkedList<>();
@@ -232,8 +232,10 @@ public class Board {
         LinkedList<Integer> positions = color == Piece.white ? whitePositions : blackPositions;
         LinkedList<int[]> attackedByOwn = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
         LinkedList<int[]> attackedByEnemy = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
+        LinkedList<int[]> ownAttackedN = new LinkedList<>(attackedByOwn);
+        LinkedList<int[]> enemyAttackedN = new LinkedList<>(attackedByEnemy);
         for (int i = 0; i < positions.size(); i++) {
-            if(generateLegalMoves(positions.get(i),Square[positions.get(i)],Square,attackedByOwn,attackedByEnemy,positions,specialMovePositions).length != 0) {
+            if(generateLegalMoves(positions.get(i),Square[positions.get(i)],Square,ownAttackedN,enemyAttackedN,positions,specialMovePositions).length != 0) {
             return false;
             }
             }
@@ -495,9 +497,10 @@ public class Board {
     /**
      *
      * @param startPosition startPosition auf dem brett
+     * @param pSpecialMovePositions
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
-   public  int[][] generateMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn,LinkedList<int[]> attackedByEnemy,ArrayList<Integer> pSpecialMovePositions)
+   public  int[][] generateMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, ArrayList<Integer> pSpecialMovePositions)
     {
 
         //int figurInt = pSquares[startPosition]; -> waere theorethisch auch moeglich
@@ -714,8 +717,9 @@ public class Board {
     }
 
 
-    public void execMove(int pStartPosition, int pEndPosition,int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions, LinkedList<int[]> enemyAttackedPositions, LinkedList<Integer> ownPositions, LinkedList<Integer> enemyPositions,LinkedList<Integer> pSpecialMoves)
+    public void execMove(int pStartPosition, int pEndPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions, LinkedList<int[]> enemyAttackedPositions, LinkedList<Integer> ownPositions, LinkedList<Integer> enemyPositions, ArrayList<Integer> pSpecialMoves)
     {
+
         int color = pPieceValue / Math.abs(pPieceValue);
         int rookStartPos = -1, rookEndPos = -1;
         if(pPieceValue == castleInt)
@@ -725,7 +729,7 @@ public class Board {
             {
                 rookStartPos = pStartPosition -4;
                 rookEndPos = pStartPosition -1;
-                specialMovePositions.remove(Integer.valueOf(pStartPosition-2)); // Integer.value
+                pSpecialMoves.remove(Integer.valueOf(pStartPosition-2)); // Integer.value
             }
             else // KingSide
             {
@@ -786,7 +790,7 @@ public class Board {
         pSquares[pStartPosition] = emptySquare;
 
 
-        if(pPieceValue!=castleInt) { // Es ist wenn gecastlet wird nicht moeglich, dass ein gegnerischer Zug verhindert wird
+       if(pPieceValue!=castleInt) { // Es ist wenn gecastlet wird nicht moeglich, dass ein gegnerischer Zug verhindert wird
             //Angriffe(des Gegners), die dadurch verhindert werden, dass das Feld besetzt wird loeschen
             LinkedList<int[]> enemyBlockedMoves = new LinkedList<>();
             for (int i = 0; i < enemyAttackedPositions.size(); i++) {
@@ -798,18 +802,16 @@ public class Board {
                     }
                 }
             }
-            if(enemyBlockedMoves.size() != 0) {
-                for (int i = 0; i < enemyAttackedPositions.size(); i++) {
-                    for (int j = 0; j < enemyBlockedMoves.size(); j++) {
-                        if (enemyBlockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0]) {
-                            enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
-                            i -= 1;
-                        }
+            for (int i = 0; i < enemyAttackedPositions.size(); i++) {
+                for (int j = 0; j < enemyBlockedMoves.size(); j++) {
+                    if (enemyBlockedMoves.get(j)[0] == enemyAttackedPositions.get(i)[0]) {
+                        enemyAttackedPositions.remove(enemyAttackedPositions.get(i));
+                        i -= 1;
                     }
                 }
-                for (int i = 0; i < enemyBlockedMoves.size(); i++) {
-                    generateLegalMoves(enemyBlockedMoves.get(i)[0], enemyBlockedMoves.get(i)[2], pSquares, enemyAttackedPositions, ownAttackedPositions, enemyPositions, specialMovePositions);
-                }
+            }
+            for (int i = 0; i < enemyBlockedMoves.size(); i++) {
+                generateLegalMoves(enemyBlockedMoves.get(i)[0], pSquares[enemyBlockedMoves.get(i)[0]], pSquares, enemyAttackedPositions, ownAttackedPositions, enemyPositions, pSpecialMoves);
             }
 
 
@@ -833,7 +835,7 @@ public class Board {
                 }
             }
             for (int i = 0; i < ownBlockedMoves.size(); i++) {
-                generateLegalMoves(ownBlockedMoves.get(i)[0], ownBlockedMoves.get(i)[2], pSquares,ownAttackedPositions, enemyAttackedPositions, ownPositions, specialMovePositions);
+                generateLegalMoves(ownBlockedMoves.get(i)[0], pSquares[ownBlockedMoves.get(i)[0]], pSquares,ownAttackedPositions, enemyAttackedPositions, ownPositions, pSpecialMoves);
             }
         }
 
@@ -872,7 +874,7 @@ public class Board {
                                     k-=1;
                                 }
                             }
-                            generateLegalMoves(ownPosition,pSquares[ownPosition],pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+                            generateLegalMoves(ownPosition,pSquares[ownPosition],pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
                             break;
                         }
 
@@ -915,7 +917,7 @@ public class Board {
                                     k-=1;
                                 }
                             }
-                            generateLegalMoves(piecePosition,pSquares[piecePosition],pSquares,enemyAttackedPositions,ownAttackedPositions,enemyPositions,specialMovePositions);
+                            generateLegalMoves(piecePosition,pSquares[piecePosition],pSquares,enemyAttackedPositions,ownAttackedPositions,enemyPositions,pSpecialMoves);
                             break;
                         }
 
@@ -923,6 +925,8 @@ public class Board {
                 }
             }
         }
+
+
 
 
         //Figur aus Positionen loeschen
@@ -934,45 +938,47 @@ public class Board {
         }
 
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
-        generateLegalMoves(pEndPosition,pPieceValue,pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+        generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
         if(pPieceValue == castleInt)
         {
-            generateLegalMoves(rookEndPos,pSquares[rookEndPos],pSquares,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
+            generateLegalMoves(rookEndPos,Square[rookEndPos],Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,pSpecialMoves);
         }
 
         //En-Passant ist immer nur einen Zug lang moeglich, danach muss der specialmove dementsprechend geloescht werden
-        for (int i = 0; i < specialMovePositions.size(); i++) {
-            int position = specialMovePositions.get(i);
+        for (int i = 0; i < pSpecialMoves.size(); i++) {
+            int position = pSpecialMoves.get(i);
             if(position!=2&&position!=6&&position!=62&&position!=58)
             {
-                specialMovePositions.remove(i);
+                pSpecialMoves.remove(i);
                 i-=1;
             }
         }
         //Falls neue Specialmoves entstanden sind, diese eintragen
         if(Math.abs(pPieceValue) == Piece.pawn && Math.abs(pStartPosition - pEndPosition) == 16)
         {
-            specialMovePositions.add(pEndPosition);
+            pSpecialMoves.add(pEndPosition);
         }
         //wenn sich der Koenig bewegt, kann danach keine Rochade mehr ausgeführt werden
         if(Math.abs(pPieceValue) == Piece.king || Math.abs(pPieceValue) == castleInt)
         {
             if(pEndPosition < 8)
             {
-                specialMovePositions.remove((Integer) 2);
-                specialMovePositions.remove((Integer) 6);
+                pSpecialMoves.remove((Integer) 2);
+                pSpecialMoves.remove((Integer) 6);
 
             }
             else
             {
-                specialMovePositions.remove((Integer) 58);
-                specialMovePositions.remove((Integer) 62);
+                pSpecialMoves.remove((Integer) 58);
+                pSpecialMoves.remove((Integer) 62);
             }
         }
         /*System.out.println("AA");
         for (int i = 0; i < enemyAttackedPositions.size(); i++) {
             printMove(enemyAttackedPositions.get(i));
         }*/
+        //System.out.println("own"+ownAttackedPositions.size());
+        //System.out.println("enemy"+enemyAttackedPositions.size());
     }
 
     /**
@@ -982,11 +988,16 @@ public class Board {
      */
     public void execMove(int pStartPosition, int pEndPosition,int pPieceValue)
     {
+
+
         int color = pPieceValue / Math.abs(pPieceValue);
         LinkedList<int[]> ownAttackedPositions = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
         LinkedList<int[]> enemyAttackedPositions = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
         LinkedList<Integer> ownPositions = color == Piece.white ? whitePositions : blackPositions;
         LinkedList<Integer> enemyPositions = color == Piece.black ? whitePositions : blackPositions;
+        System.out.println("own"+ownAttackedPositions.size());
+        System.out.println("enemy"+enemyAttackedPositions.size());
+
         int rookStartPos = -1, rookEndPos = -1;
         if(pPieceValue == castleInt)
         {
@@ -1019,6 +1030,7 @@ public class Board {
             }
 
         }
+
 
         //falls eine gegnerische Figur geschlagen wird, werden ihre AttackedPositions entfernt
         if(Square[pEndPosition] != emptySquare && pPieceValue != castleInt)
@@ -1081,6 +1093,7 @@ public class Board {
             }
 
 
+
             // Eigene Angriffe, die dadurch verhindert dass das Feld besetzt wird
             LinkedList<int[]> ownBlockedMoves = new LinkedList<>();
             for (int i = 0; i < ownAttackedPositions.size(); i++) {
@@ -1104,6 +1117,7 @@ public class Board {
                 generateLegalMoves(ownBlockedMoves.get(i)[0], Square[ownBlockedMoves.get(i)[0]], Square,ownAttackedPositions, enemyAttackedPositions, ownPositions, specialMovePositions);
             }
         }
+
 
         // eigene Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
         outerloop: for (int i = 0; i < ownPositions.size(); i++) {
@@ -1148,6 +1162,7 @@ public class Board {
                 }
             }
         }
+
 
         // gegnerische Angriffe, die dadurch entstehen, dass das Feld frei wird generieren
         outerloop: for (int i = 0; i < enemyPositions.size(); i++) {
@@ -1202,6 +1217,7 @@ public class Board {
         }
 
         //neue Legalmoves von der neuen Figur vom neuen Feld saus
+
         generateLegalMoves(pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,specialMovePositions);
         if(pPieceValue == castleInt)
         {
@@ -1240,7 +1256,8 @@ public class Board {
         /*System.out.println("AA");
         for (int i = 0; i < enemyAttackedPositions.size(); i++) {
             printMove(enemyAttackedPositions.get(i));
-        }*/
+        }*/System.out.println("own"+ownAttackedPositions.size());
+        System.out.println("enemy"+enemyAttackedPositions.size());
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)
