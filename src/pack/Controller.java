@@ -1,5 +1,7 @@
 package pack;
 
+import java.util.LinkedList;
+
 public class Controller {
     View view;
     Piece piece;
@@ -40,6 +42,21 @@ public class Controller {
         input = new Input(this);
         boardGUI = new BoardGUI(this);
         bot = new Bot(board);
+    }
+
+    public void vsBot()
+    {
+        input.setActive(false);
+        boardGUI.repaint();
+        //Bot tests
+        LinkedList<Integer> ownPos = dran == Piece.white ? board.whitePositions : board.blackPositions;
+        LinkedList<Integer> enemyPos = dran == Piece.black ? board.whitePositions : board.blackPositions;
+        LinkedList<int[]> ownAttacked = dran == Piece.white ? board.attackedByWhitePositions : board.attackedByBlackPositions ;
+        LinkedList<int[]> enemyAttacked = dran == Piece.black ? board.attackedByWhitePositions : board.attackedByBlackPositions ;
+        int[] move = (bot.getMove(board.Square,dran,ownPos,enemyPos,ownAttacked,enemyAttacked,board.specialMovePositions));
+        board.execMove(move[0],move[1],move[2]);
+        dran *= -1;
+        input.setActive(true);
     }
     public void setDran(int color)
     {

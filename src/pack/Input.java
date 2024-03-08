@@ -188,13 +188,9 @@ public class Input extends MouseAdapter {
                             //move ausführung
                             c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
 
-                            //Bot tests
-                            LinkedList<Integer> ownPos = c.dran == Piece.white ? c.board.whitePositions : c.board.blackPositions;
-                            LinkedList<Integer> enemyPos = c.dran == Piece.black ? c.board.whitePositions : c.board.blackPositions;
-                            LinkedList<int[]> ownAttacked = c.dran == Piece.white ? c.board.attackedByWhitePositions : c.board.attackedByBlackPositions ;
-                            LinkedList<int[]> enemyAttacked = c.dran == Piece.black ? c.board.attackedByWhitePositions : c.board.attackedByBlackPositions ;
+
                             if(c.dran == 1) {
-                                c.board.printMove(c.bot.getMove(c.board.Square, c.dran * -1, enemyPos, ownPos, enemyAttacked, ownAttacked, c.board.specialMovePositions));
+                                //c.board.printMove(c.bot.getMove(c.board.Square, c.dran * -1, enemyPos, ownPos, enemyAttacked, ownAttacked, c.board.specialMovePositions));
                             }
 
 
@@ -209,12 +205,21 @@ public class Input extends MouseAdapter {
                             //System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE");
                             startSquare = -1; //???????????????????????????????????????????????????????????????? EIG MÜSSTE
 
+
+
                             System.out.println("MOVEEEE!!");
 
                             //REPAINTE DU ...
                             c.boardGUI.repaint();
                             if(c.view.getPickedMode()==2)
                             c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
+                            //Bei Online oder gegen Bot setze active auf false nach einem Move
+                            if(c.view.getPickedMode() == 2) {
+                                active = false;
+                            }
+                            else if(c.view.getPickedMode() == 3) {
+                                c.vsBot();
+                            }
                             return;
                         }
                     }
@@ -229,6 +234,8 @@ public class Input extends MouseAdapter {
                         //System.out.println("selectedPieceValue = 0 DRAGGEN SCHLEIFE DURCH");
                         c.boardGUI.repaint();
                     }
+
+
                 }
                 else
                 {
@@ -247,7 +254,7 @@ public class Input extends MouseAdapter {
                             //WENN DAS ENDSQUARE EIN LEGALMOVE IST DANN MACHE DEN MOVE
                             if (legalMoves[i][1] == endSquare) {
                                 c.board.execMove(legalMoves[i][0], legalMoves[i][1], legalMoves[i][2]);
-                                //legalMoves = null;
+                                legalMoves = null;
                                 int pieceColor = selectedPieceValue / Math.abs(selectedPieceValue);
                                 c.dran = pieceColor == Piece.white ? Piece.black : Piece.white;
 
@@ -257,9 +264,23 @@ public class Input extends MouseAdapter {
                                 //System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE");
 
                                 System.out.println("MOVEEEE!!");
+                                System.out.println(c.view.getPickedMode());
+                                //Bei Online oder gegen Bot setze active auf false nach einem Move (Bot 3, Online 2)
+
 
                                 //REPAINTE DU ...
                                 c.boardGUI.repaint();
+
+
+                                //Bei Online oder gegen Bot setze active auf false nach einem Move
+                                if(c.view.getPickedMode() == 2) {
+                                    active = false;
+                                    c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
+                                }
+                                else if(c.view.getPickedMode() == 3) {
+                                    c.vsBot();
+                                }
+
                                 return;
                                 //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
 

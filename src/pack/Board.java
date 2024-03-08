@@ -335,7 +335,7 @@ public class Board {
                 }
 
             }
-        if(removeFirstIndex)
+        if(removeFirstIndex && moves.size() > 0)
         {
             moves.remove(0);
         }

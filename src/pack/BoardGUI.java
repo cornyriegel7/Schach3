@@ -31,7 +31,7 @@ public class BoardGUI extends JPanel {
             public void paintComponent(Graphics g) {
 
                 Graphics2D g2d = (Graphics2D) g;
-                //System.out.println("PaintComponent");
+                System.out.println("PaintComponent");
 
                 //Das Brett painten
                 for(int r = 0; r < 8; r++){
