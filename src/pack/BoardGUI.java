@@ -29,7 +29,8 @@ public class BoardGUI extends JPanel {
 
 
             public void paintComponent(Graphics g) {
-
+                Square = c.board.giveBoard();
+                
                 Graphics2D g2d = (Graphics2D) g;
                 System.out.println("PaintComponent");
 
