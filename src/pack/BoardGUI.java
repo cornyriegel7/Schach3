@@ -72,6 +72,7 @@ public class BoardGUI extends JPanel {
                     Image selectedPiece = pieceIntToImage(c.input.getSelectedPieceValue()).getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
                     g2d.drawImage(selectedPiece, c.input.getxE() - titleSize / 2, c.input.getyE() - titleSize / 2, null);
                 }
+                System.out.println("FERTIG");
 
             }
 

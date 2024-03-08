@@ -1,13 +1,12 @@
 package pack;
 import java.util.*;
 
-import static pack.Piece.pawn;
 
 public class Board {
 
     Controller c;
     //Gameplay Zeug
-    public final int[] Square;
+    public int[] Square;
     private static final int emptySquare = 0;
     static int[][] distancesToEdge;
 
@@ -79,7 +78,7 @@ public class Board {
 
         return switch (absolutFigurInt) {
             case (Piece.king) -> farbe == Piece.black ? 'k' : 'K';
-            case (pawn) -> farbe == Piece.black ? 'p' : 'P';
+            case (Piece.pawn) -> farbe == Piece.black ? 'p' : 'P';
             case (Piece.knight) -> farbe == Piece.black ? 'n' : 'N';
             case (Piece.bishop) -> farbe == Piece.black ? 'b' : 'B';
             case (Piece.rook) -> farbe == Piece.black ? 'r' : 'R';
@@ -512,7 +511,7 @@ public class Board {
 
 
         int absPieceValue = Math.abs(pPieceValue);
-        if(absPieceValue == pawn)
+        if(absPieceValue == Piece.pawn)
         {
             return generatePawnMoves(startPosition,pPieceValue,pSquares,attackedByOwn,pSpecialMovePositions);
         }
@@ -641,7 +640,7 @@ public class Board {
                     moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
                 }
                 else
-                {moves.add(new int[]{startPos, neuersquare, pawn * eigeneFarbe});}
+                {moves.add(new int[]{startPos, neuersquare, Piece.pawn * eigeneFarbe});}
 
             }
         }
@@ -656,7 +655,7 @@ public class Board {
                     moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
                 }
                 else
-                {moves.add(new int[]{startPos, neuersquare, pawn * eigeneFarbe});}
+                {moves.add(new int[]{startPos, neuersquare, Piece.pawn * eigeneFarbe});}
 
 
             }
@@ -664,7 +663,7 @@ public class Board {
         //En passant
         if(enPassantReiheAnfang <= startPos && startPos <= enPassantReiheEnde)
         {
-            if((startPos+1) / 8 == startPos / 8 && pSquares[startPos+1] != emptySquare && Math.abs(pSquares[startPos+1]) == pawn)
+            if((startPos+1) / 8 == startPos / 8 && pSquares[startPos+1] != emptySquare && Math.abs(pSquares[startPos+1]) == Piece.pawn)
             {
                 for (int i = 0; i < specialMovePositions.size(); i++) {
                     if(specialMovePositions.get(i) == startPos+1)
@@ -675,7 +674,7 @@ public class Board {
                     }
                 }
             }
-            if((startPos-1) / 8 == startPos / 8 && pSquares[startPos-1] != emptySquare && Math.abs(pSquares[startPos-1]) == pawn)
+            if((startPos-1) / 8 == startPos / 8 && pSquares[startPos-1] != emptySquare && Math.abs(pSquares[startPos-1]) == Piece.pawn)
             {
                 for (int i = 0; i < specialMovePositions.size(); i++) {
                     if(specialMovePositions.get(i) == startPos-1)
@@ -697,14 +696,14 @@ public class Board {
                 moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
             }
             else
-            {moves.add(new int[]{startPos, neuersquare, pawn * eigeneFarbe});}
+            {moves.add(new int[]{startPos, neuersquare, Piece.pawn * eigeneFarbe});}
         }
 
         // geradeaus 2
         neuersquare = startPos+bewegungsrichtung*2;
         if((anfangsReiheAnfang <= startPos && startPos <= anfangsReiheEnde) && pSquares[neuersquare] == emptySquare)
         {
-            moves.add(new int[]{startPos,neuersquare, pawn * eigeneFarbe});
+            moves.add(new int[]{startPos,neuersquare, Piece.pawn * eigeneFarbe});
         }
 
         return moves.toArray(new int[0][0]);
@@ -764,7 +763,7 @@ public class Board {
 
         //Zug im Square array eintragen
         if(Math.abs(pPieceValue)==enPassantInt) {
-            pSquares[pEndPosition] = pawn * color;
+            pSquares[pEndPosition] = Piece.pawn * color;
             pSquares[pEndPosition + color * 8] = emptySquare;
 
         }
@@ -1067,7 +1066,7 @@ public class Board {
 
         //Zug im Square array eintragen
         if(Math.abs(pPieceValue)==enPassantInt) {
-            Square[pEndPosition] = pawn * color;
+            Square[pEndPosition] = Piece.pawn * color;
             Square[pEndPosition + color * 8] = emptySquare;
 
         }

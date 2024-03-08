@@ -269,6 +269,7 @@ public class Input extends MouseAdapter {
 
 
                                 //REPAINTE DU ...
+                                System.out.println("Paint Component aufgerufen");
                                 c.boardGUI.repaint();
 
 
