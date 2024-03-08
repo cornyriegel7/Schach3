@@ -309,7 +309,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     public void neuesBrett(String boardString) {
         int[] recievedBoard = stringToIntArray(boardString);
-        c.boardGUI.setSquare(recievedBoard);
+        c.board.Square = recievedBoard;
         c.boardGUI.repaint();
     }
     public int[] stringToIntArray(String str) {
