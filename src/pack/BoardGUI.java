@@ -3,6 +3,8 @@ package pack;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+
 public class BoardGUI extends JPanel {
     Controller c;
 
@@ -72,8 +74,6 @@ public class BoardGUI extends JPanel {
                     Image selectedPiece = pieceIntToImage(c.input.getSelectedPieceValue()).getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
                     g2d.drawImage(selectedPiece, c.input.getxE() - titleSize / 2, c.input.getyE() - titleSize / 2, null);
                 }
-                System.out.println("FERTIG");
-
             }
 
 

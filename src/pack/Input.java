@@ -282,6 +282,7 @@ public class Input extends MouseAdapter {
                                     c.vsBot();
                                 }
 
+                                c.boardGUI.repaint();
                                 return;
                                 //board.view.c.chatClient.setIntArray(board.giveBoard()); //intarray wird verschickt
 

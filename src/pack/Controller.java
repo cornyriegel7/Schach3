@@ -11,6 +11,7 @@ public class Controller {
     Chatserver chatServer;
     ChatClient chatClient;
     Bot bot;
+    boolean BOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT;
     public int dran;
     public Controller(View pView) {
         view = pView;
@@ -47,7 +48,6 @@ public class Controller {
     public void vsBot()
     {
         input.setActive(false);
-        boardGUI.repaint();
         //Bot tests
         LinkedList<Integer> ownPos = dran == Piece.white ? board.whitePositions : board.blackPositions;
         LinkedList<Integer> enemyPos = dran == Piece.black ? board.whitePositions : board.blackPositions;
@@ -72,6 +72,8 @@ public class Controller {
 
     public void toggleDran(){dran = dran * -1;}
 
+    public void setBOT(boolean hehe){BOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT = hehe;}
+    public boolean getBOT(){return BOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT;}
 
 }
 

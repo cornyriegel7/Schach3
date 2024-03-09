@@ -308,12 +308,10 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         }
 
     public void neuesBrett(String boardString) {
-        int[] recievedBoard = stringToIntArray(boardString);
-        c.board.Square = recievedBoard;
+        c.board.Square = stringToIntArray(boardString);
         c.boardGUI.repaint();
     }
     public int[] stringToIntArray(String str) {
-        // Zuerst entfernen wir die Klammern und Leerzeichen und teilen den String in Teile
         String[] parts = str.substring(1, str.length() - 1).split(", ");
         int[] array = new int[parts.length];
         for (int i = 0; i < parts.length; i++) {
@@ -356,9 +354,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         }
     }
 
-    public void sendMessage(String message){
-        if(message.equals("TEST")) c.chatClient.send(message);
-        else c.chatClient.send("MSSG" + message);
+    public void sendMessage(String pMessage){
+      c.chatClient.send(pMessage);
     }
 
     public void checkMateMessage(boolean hasWhiteLost)
