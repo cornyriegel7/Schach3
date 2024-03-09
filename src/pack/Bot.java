@@ -81,8 +81,38 @@ public class Bot {
         gameStatus = 0;
         this.board = board;
     }
+
+    /**
+     * Funktion soll sehr grobb bestimmen ob das Spiel in der Endphase ist. Dazu wird bewertet wie viele Pieces (die nicht Bauer oder Koenig sind)
+     * noch vorhanden sind. 1 = Engame, 0 = Eroeffnung
+     * @return 1 = Engame, 0 = Eroeffnung
+     */
+
+    public double updateGameStatus(int[] pSquares, LinkedList<Integer> whitePositions, LinkedList<Integer> blackPositions)
+    {
+        int heavyPieceCount = 0;
+        for (int i = 0; i < whitePositions.size(); i++) {
+            if(pSquares[whitePositions.get(i)] != Piece.pawn && pSquares[whitePositions.get(i)] != Piece.king)
+            {
+                heavyPieceCount+= pSquares[whitePositions.get(i)];
+            }
+        }
+        for (int i = 0; i < blackPositions.size(); i++) {
+            if(pSquares[blackPositions.get(i)] != -Piece.pawn && pSquares[blackPositions.get(i)] != -Piece.king)
+            {
+                heavyPieceCount += -pSquares[blackPositions.get(i)];
+            }
+        }
+        if(heavyPieceCount > 21)
+        {
+            return -0.025 * heavyPieceCount + 1.2;
+        }
+        return -0.015 * heavyPieceCount + 1;
+    }
+
     public int evaluation(int[] pSquares, LinkedList<Integer> whitePositions, LinkedList<Integer> blackPositions){
         int balancing = 20;
+
         int whiteMaterial = 0;
         int pos;
         for (int i = 0; i < whitePositions.size(); i++) {
@@ -123,6 +153,10 @@ public class Bot {
         LinkedList<int[]> moves = new LinkedList<>();
         int[] moveTotal = null;
         int total = pDran == Piece.white ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+        LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
+        LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
+        System.out.println(updateGameStatus(pSquares,whitePos,blackPos));
 
 
         LinkedList<Integer> ownPosN= new LinkedList<>(),enemyPosN = new LinkedList<>();

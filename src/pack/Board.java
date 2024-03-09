@@ -1015,11 +1015,11 @@ public class Board {
         //System.out.println("own"+ownPositions.size());
        // System.out.println("enemy"+enemyPositions.size());
 
-        System.out.println("own"+ownPositions.size());
-        System.out.println("enemy"+enemyPositions.size());
+        //System.out.println("own"+ownPositions.size());
+        //System.out.println("enemy"+enemyPositions.size());
        execMove(pStartPosition,pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,enemyPositions,specialMovePositions);
-        System.out.println("own"+ownPositions.size());
-        System.out.println("enemy"+enemyPositions.size());
+        //System.out.println("own"+ownPositions.size());
+        //System.out.println("enemy"+enemyPositions.size());
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)

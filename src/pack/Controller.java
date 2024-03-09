@@ -54,9 +54,16 @@ public class Controller {
         LinkedList<int[]> ownAttacked = dran == Piece.white ? board.attackedByWhitePositions : board.attackedByBlackPositions ;
         LinkedList<int[]> enemyAttacked = dran == Piece.black ? board.attackedByWhitePositions : board.attackedByBlackPositions ;
         int[] move = (bot.getMove(board.Square,dran,ownPos,enemyPos,ownAttacked,enemyAttacked,board.specialMovePositions));
-        board.execMove(move[0],move[1],move[2]);
-        dran *= -1;
-        input.setActive(true);
+        if(move == null)
+        {
+            boolean hasWhiteLost = dran == Piece.white;
+            view.checkMateMessage(hasWhiteLost);
+        }
+        else {
+            board.execMove(move[0], move[1], move[2]);
+            dran *= -1;
+            input.setActive(true);
+        }
     }
     public void setDran(int color)
     {
