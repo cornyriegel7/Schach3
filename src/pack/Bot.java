@@ -1,8 +1,6 @@
 package pack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Bot {
     // Alle Ratings aus der Perspektive von unten
@@ -125,8 +123,8 @@ public class Bot {
         LinkedList<int[]> moves = new LinkedList<>();
         int[] moveTotal = null;
         int total = pDran == Piece.white ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-        LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
-        LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
+
+
         LinkedList<Integer> ownPosN= new LinkedList<>(),enemyPosN = new LinkedList<>();
         LinkedList<int[]> ownAttackedN= new LinkedList<>(), enemyAttackedN= new LinkedList<>();
         ArrayList<Integer> spezialMovesN = new ArrayList<>();
@@ -141,9 +139,11 @@ public class Bot {
         for (int i = 0; i < ownPos.size(); i++) {
            moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPos.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
         }
+        MoveComparator moveComparator = new MoveComparator(pSquares);
+        moves.sort(moveComparator);
 
-        int alpha = 0;
-        int beta = 0;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
         int depth = 4;
 
         for (int i = 0; i < moves.size(); i++) {
@@ -159,10 +159,21 @@ public class Bot {
              //evaluation(SquareN,whitePos,blackPos);
             int ev = minimax(SquareN,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMovesN);
             //System.out.println(ev);
-            if((pDran == Piece.white && ev > total) || (pDran == Piece.black && ev < total))
+            if(pDran == Piece.white && ev > total)
             {
                 total = ev;
                 moveTotal = move;
+                alpha = ev;
+            }
+            else if(pDran == Piece.black && ev < total)
+            {
+                total = ev;
+                moveTotal = move;
+                beta = ev;
+            }
+            if(alpha >= beta)
+            {
+                break;
             }
             ownPosN = new LinkedList<>(ownPos);
             enemyPosN = new LinkedList<>(enemyPos);
@@ -203,6 +214,8 @@ public class Bot {
         for (int i = 0; i < ownPos.size(); i++) {
             moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPos.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
         }
+        MoveComparator moveComparator = new MoveComparator(pSquares);
+        moves.sort(moveComparator);
         for (int i = 0; i < moves.size(); i++) {
 
 
@@ -217,9 +230,19 @@ public class Bot {
             int ev = minimax(SquareN,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMovesN);
             //minimax(pSquares,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMoves);
             //System.out.println(ev);
-            if((pDran == Piece.white && ev > total) || (pDran == Piece.black && ev < total))
+            if(pDran == Piece.white && ev > total)
             {
                 total = ev;
+                alpha = ev;
+            }
+            else if(pDran == Piece.black && ev < total)
+            {
+                total = ev;
+                beta = ev;
+            }
+            if(alpha >= beta)
+            {
+                break;
             }
             ownPosN = new LinkedList<>(ownPos);
             enemyPosN = new LinkedList<>(enemyPos);
@@ -232,5 +255,46 @@ public class Bot {
         return total;
     }
 
+
+
+    private class MoveComparator implements Comparator<int[]>
+    {
+        private int[] Square;
+        public MoveComparator(int[] pSquare)
+        {
+            this.Square = pSquare;
+        }
+
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            if(predictMoveValue(o1,Square) > predictMoveValue(o2,Square))
+            {
+                return -1;
+            }
+            else if(predictMoveValue(o1,Square) < predictMoveValue(o2,Square))
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public int predictMoveValue(int[] move, int[] pSquare)
+        {
+            int promoBonus = 5;
+            int predict = 0;
+            int ownPieceValue = Math.abs(pSquare[move[0]]);
+            int enemyPieceValue = 0;
+            if(pSquare[move[1]] != 0)
+            {
+                enemyPieceValue = Math.abs(pSquare[move[1]]);
+            }
+            predict += enemyPieceValue - ownPieceValue; // Zuege, bei denen Figuren mit groesserem Wert als die eigene geschlagen werden sind gut
+            if(move[2] == Piece.pawn && (move[1] / 8 == 0 || move[1] / 8 == 7)) // Bauern umzuwandeln ist auch eig immer gut
+            {
+                predict += promoBonus;
+            }
+            return predict;
+        }
+    }
 }
 
