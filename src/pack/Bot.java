@@ -214,6 +214,18 @@ public class Bot {
         for (int i = 0; i < ownPos.size(); i++) {
             moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPos.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
         }
+        if(moves.size() == 0 )
+        {
+            int[][] attacksOnKing = board.getAttacksOnKing(board.getKingPos(pSquares,ownPos),pSquares,ownPos,enemyAttacked);
+            if(attacksOnKing.length == 0) // Patt -> unentschieden
+            {
+                return 0;
+            }
+            else // Schachmatt
+            {
+                return Integer.MIN_VALUE * pDran;
+            }
+        }
         MoveComparator moveComparator = new MoveComparator(pSquares);
         moves.sort(moveComparator);
         for (int i = 0; i < moves.size(); i++) {
