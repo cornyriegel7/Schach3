@@ -10,7 +10,6 @@ public class ChatClient extends Client {
     private String ip;
 
     private boolean gewaehrt;
-    private String currentServerText;
 
     public ChatClient(String pServerIP, int pServerPort, Controller pController){
         super(pServerIP, pServerPort);
@@ -22,16 +21,15 @@ public class ChatClient extends Client {
         send(pText);
     }
 
-    /*** Mit dieser Methode wird die aktuelle Verbindung getrennt */
-    public void beenden()
-    {
-        send("ABME");
-    }
+//    /*** Mit dieser Methode wird die aktuelle Verbindung getrennt */
+//    public void beenden()
+//    {
+//        send("ABME");
+//    }
 
     /*** Die Methode dient zur verarbeitung der Nachrichten vom Server */
     public void processMessage(String pMessage)
     {
-        //weitergabe an die View
         StringEmpfangen.getString(pMessage);
     }
     public void setIntArray(int[] pIntArray) {

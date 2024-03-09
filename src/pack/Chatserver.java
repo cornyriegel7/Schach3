@@ -1,14 +1,9 @@
 package pack;
-import java.util.*;
-import java.util.ArrayList;
 //Todo: muss beim onlinespiel dauernd laufen und empfangsbereit sein, wenn int[] kommt an den controller geben und dann das board damit aktualisieren.
-// man muss schauen, dass nur ein move at a time erlaubt ist. außerdem vielleicht server als interface von controller machen, damit die kommunikation
-// funktioniert.
+// man muss schauen, dass nur ein move at a time erlaubt ist.
 public class Chatserver extends Server {
     public static final String logout = "ABME", test = "TEST", board = "BOAR", nrOfConnections = "CONN";
-    private String hostIP;
-    private String joinIP;
-
+    private String hostIP, joinIP;
     private boolean isHost;
     int connections;
     public Chatserver(int pPort) {
@@ -36,13 +31,14 @@ public class Chatserver extends Server {
         //command rausfinden
         String command = pMessage.substring(0, Math.min(pMessage.length(), 4));
                 switch (command) {
-                    case (logout): {processClosingConnection(pClientIP, pClientPort); }//if host dann alles plattmachen
+                    case (logout): {processClosingConnection(pClientIP, pClientPort);
+                    }//if host dann alles plattmachen - wenn client aber auch
                         return;
                     case(nrOfConnections): this.send(pClientIP,pClientPort, String.valueOf(getConnections()));
                         return;
                     case (test): this.send(pClientIP,pClientPort,"BOAR[-2, -2, -3, -5, -6, -3, -4, 2, -1, -1, -1, -1, 1, -1, -1, -1, 0, 0, 0, 0, 0, 4, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 0, 1, 1, 1, -4, 1, 1, 1, 1, 4, 2, 3, 5, 6, 3, 2, 4]");
                         return;
-                    case (board): this.send(addressee, pClientPort, pMessage); //??
+                    case (board): this.send(addressee, pClientPort, pMessage);
                 }
                 this.send(addressee,pClientPort,pMessage);
     }

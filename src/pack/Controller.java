@@ -26,7 +26,6 @@ public class Controller {
     {
         if(view.getPickedMode() == 2){
             chatClient = new ChatClient(view.getIp(), view.getPickedPort(), this);
-            chatClient.setIp(view.getIp());
         }
     }
 

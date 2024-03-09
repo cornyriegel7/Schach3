@@ -19,7 +19,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     JScrollPane scrollPane;
     JComboBox<String> dropdownProm, dropdownSkins;
 
-    public final static String verbindungGewaehrt = "OKOK", verbindungAbgebrochen = "CCUT", spielZuende = "GMOV", brettEmpfangen = "BOAR";
+    public final static String verbindungGewaehrt = "OKOK", verbindungAbgebrochen = "CCUT", spielZuende = "GMOV", brettEmpfangen = "BOAR",
+    allesBeenden = "Lieb";
 
     boolean host = false;
     private String ip;
@@ -171,20 +172,13 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     //Createt das lokale Spielfeld
     public void createVsLokal()
     {
-        pickedMode = 1; //modus:1,2 oder 3
-
+        pickedMode = 1; //modus:1 lokal,2 online oder 3 bot
         c = new Controller(this);
         c.createBoard();
-
-        fVsLokal = new JFrame();
+        fVsLokal = createDefaultWindow();
         fVsLokal.setTitle("Gegen Lokalen Gegner");
         fVsLokal.getContentPane().setBackground(new Color(27, 40, 93));
-        fVsLokal.setLayout(new GridBagLayout());
-        fVsLokal.setMinimumSize(new Dimension(1000, 1000));
         fVsLokal.setLocationRelativeTo(null);
-        fVsLokal.add(c.boardGUI);
-        fVsLokal.addWindowListener(this);
-        fVsLokal.setVisible(true);
     }
 
     //createt das Onlinespielfeld
@@ -199,15 +193,10 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
                 c = new Controller(this);
                 c.createBoard();
 
-                fVsOnline = new JFrame();
+                fVsOnline = createDefaultWindow();
                 fVsOnline.setTitle("Gegen Online Gegner");
                 fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
-                fVsOnline.setLayout(new GridBagLayout());
-                fVsOnline.setMinimumSize(new Dimension(1000, 1000));
                 fVsOnline.setLocationRelativeTo(null);
-                fVsOnline.add(c.boardGUI);
-                fVsOnline.addWindowListener(this);
-                fVsOnline.setVisible(true);
 
                 chatFrame = new JFrame();
                 chatFrame.setTitle("Chat");
@@ -229,19 +218,22 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     public void createVsBot()
     {
         pickedMode = 3;
-
         c = new Controller(this);
         c.createBoard();
-
-        fVsBot = new JFrame();
+        fVsBot = createDefaultWindow();
         fVsBot.setTitle("Gegen Bot");
         fVsBot.getContentPane().setBackground(new Color(63, 66, 77));
-        fVsBot.setLayout(new GridBagLayout());
-        fVsBot.setMinimumSize(new Dimension(1000, 1000));
         fVsBot.setLocationRelativeTo(null);
-        fVsBot.addWindowListener(this);
-        fVsBot.add(c.boardGUI);
-        fVsBot.setVisible(true);
+    }
+
+    public JFrame createDefaultWindow(){
+        JFrame frame = new JFrame();
+        frame.setLayout(new GridBagLayout());
+        frame.setMinimumSize(new Dimension(1000, 1000));
+        frame.addWindowListener(this);
+        frame.add(c.boardGUI);
+        frame.setVisible(true);
+        return frame;
     }
 
     //createt das IP und Porteingabeframe
@@ -281,10 +273,10 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     /**
      * Hier kommt an, was der Client empfängt. (Client ruft diese Methode auf).
-     * Anhand von 4-Buchstaben-Codewörtern am Anfang kann verschiedenes gemacht werden, das kann man aber ändern.
+     * Anhand von 4-Buchstaben-Codewörtern
      */
 
-    //Todo: Verschiedene Möglichkeiten behandeln: 1. Neue Verbindung, 2. Verbindung getrennt, 3. Chatnachricht wird empfangen, 4. Schachbrett wird empfangen
+    //Todo: Verschiedene Möglichkeiten behandeln: 1. Chatnachricht wird empfangen, 2. Schachbrett wird empfangen
     public void getString(String text){
 
         String neueNachricht ="";
@@ -293,16 +285,17 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
 
             switch (command) {
-                case (verbindungGewaehrt):
-                    neueNachricht = "Du bist connected \uD83D\uDE0E";
-                    break;
-                case (verbindungAbgebrochen):
-                    neueNachricht = "Verbindung zum Spielpartner getrennt";
-                    break;
-                //case (spielZuende):
                 case (brettEmpfangen):
                     neuesBrett(text.substring(4));
                     return;
+                case(allesBeenden): {
+                    taChat.append("Server: Du wirst abgemeldet.");
+                    try {Thread.sleep(3000);} catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    fVsOnline.dispose();
+                    chatFrame.dispose();
+                }
             }
         taChat.append("Server: " + text + "\r\n");
         }
