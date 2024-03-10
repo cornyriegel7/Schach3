@@ -2,7 +2,7 @@ package pack;
 
 import java.util.LinkedList;
 
-public class Controller {
+public class  Controller {
     View view;
     Piece piece;
     Board board;
@@ -70,9 +70,6 @@ public class Controller {
     }
 
     public void toggleDran(){dran = dran * -1;}
-
-    public void setBOT(boolean hehe){BOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT = hehe;}
-    public boolean getBOT(){return BOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT;}
 
 }
 

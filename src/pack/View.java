@@ -356,7 +356,25 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         if(hasWhiteLost) JOptionPane.showMessageDialog(null,"Schachmatt! Schwarz gewinnt");
         else JOptionPane.showMessageDialog(null,"Schachmatt! Weiß gewinnt");
         c.input.setActive(false);
-        Integer a = JOptionPane.showOptionDialog(null, "Spiel neustarten?","AOEUO", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"JA", "NEIN"}, "JA");
+        Integer a = JOptionPane.showOptionDialog(null, "Spiel neustarten?","Spiel beendet.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"JA", "NEIN"}, "JA");
+
+        if(a==YES_OPTION) {
+            this.disposeAFrame();
+            addPromoWindow(6);
+            switch (getPickedMode()) {
+                case 1: this.createVsLokal(); break;
+                //case 2: this.createVsOnline(); break; muss man schaun
+                case 3: this.createVsBot(); break;
+            }
+        }
+        if(a==NO_OPTION) {this.disposeAFrame(); setPickedMode(0);}
+    }
+
+    public void staleMateMessage()
+    {
+        JOptionPane.showMessageDialog(null,"Unentschieden");
+        c.input.setActive(false);
+        Integer a = JOptionPane.showOptionDialog(null, "Spiel neustarten?","Spiel beendet.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"JA", "NEIN"}, "JA");
 
         if(a==YES_OPTION) {
             this.disposeAFrame();
@@ -370,12 +388,12 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     public void disposeAFrame(){
+        promFrame.dispose();
         switch (getPickedMode()){
             case 1: this.fVsLokal.dispose(); break;
             case 2: this.fVsOnline.dispose(); break;
             case 3: this.fVsBot.dispose(); break;
         }
-        promFrame.dispose();
     }
     //Getter, setter-Methoden
     public String getIp(){

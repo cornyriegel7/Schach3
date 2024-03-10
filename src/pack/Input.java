@@ -77,12 +77,14 @@ public class Input extends MouseAdapter {
                             else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),c.board.Square,eigenePositionen,vonAnderenAngegriffen).length == 0)
                             {
                                 //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
+                                c.view.staleMateMessage();
                                 System.out.println("PATTPATTPATTPATTPATT");
                             }
                         }
                         else if(c.board.isTie(eigenePositionen,gegnerPositionen,c.board.Square))
                         {
                             //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
+                            c.view.staleMateMessage();
                             System.out.println("PATTPATTPATTPATTPATT");
                         }
 
