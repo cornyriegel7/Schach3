@@ -451,6 +451,7 @@ public class Board {
             }
             for(int i = attackOnKing[0] + attackDirection;i != attackOnKing[1]; i += attackDirection)
             {
+                if(attackOnKing.length  == 1 || (attackOnKing.length > 1 && squares.contains(i)))
                 squares.add(i);
             }
         }
@@ -762,7 +763,7 @@ public class Board {
         return moves.toArray(new int[0][0]);
     }
 
-    private LinkedList getPositions(int pColor, int[] pSquare)
+    public LinkedList getPositions(int pColor, int[] pSquare)
     {
         LinkedList<Integer> positions = new LinkedList<Integer>();
         for (int i = 0; i < pSquare.length && positions.size() < 16; i++) {
@@ -903,7 +904,7 @@ public class Board {
                 }
             }
             for (int i = 0; i < ownBlockedMoves.size(); i++) {
-                generateLegalMoves(ownBlockedMoves.get(i)[0], pSquares[ownBlockedMoves.get(i)[0]], pSquares,ownAttackedPositions, enemyAttackedPositions, ownPositions, pSpecialMoves);
+                generateLegalMoves(ownBlockedMoves.get(i)[0], ownBlockedMoves.get(i)[2], pSquares,ownAttackedPositions, enemyAttackedPositions, ownPositions, pSpecialMoves);
             }
         }
 

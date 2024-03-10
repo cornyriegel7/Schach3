@@ -139,7 +139,7 @@ public class Bot {
         if(moveCount >= 40)
         {return 4;}
 
-        return (int) (-0.049 * moveCount + 6);
+        return (int) (-0.058 * moveCount + 6.28);
     }
     public int positionEvaluation(double pGameStatus, int index, int[] pSquares)
     {
