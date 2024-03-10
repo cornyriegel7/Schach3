@@ -86,7 +86,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             //fenster: lokaler gegner
             if (e.getSource() == bVsLokal) {
                 createVsLokal();
-                addPromoWindow(6);
             }
 
             //Für Onlinespiel
@@ -114,7 +113,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             //Für Spiel gegen Bot
             if (e.getSource() == bVsBot) {
                createVsBot();
-                addPromoWindow(6);
             }
         }
 
@@ -229,10 +227,34 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     public JFrame createDefaultWindow(){
         JFrame frame = new JFrame();
         frame.setLayout(new GridBagLayout());
-        frame.setMinimumSize(new Dimension(1000, 1000));
+        frame.setMinimumSize(new Dimension(1400, 1000));
         frame.addWindowListener(this);
         frame.add(c.boardGUI);
         frame.setVisible(true);
+
+        String[] proms = {"Dame", "Turm", "Läufer", "Springer"};
+        dropdownProm = new JComboBox<>(proms);
+        dropdownProm.addActionListener(this);
+        dropdownProm.setBounds(50,50,300,30);
+        dropdownProm.setVisible(true);
+
+        String[] skins = {"pink-blau","pink-blau-Apo","oransch-lila","",""};
+        dropdownSkins = new JComboBox<>(skins);
+        dropdownSkins.addActionListener(this);
+        dropdownSkins.setBounds(50,100,300,30);
+        dropdownSkins.setVisible(true);
+
+        bApply = new JButton("Apply");
+        bApply.addActionListener(this);
+        bApply.setBounds(380, 100, 140, 30);
+        bApply.setVisible(true);
+
+        frame.add(dropdownProm);
+        frame.add(dropdownSkins);
+        frame.add(bApply);
+
+        frame.setVisible(true);
+
         return frame;
     }
 
@@ -370,22 +392,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         if(a==NO_OPTION) {this.disposeAFrame(); setPickedMode(0);}
     }
 
-    public void staleMateMessage()
-    {
-        JOptionPane.showMessageDialog(null,"Unentschieden");
-        c.input.setActive(false);
-        Integer a = JOptionPane.showOptionDialog(null, "Spiel neustarten?","Spiel beendet.", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"JA", "NEIN"}, "JA");
-
-        if(a==YES_OPTION) {
-            this.disposeAFrame();
-            switch (getPickedMode()) {
-                case 1: this.createVsLokal(); break;
-                //case 2: this.createVsOnline(); break; muss man schaun
-                case 3: this.createVsBot(); break;
-            }
-        }
-        if(a==NO_OPTION) {this.disposeAFrame(); setPickedMode(0);}
-    }
     public void staleMateMessage()
     {
         JOptionPane.showMessageDialog(null,"Unentschieden");
