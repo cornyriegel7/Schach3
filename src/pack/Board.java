@@ -231,6 +231,59 @@ public class Board {
         return kingPosition;
     }
 
+    /**
+     * STALEMATE WIRD NICHT BERUECKSICHTIGT, DAS KOMMT MANUELL IN INPUT BZW BOT
+     * @param positions1
+     * @param positions2
+     * @return
+     */
+    public boolean isTie(LinkedList<Integer> positions1, LinkedList<Integer> positions2, int[] pSquare)
+    {
+        int knightCount1 = 0;
+        int bishopCount1 = 0;
+        for (int i = 0; i < positions1.size(); i++) {
+            int absValue = Math.abs(pSquare[positions1.get(i)]);
+            if(absValue == Piece.pawn || absValue == Piece.queen || absValue == Piece.rook)
+            {
+                return false;
+            }
+            if(absValue == Piece.bishop)
+            {
+                bishopCount1++;
+            }
+            else if(absValue == Piece.knight)
+            {
+                knightCount1++;
+            }
+        }
+        int knightCount2 = 0;
+        int bishopCount2 = 0;
+        for (int i = 0; i < positions2.size(); i++) {
+            int absValue = Math.abs(pSquare[positions2.get(i)]);
+            if(absValue == Piece.pawn || absValue == Piece.queen || absValue == Piece.rook)
+            {
+                return false;
+            }
+            if(absValue == Piece.bishop)
+            {
+                bishopCount2++;
+            }
+            else if(absValue == Piece.knight)
+            {
+                knightCount2++;
+            }
+        }
+        if((knightCount2+bishopCount2 > 1 && knightCount2 < 2) || (knightCount2 == 2 && knightCount1+bishopCount1 != 0))
+        {
+            return false;
+        }
+        if((knightCount1+bishopCount1 > 1 && knightCount1 < 2) || (knightCount1 == 2 && knightCount2+bishopCount2 != 0))
+        {
+            return false;
+        }
+        return true;
+    }
+
     public boolean isCheckMate(int color)
     {
         LinkedList<Integer> positions = color == Piece.white ? whitePositions : blackPositions;
