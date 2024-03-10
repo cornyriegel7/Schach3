@@ -173,23 +173,18 @@ public class Board {
              moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
 
         }
-        else
+        else if(attacksOnKing.length == 1)
         {
             moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
             LinkedList<int[]> legalMoves = new LinkedList<>();
-            LinkedList<int[]> allowedBlockSquares = new LinkedList<>();
-            for (int i = 0; i < attacksOnKing.length; i++) {
-                allowedBlockSquares.add(generateAllowedSquares(attacksOnKing[i]));
-            }
+            int[] allowedSquares = generateAllowedSquares(attacksOnKing[0]);
 
             for (int i = 0; i < moves.length; i++) {
-                for (int j = 0; j < allowedBlockSquares.size(); j++) {
-                    for (int k = 0; k < allowedBlockSquares.get(j).length; k++) {
-                        if(moves[i][1] == allowedBlockSquares.get(j)[k])
-                        {
-                            legalMoves.add(moves[i]);
-                            break;
-                        }
+                for (int j = 0; j < allowedSquares.length; j++) {
+                    if(moves[i][1] == allowedSquares[j])
+                    {
+                        legalMoves.add(moves[i]);
+                        break;
                     }
                 }
             }
