@@ -247,9 +247,9 @@ public class Bot {
         {
             return evaluation(SquareN,whitePos,blackPos);
         }
-        LinkedList<Integer> ownPosN= new LinkedList<>(),enemyPosN = new LinkedList<>();
-        LinkedList<int[]> ownAttackedN= new LinkedList<>(), enemyAttackedN= new LinkedList<>();
-        ArrayList<Integer> spezialMovesN = new ArrayList<>();
+        LinkedList<Integer> ownPosN,enemyPosN;
+        LinkedList<int[]> ownAttackedN, enemyAttackedN;
+        ArrayList<Integer> spezialMovesN;
 
         ownPosN = new LinkedList<>(ownPos);
         enemyPosN = new LinkedList<>(enemyPos);
@@ -277,12 +277,10 @@ public class Bot {
         moves.sort(moveComparator);
         for (int i = 0; i < moves.size(); i++) {
             int[] move = moves.get(i);
-            //System.out.println(i);
             board.execMove(move[0],move[1],move[2],SquareN,ownAttackedN,enemyAttackedN,ownPosN,enemyPosN,spezialMovesN);
 
             int ev = minimax(SquareN,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMovesN);
-            //minimax(pSquares,pDran * -1,alpha,beta,depth -1,enemyPosN,ownPosN,enemyAttackedN,ownAttackedN,spezialMoves);
-            //System.out.println(ev);
+
             if(pDran == Piece.white && ev > total)
             {
                 total = ev;
@@ -304,7 +302,6 @@ public class Bot {
             spezialMovesN = new ArrayList<>(spezialMoves);
             System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
         }
-        // System.out.println(total);
         return total;
     }
 

@@ -67,51 +67,6 @@ public class Board {
             return -1;
         }
     }
-    /**
-     * @param pPieceValue den wert einer Figur aus Farbe * FigurTyp
-     * @return den Anfangsbuchstaben des Namen der Figur (klein wenn Figur == schwarz, gross wenn weiß)
-     */
-    public  char pieceIntToChar(int pPieceValue)
-    {
-        int absolutFigurInt = Math.abs(pPieceValue);
-        int farbe = pPieceValue / absolutFigurInt;
-
-        return switch (absolutFigurInt) {
-            case (Piece.king) -> farbe == Piece.black ? 'k' : 'K';
-            case (Piece.pawn) -> farbe == Piece.black ? 'p' : 'P';
-            case (Piece.knight) -> farbe == Piece.black ? 'n' : 'N';
-            case (Piece.bishop) -> farbe == Piece.black ? 'b' : 'B';
-            case (Piece.rook) -> farbe == Piece.black ? 'r' : 'R';
-            case (Piece.queen) -> farbe == Piece.black ? 'q' : 'Q';
-            default -> 0;
-        };
-    }
-
-    /**
-     * Dreckige HIlfsmethode (braucht keiner)
-     */
-    public  void printBoard()
-    {
-        String lineString = "";
-        for(int i = 0; i< Square.length; i++)
-        {
-
-            if(Square[i] == Board.emptySquare)
-            {
-                lineString += " ";
-            }
-            else
-            {
-                lineString += pieceIntToChar(Square[i]);
-            }
-            lineString += " | ";
-            if(( (i + 1) % 8 == 0 && i != 0 ) || i == 63) { //Zeilenumbruch wenn i durch 8 teilbar ist -> alle 8 Felder
-                System.out.println(lineString);
-                System.out.println("------------------------------");
-                lineString = "";
-            }
-        }
-    }
 
     public int[] giveBoard()
     {
@@ -538,17 +493,6 @@ public class Board {
         }
         return allowedSquares;
     }
-
-
-    /**
-     *  unnoetige Hilfsmethode TODO: irgendwann entfernen
-     * @param move der move(StartPosition, Endposition
-     */
-    public void printMove(int[] move)
-    {
-        System.out.println(pieceIntToChar(move[2])+" von "+move[0]+" nach "+move[1]);
-    }
-
     /**
      *
      * @param startPosition startPosition auf dem brett
@@ -778,7 +722,6 @@ public class Board {
             if(pSquare[i] != emptySquare && pSquare[i]/Math.abs(pSquare[i]) == pColor)
                 positions.add(i);
         }
-
         return positions;
     }
 
@@ -1069,27 +1012,16 @@ public class Board {
      */
     public void execMove(int pStartPosition, int pEndPosition,int pPieceValue)
     {
-
-
         int color = pPieceValue / Math.abs(pPieceValue);
         LinkedList<int[]> ownAttackedPositions = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
         LinkedList<int[]> enemyAttackedPositions = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
         LinkedList<Integer> ownPositions = color == Piece.white ? whitePositions : blackPositions;
         LinkedList<Integer> enemyPositions = color == Piece.black ? whitePositions : blackPositions;
-        //System.out.println("own"+ownPositions.size());
-       // System.out.println("enemy"+enemyPositions.size());
-
-        //System.out.println("own"+ownPositions.size());
-        //System.out.println("enemy"+enemyPositions.size());
        execMove(pStartPosition,pEndPosition,pPieceValue,Square,ownAttackedPositions,enemyAttackedPositions,ownPositions,enemyPositions,specialMovePositions);
-        //System.out.println("own"+ownPositions.size());
-        //System.out.println("enemy"+enemyPositions.size());
     }
 
     private void addToAttackedPositions(int pEigenePosition, int pAttackedSquare, int pAbsPieceValue, LinkedList<int[]> pAttackedPositions)
     {
-        /*if(pAttackedSquare == 46)
-            printMove(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});*/
         pAttackedPositions.add(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});
     }
     public void setSquare(int pIndex, int pValue){
