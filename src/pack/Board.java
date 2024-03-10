@@ -288,8 +288,6 @@ public class Board {
 
                         if (newSquare == attackedSquare) // ist ein moegliches Feld angegriffen
                         {
-                            /*System.out.println("Koenig kann nd nach"+newSquare+" weil:");
-                            printMove(attackedByEnemy.get(j));*/
                             if((KingSidePossible||QueenSidePossible) && i==0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
                                 removeFirstIndex = true;
                             }
@@ -307,8 +305,6 @@ public class Board {
                                 int absAttackingPieceValue = Math.abs(attacksOnKing[k][2]);
                                 if (absAttackingPieceValue == Piece.queen || absAttackingPieceValue == Piece.rook || absAttackingPieceValue == Piece.bishop) {
                                     if (attackDirection % moveDirection == 0 && (Math.abs(moveDirection) != 1 || (Math.abs(moveDirection) == 1 && attacksOnKing[k][0] / 8 == attacksOnKing[k][1] / 8)) && newSquare != attacksOnKing[k][0]) {
-                                        /*System.out.println(newSquare+"geskippt weil:");
-                                        printMove(attacksOnKing[k]);*/
                                         if((KingSidePossible||QueenSidePossible) && i==0) { // Wenn es weder die erste Wiederholung ist, noch castlen ueberhaupt moeglich ist
                                             removeFirstIndex = true;
                                         }
@@ -324,13 +320,10 @@ public class Board {
                         {
                             if(KingSidePossible && (castleKingSideBegin <= attackedSquare && attackedSquare <= castleKingSideEnd))
                             {
-                                /*System.out.println("castlen impossible bc:");
-                                printMove(attackedByEnemy.get(j));*/
                                 KingSidePossible = false;
                             }
                             if(QueenSidePossible &&(castleQueenSideBegin <= attackedSquare && attackedSquare <= castleQueenSideEnd))
-                            {/*System.out.println("castlen impossible bc:");
-                                printMove(attackedByEnemy.get(j));*/
+                            {
                                 QueenSidePossible = false;
                             }
                         }
@@ -370,8 +363,6 @@ public class Board {
 
         }
 
-        //System.out.println("King:"+KingSidePossible);
-        //System.out.println("Queen:"+QueenSidePossible);
         return moves.toArray(new int[0][0]);
     }
 
@@ -997,13 +988,6 @@ public class Board {
                 pSpecialMoves.remove((Integer) 62);
             }
         }
-        /*System.out.println("AA");
-        for (int i = 0; i < enemyAttackedPositions.size(); i++) {
-            printMove(enemyAttackedPositions.get(i));
-        }*/
-        //System.out.println("own"+ownPositions.size());
-        //System.out.println("enemy"+enemyPositions.size());
-        //System.out.println(Arrays.toString(ownPositions.toArray()));
     }
 
     /**
