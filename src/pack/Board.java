@@ -150,28 +150,21 @@ public class Board {
         return rdistancesToEdge;
     }
 
-    public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, LinkedList<Integer> pPositions, ArrayList<Integer> pSpecialMovePositions)
+    public int[][] generateLegalMoves(int startPosition, int pPieceValue, int[] pSquares,
+                                      LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, LinkedList<Integer> pPositions, ArrayList<Integer> pSpecialMovePositions)
     {
-
-        if(pPieceValue == 0)
-        {
-            System.out.println("start:"+startPosition);
-        }
         //int color = pPieceValue / Math.abs(pPieceValue);
         int color = pSquares[startPosition] / Math.abs(pSquares[startPosition]);
         int kingPosition = getKingPos(pSquares,pPositions);
         int[][] attacksOnKing= getAttacksOnKing(kingPosition,pSquares,pPositions,attackedByEnemy);
 
-
         int[][] moves = new int[0][0];
         if (Math.abs(pPieceValue) == Piece.king) {
             return generateLegalKingMoves(startPosition, color, pSquares, attackedByOwn, attackedByEnemy,attacksOnKing,pSpecialMovePositions);
-
         }
         else if(attacksOnKing.length == 0)
         {
              moves  =  generateMoves(startPosition,pPieceValue,pSquares,attackedByOwn,attackedByEnemy,pSpecialMovePositions);
-
         }
         else if(attacksOnKing.length == 1)
         {
@@ -191,7 +184,7 @@ public class Board {
             moves = legalMoves.toArray(new int[0][0]);
         }
         int[] allowedAfterPin = isPinned(startPosition,kingPosition,Square,attackedByEnemy);
-        if(allowedAfterPin!= null) {
+        if(allowedAfterPin != null) {
             LinkedList<int[]> allowedMoves = new LinkedList<>();
             for (int i = 0; i < moves.length; i++) {
                 for (int j = 0; j < allowedAfterPin.length; j++) {
@@ -662,7 +655,6 @@ public class Board {
         }
         return moves.toArray(new int[0][0]);
     }
-//COMMITTEST DU JETZT??
     public int[][] generatePawnMoves(int startPos,int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions,ArrayList<Integer> pSpecialMovePositions)
     {
         LinkedList<int[]> moves = new LinkedList<>();
@@ -774,7 +766,8 @@ public class Board {
     }
 
 
-    public void execMove(int pStartPosition, int pEndPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> ownAttackedPositions, LinkedList<int[]> enemyAttackedPositions, LinkedList<Integer> ownPositions, LinkedList<Integer> enemyPositions, ArrayList<Integer> pSpecialMoves)
+    public void execMove(int pStartPosition, int pEndPosition, int pPieceValue,
+                         int[] pSquares, LinkedList<int[]> ownAttackedPositions, LinkedList<int[]> enemyAttackedPositions, LinkedList<Integer> ownPositions, LinkedList<Integer> enemyPositions, ArrayList<Integer> pSpecialMoves)
     {
         //System.out.println("own"+ownPositions.size());
         //System.out.println("enemy"+enemyPositions.size());
@@ -1082,55 +1075,9 @@ public class Board {
             printMove(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});*/
         pAttackedPositions.add(new int[]{pEigenePosition,pAttackedSquare, pAbsPieceValue});
     }
-
-    /**
-     * funktioniert nur, wenn bekannst ist welche Felder angegriffen werden-> für die Figur,
-     * die den König angegriffen hat muss deshalb generateMoves(Position der Figur, aktuelles Brett, durchDieFarbeDerFigurAngegriffeneFelder)
-     * gelaufen sein.
-     * @param pPosition Position der Figur von dem geguckt werden soll ob er im Schach ist
-     * @param pAttackedByColorPositions durch Die Farbe(die andere als die Figur) angegriffene Felder
-     * @return true = angegriffen
-     */
-    public boolean isPositionAttacked(int pPosition, LinkedList<int[]> pAttackedByColorPositions)
-    {
-
-        for (int[] pAttackedByColorPosition : pAttackedByColorPositions) {
-            if (pPosition == pAttackedByColorPosition[1]) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    //soll checken ob ein square besetzt ist
-    public boolean isEmpty(int pFeld) {
-        // Stimmt der Bereich
-        if (pFeld < 0 || pFeld >= Square.length) {
-            System.out.println("IRGENDWO WIRD GRAD VERSUCHT ZU GUCKEN, OB EIN NICHT EXISTENTES FELD LEER IST!!!");
-        }
-        // Wert ==0
-        return Square[pFeld] == 0;
-    }
-
-    /**
-     * setter-methode um das square-array zu verändern mit
-     * @param pIndex an welchem square-index
-     * @param //Value welchen wert (Piece)
-     */
-    public int getSquare(int pIndex){
-        return Square[pIndex];
-    }
     public void setSquare(int pIndex, int pValue){
         Square[pIndex] = pValue;
     }
-
-    public int getSquareLength()
-    {
-        return Square.length;
-    }
-
-
     /**
      * unter angabe der feldnummer wird die daraufstehende figur returnt
      * @param pIndex die Feldnummer
