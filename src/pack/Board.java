@@ -112,7 +112,7 @@ public class Board {
         //int color = pPieceValue / Math.abs(pPieceValue);
         int color = pSquares[startPosition] / Math.abs(pSquares[startPosition]);
         int kingPosition = getKingPos(pSquares,pPositions);
-        int[][] attacksOnKing= getAttacksOnKing(kingPosition,pSquares,pPositions,attackedByEnemy);
+        int[][] attacksOnKing= getAttacksOnKing(kingPosition,attackedByEnemy);
 
         int[][] moves = new int[0][0];
         if (Math.abs(pPieceValue) == Piece.king) {
@@ -153,7 +153,7 @@ public class Board {
         }
         return moves;
     }
-    public int[][] getAttacksOnKing(int kingPosition,int[] pSquares,LinkedList<Integer> ownPositions, LinkedList<int[]> enemyAttacked)
+    public int[][] getAttacksOnKing(int kingPosition, LinkedList<int[]> enemyAttacked)
     {
 
 
@@ -245,7 +245,7 @@ public class Board {
             return false;
             }
             }
-        if(getAttacksOnKing(getKingPos(Square,positions),Square,positions,attackedByEnemy).length == 0)
+        if(getAttacksOnKing(getKingPos(Square,positions),attackedByEnemy).length == 0)
         {
             return false;
         }
@@ -730,8 +730,8 @@ public class Board {
     public void execMove(int pStartPosition, int pEndPosition, int pPieceValue,
                          int[] pSquares, LinkedList<int[]> ownAttackedPositions, LinkedList<int[]> enemyAttackedPositions, LinkedList<Integer> ownPositions, LinkedList<Integer> enemyPositions, ArrayList<Integer> pSpecialMoves)
     {
-        //System.out.println("own"+ownPositions.size());
-        //System.out.println("enemy"+enemyPositions.size());
+
+        int[] move = new int[]{pStartPosition ,pEndPosition ,pPieceValue};
 
         int color = pPieceValue / Math.abs(pPieceValue);
         int rookStartPos = -1, rookEndPos = -1;

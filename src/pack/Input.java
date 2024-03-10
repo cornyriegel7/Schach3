@@ -74,7 +74,7 @@ public class Input extends MouseAdapter {
                                 boolean hasWhiteLost = c.dran == Piece.white;
                                 c.view.checkMateMessage(hasWhiteLost);
                             }
-                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),c.board.Square,eigenePositionen,vonAnderenAngegriffen).length == 0)
+                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),vonAnderenAngegriffen).length == 0)
                             {
                                 //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
                                 c.view.staleMateMessage();
@@ -146,7 +146,7 @@ public class Input extends MouseAdapter {
                                 boolean hasWhiteLost = c.dran == Piece.white;
                                 c.view.checkMateMessage(hasWhiteLost);
                             }
-                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),c.board.Square,eigenePositionen,vonAnderenAngegriffen).length == 0)
+                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),vonAnderenAngegriffen).length == 0)
                             {
                                 //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
                                 System.out.println("PATTPATTPATTPATTPATT");

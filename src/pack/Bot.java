@@ -170,8 +170,6 @@ public class Bot {
         int[] moveTotal = null;
         int total = pDran == Piece.white ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
-        LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
-        LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
 
 
         LinkedList<Integer> ownPosN,enemyPosN;
@@ -271,7 +269,7 @@ public class Bot {
         }
         if(moves.size() == 0 )
         {
-            int[][] attacksOnKing = board.getAttacksOnKing(board.getKingPos(pSquares,ownPos),pSquares,ownPos,enemyAttacked);
+            int[][] attacksOnKing = board.getAttacksOnKing(board.getKingPos(pSquares,ownPos),enemyAttacked);
             if(attacksOnKing.length == 0) // Patt -> unentschieden
             {
                 return 0;
