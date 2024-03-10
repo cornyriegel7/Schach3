@@ -336,22 +336,25 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         //Kommandowort rausfinden
         String command = text.substring(0, Math.min(text.length(), 4));
 
-
-            switch (command) {
-                case (brettEmpfangen):
-                    neuesBrett(text.substring(4));
-                    return;
-                case(allesBeenden): {
-                    taChat.append("Server: Du wirst abgemeldet.");
-                    try {Thread.sleep(3000);} catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    fVsOnline.dispose();
-                    chatFrame.dispose();
-                }
+        switch (command) {
+            case (verbindungGewaehrt):
+                neueNachricht = "Du bist connected \uD83D\uDE0E";
+                break;
+            case (verbindungAbgebrochen):
+                neueNachricht = "Verbindung zum Spielpartner getrennt";
+                break;
+            //case (spielZuende):
+            case (brettEmpfangen): {
+                c.input.setActive(true);
+                //c.toggleDran();
+                neuesBrett(text.substring(4));
             }
-        taChat.append("Server: " + text + "\r\n");
+            return;
+            case("ACTN"): c.input.setActive(true);
+                return;
         }
+        taChat.append("Server: " + text + "\r\n");
+    }
 
     public void neuesBrett(String boardString) {
         c.board.Square = stringToIntArray(boardString);
