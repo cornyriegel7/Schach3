@@ -237,6 +237,10 @@ public class Bot {
         int total = pDran == Piece.white ? Integer.MIN_VALUE : Integer.MAX_VALUE;
         LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
         LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
+        if(whitePos.size() + blackPos.size() <5 && board.isTie(whitePos,blackPos,pSquares)) // Unentschieden
+        {
+            return 0;
+        }
         int[] SquareN = new int[64];
         System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
         if(depth == 0)
