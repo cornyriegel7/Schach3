@@ -110,9 +110,16 @@ public class Bot {
         return -0.015 * heavyPieceCount + 1;
     }
 
+    /**
+     * Werte ueber 0 wenn weiß besser ist, Werte unter null, wenn schwarz besser ist
+     * @param pSquares
+     * @param whitePositions
+     * @param blackPositions
+     * @return
+     */
     public int evaluation(int[] pSquares, LinkedList<Integer> whitePositions, LinkedList<Integer> blackPositions){
-        int balancing = 23;
         double gameStatus = updateGameStatus(pSquares,whitePositions,blackPositions);
+        int balancing = 23;
         int whiteMaterial = 0;
         int pos;
         for (int i = 0; i < whitePositions.size(); i++) {
@@ -130,6 +137,12 @@ public class Bot {
         }
         return  whiteMaterial - blackMaterial;
     }
+
+    /**
+     * passt die Tiefe grobb darauf an, wie viele Moves gemacht werden koennen
+     * @param moveCount
+     * @return
+     */
     public int getDepth(int moveCount)
     {
         if(moveCount >= 40)
