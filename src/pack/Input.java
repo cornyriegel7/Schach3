@@ -134,14 +134,26 @@ public class Input extends MouseAdapter {
 
                         //BERECHNE DIE LEGAL MOVESSSS DES NEU AUSGEWÄHLTEN PIECESS
                         LinkedList<Integer> eigenePositionen = tempPieceColour == Piece.white ? c.board.whitePositions : c.board.blackPositions;
+                        LinkedList<Integer> gegnerPositionen = tempPieceColour == Piece.black ? c.board.whitePositions : c.board.blackPositions;
                         LinkedList<int[]> vonAnderenAngegriffen = tempPieceColour == Piece.white ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
                         LinkedList<int[]> vonEigenenAngegriffen = tempPieceColour == Piece.black ? c.board.attackedByBlackPositions : c.board.attackedByWhitePositions;
                         legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen,c.board.specialMovePositions);
 
-                        //CHECKMATE??!??!?!?!
-                        if (legalMoves.length == 0 && c.board.isCheckMate(c.dran)) {
-                            boolean hasWhiteLost = c.dran == Piece.white;
-                            c.view.checkMateMessage(hasWhiteLost);
+                        if (legalMoves.length == 0) {
+                            if(c.board.isCheckMate(c.dran)) {
+                                boolean hasWhiteLost = c.dran == Piece.white;
+                                c.view.checkMateMessage(hasWhiteLost);
+                            }
+                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),c.board.Square,eigenePositionen,vonAnderenAngegriffen).length == 0)
+                            {
+                                //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
+                                System.out.println("PATTPATTPATTPATTPATT");
+                            }
+                        }
+                        else if(c.board.isTie(eigenePositionen,gegnerPositionen,c.board.Square))
+                        {
+                            //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
+                            System.out.println("PATTPATTPATTPATTPATT");
                         }
 
                         c.boardGUI.repaint();
