@@ -20,7 +20,7 @@ public class Bot {
             -30,  0, 10, 15, 15, 10,  0,-30,
             -30,  5, 15, 20, 20, 15,  5,-30,
             -30,  0, 15, 20, 20, 15,  0,-30,
-            -30,  5, 10, 15, 15, 10,  5,-30,
+            -35,  5, 10, 15, 15, 10,  5,-35,
             -40,-20,  0,  5,  5,  0,-20,-40,
             -50,-40,-30,-30,-30,-30,-40,-50
     };
@@ -111,7 +111,7 @@ public class Bot {
     }
 
     public int evaluation(int[] pSquares, LinkedList<Integer> whitePositions, LinkedList<Integer> blackPositions){
-        int balancing = 20;
+        int balancing = 23;
 
         int whiteMaterial = 0;
         int pos;
@@ -133,6 +133,13 @@ public class Bot {
             blackMaterial += positionEvaluation(gameStatus,PosIndexReversed,pSquares);
         }
         return  whiteMaterial - blackMaterial;
+    }
+    public int getDepth(int moveCount)
+    {
+        if(moveCount >= 40)
+        {return 4;}
+
+        return (int) (-0.049 * moveCount + 6);
     }
     public int positionEvaluation(double pGameStatus, int index, int[] pSquares)
     {
@@ -156,7 +163,7 @@ public class Bot {
 
         LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
         LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
-        System.out.println(updateGameStatus(pSquares,whitePos,blackPos));
+        //System.out.println(updateGameStatus(pSquares,whitePos,blackPos));
 
 
         LinkedList<Integer> ownPosN= new LinkedList<>(),enemyPosN = new LinkedList<>();
@@ -173,12 +180,14 @@ public class Bot {
         for (int i = 0; i < ownPos.size(); i++) {
            moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPos.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
         }
+
         MoveComparator moveComparator = new MoveComparator(pSquares);
         moves.sort(moveComparator);
 
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
-        int depth = 4;
+        int depth = getDepth(moves.size());
+        System.out.println(depth);
 
         for (int i = 0; i < moves.size(); i++) {
 

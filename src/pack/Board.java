@@ -767,7 +767,7 @@ public class Board {
         if(Math.abs(pPieceValue)==enPassantInt) {
             pSquares[pEndPosition] = Piece.pawn * color;
             pSquares[pEndPosition + color * 8] = emptySquare;
-
+            enemyPositions.removeFirstOccurrence(pEndPosition + color * 8);
         }
         else if(pPieceValue == castleInt)
         {
@@ -996,6 +996,7 @@ public class Board {
         }*/
         //System.out.println("own"+ownPositions.size());
         //System.out.println("enemy"+enemyPositions.size());
+        //System.out.println(Arrays.toString(ownPositions.toArray()));
     }
 
     /**
