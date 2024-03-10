@@ -11,6 +11,7 @@ public class Piece {
     // Figur kann an einem int erkannt werden denn: Farbe * FigurTyp
     static final int black = -1, white = 1;
     static final int pawn = 1, knight = 2, bishop = 3, rook = 4, queen = 5, king = 6;
+    static final int[] pieces = new int[]{pawn,knight,bishop,queen,king};
     //Für die Bilder der Pieces
     BufferedImage sheet;
     public int sheetScale;

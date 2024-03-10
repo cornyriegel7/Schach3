@@ -688,6 +688,12 @@ public class Board {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
                 {
                     moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
+                    for (int i = 1; i < Piece.pieces.length -1 ; i++) {
+                        if(Piece.pieces[i] != c.view.getPromotionInt())
+                        {
+                            moves.add(new int[]{startPos, neuersquare,Piece.pieces[i] * eigeneFarbe});
+                        }
+                    }
                 }
                 else
                 {moves.add(new int[]{startPos, neuersquare, Piece.pawn * eigeneFarbe});}
@@ -703,6 +709,12 @@ public class Board {
                 if(endReiheAnfang <= startPos && startPos <= endReiheEnde)
                 {
                     moves.add(new int[]{startPos, neuersquare,c.view.getPromotionInt() * eigeneFarbe});
+                    for (int i = 1; i < Piece.pieces.length -1 ; i++) {
+                        if(Piece.pieces[i] != c.view.getPromotionInt())
+                        {
+                            moves.add(new int[]{startPos, neuersquare,Piece.pieces[i] * eigeneFarbe});
+                        }
+                    }
                 }
                 else
                 {moves.add(new int[]{startPos, neuersquare, Piece.pawn * eigeneFarbe});}
