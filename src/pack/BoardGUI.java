@@ -39,7 +39,7 @@ public class BoardGUI extends JPanel {
                 //Das Brett painten
                 for(int r = 0; r < 8; r++){
                     for(int c = 0; c < 8; c++){
-                        g2d.setColor((c+r) % 2 == 0 ? new Color(205, 133, 63) : new Color(101, 67, 33));
+                        g2d.setColor((c+r) % 2 == 0 ? new Color(239, 182, 134) : new Color(80, 52, 22));
                         g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
                     }
                 }

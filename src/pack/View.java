@@ -135,39 +135,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         pickedMode = 0;
     }
 
-    //Createt das Promotion-Menü
-    public void addPromoWindow(int pieceValue){
-        promFrame = new JFrame();
-        promFrame.setTitle("Options:");
-        promFrame.setBounds(200,200,600,400);
-        promFrame.setLocation(20,500);
-        promFrame.setLayout(null);
-        promFrame.addWindowListener(this);
-
-        String[] proms = {"Dame", "Turm", "Läufer", "Springer"};
-        dropdownProm = new JComboBox<>(proms);
-        dropdownProm.addActionListener(this);
-        dropdownProm.setBounds(50,50,300,30);
-        dropdownProm.setVisible(true);
-
-        String[] skins = {"pink-blau","pink-blau-Apo","oransch-lila","",""};
-        dropdownSkins = new JComboBox<>(skins);
-        dropdownSkins.addActionListener(this);
-        dropdownSkins.setBounds(50,100,300,30);
-        dropdownSkins.setVisible(true);
-
-        bApply = new JButton("Apply");
-        bApply.addActionListener(this);
-        bApply.setBounds(380, 100, 140, 30);
-        bApply.setVisible(true);
-
-        promFrame.add(dropdownProm);
-        promFrame.add(dropdownSkins);
-        promFrame.add(bApply);
-        promFrame.setVisible(true);
-
-        promFrame.toBack();
-    }
 
     //Createt das lokale Spielfeld
     public void createVsLokal()
@@ -221,7 +188,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
                 fVsOnline.setVisible(true);
 
-                addPromoWindow(6);
             }
         }
 
@@ -254,7 +220,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         dropdownProm.setVisible(true);
 
 
-        String[] skins = {"pink-blau","pink-blau-Apo","oransch-lila","",""};
+        String[] skins = {"schwarz-weiß","pink-blau","pink-blau-apo","oransch-lila","hehe"};
         dropdownSkins = new JComboBox<>(skins);
         dropdownSkins.addActionListener(this);
         dropdownSkins.setPreferredSize(new Dimension(225, 30));
@@ -416,7 +382,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
         if(a==YES_OPTION) {
             this.disposeAFrame();
-            addPromoWindow(6);
             switch (getPickedMode()) {
                 case 1: this.createVsLokal(); break;
                 //case 2: this.createVsOnline(); break; muss man schaun

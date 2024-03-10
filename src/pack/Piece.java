@@ -19,7 +19,7 @@ public class Piece {
     public Piece(Controller pController) {
         c = pController;
         try {
-            sheet = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("pink-blau-ohne-apo.png")));
+            sheet = ImageIO.read(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("schwarz-weiß.png")));
             sheetScale = sheet.getWidth() / 6;
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,12 +46,11 @@ public class Piece {
     public void changeSkins(String pSkin)
     {
         switch(pSkin){
+            case("schwarz-weiß") -> sheet = readPicture("schwarz-weiß.png");
             case("pink-blau") -> sheet = readPicture("pink-blau-ohne-apo.png");
-            case("pink-blau-Apo") -> sheet = readPicture("pink-blau-mit-apo.png");
-            case("oransch-lila") -> sheet = readPicture("oransch-lila.png");            //Wenn wir mehr Skins haben einfach bei case den Namen im dropdown
-            case("adsadad") -> sheet = readPicture("adsadad");                  //Menü eintragen und rechts den Namen vom zugehörigen Skin der png
-            case("adadad") -> sheet = readPicture("adadad");
-            case("adadsda") -> sheet = readPicture("adadsda");
+            case("pink-blau-apo") -> sheet = readPicture("pink-blau-mit-apo.png");            //Wenn wir mehr Skins haben einfach bei case den Namen im dropdown
+            case("oransch-lila") -> sheet = readPicture("oransch-lila.png");                  //Menü eintragen und rechts den Namen vom zugehörigen Skin der png
+            case("hehe") -> sheet = readPicture("hehe.png");
         }
         c.boardGUI.repaint();
     }
