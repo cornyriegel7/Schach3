@@ -28,6 +28,7 @@ public class Board {
 
         Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
         initalizeSquare();
+        //testInitalizeSquare();
 
         distancesToEdge = getDistanceToEdges();
         whitePositions= getPositions(Piece.white, Square);
@@ -1071,5 +1072,43 @@ public class Board {
         Square[61] = 3;
         Square[62] = 2;
         Square[63] = 4;
+    }
+
+    public void testInitalizeSquare() {
+        Square[0] = 0;
+        Square[1] = 0;
+        Square[2] = -1;
+        Square[3] = -5;
+        Square[4] = -6;
+        Square[5] = 0;
+        Square[6] = 0;
+        Square[7] = 0;
+
+        Square[8] = 0;
+        Square[9] = 0;
+        Square[10] = 0;
+        Square[11] = 0;
+        Square[12] = 0;
+        Square[13] = 0;
+        Square[14] = 0;
+        Square[15] = 0;
+
+        Square[48] = 0;
+        Square[49] = 0;
+        Square[50] = 0;
+        Square[51] = 0;
+        Square[52] = 0;
+        Square[53] = 0;
+        Square[54] = 0;
+        Square[55] = 0;
+
+        Square[56] = 0;
+        Square[57] = 2;
+        Square[58] = 2;
+        Square[59] = 5;
+        Square[60] = 6;
+        Square[61] = 0;
+        Square[62] = 0;
+        Square[63] = 0;
     }
 }
