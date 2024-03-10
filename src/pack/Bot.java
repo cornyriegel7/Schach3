@@ -112,13 +112,11 @@ public class Bot {
 
     public int evaluation(int[] pSquares, LinkedList<Integer> whitePositions, LinkedList<Integer> blackPositions){
         int balancing = 23;
-
+        double gameStatus = updateGameStatus(pSquares,whitePositions,blackPositions);
         int whiteMaterial = 0;
         int pos;
         for (int i = 0; i < whitePositions.size(); i++) {
             pos = whitePositions.get(i);
-            //System.out.print(board.pieceIntToChar(pSquares[pos]));
-            //System.out.println(positionEvaluation(gameStatus,pos,pSquares));
             whiteMaterial += pSquares[pos] * balancing;
             whiteMaterial +=positionEvaluation(gameStatus,pos,pSquares);
         }
@@ -127,8 +125,6 @@ public class Bot {
             pos = blackPositions.get(i);
             int PosIndexReversed = 63 - pos;
             blackMaterial += pSquares[pos] * balancing * -1;
-            //System.out.print(board.pieceIntToChar(pSquares[pos]));
-           // System.out.println(positionEvaluation(gameStatus,PosIndexReversed,pSquares));
 
             blackMaterial += positionEvaluation(gameStatus,PosIndexReversed,pSquares);
         }
@@ -163,12 +159,11 @@ public class Bot {
 
         LinkedList<Integer> whitePos = pDran == Piece.white ?  ownPos: enemyPos;
         LinkedList<Integer> blackPos = pDran == Piece.black ?  ownPos: enemyPos;
-        //System.out.println(updateGameStatus(pSquares,whitePos,blackPos));
 
 
-        LinkedList<Integer> ownPosN= new LinkedList<>(),enemyPosN = new LinkedList<>();
-        LinkedList<int[]> ownAttackedN= new LinkedList<>(), enemyAttackedN= new LinkedList<>();
-        ArrayList<Integer> spezialMovesN = new ArrayList<>();
+        LinkedList<Integer> ownPosN,enemyPosN;
+        LinkedList<int[]> ownAttackedN, enemyAttackedN;
+        ArrayList<Integer> spezialMovesN;
         int[] SquareN = new int[64];
         ownPosN = new LinkedList<>(ownPos);
         enemyPosN = new LinkedList<>(enemyPos);
@@ -178,7 +173,7 @@ public class Bot {
         System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
 
         for (int i = 0; i < ownPos.size(); i++) {
-           moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPos.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
+           moves.addAll(Arrays.stream(board.generateLegalMoves(ownPosN.get(i),SquareN[ownPosN.get(i)],SquareN,ownAttackedN,enemyAttackedN,ownPosN,spezialMovesN)).toList());
         }
 
         MoveComparator moveComparator = new MoveComparator(pSquares);
