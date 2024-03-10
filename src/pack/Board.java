@@ -451,7 +451,6 @@ public class Board {
             }
             for(int i = attackOnKing[0] + attackDirection;i != attackOnKing[1]; i += attackDirection)
             {
-                if(attackOnKing.length  == 1 || (attackOnKing.length > 1 && squares.contains(i)))
                 squares.add(i);
             }
         }
