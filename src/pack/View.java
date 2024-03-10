@@ -1,10 +1,12 @@
 package pack;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
 
 import static javax.swing.JOptionPane.NO_OPTION;
 import static javax.swing.JOptionPane.YES_OPTION;
@@ -193,19 +195,31 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
                 fVsOnline = createDefaultWindow();
                 fVsOnline.setTitle("Gegen Online Gegner");
-                fVsOnline.getContentPane().setBackground(new Color(236, 5, 5));
+                fVsOnline.getContentPane().setBackground(new Color(75, 70, 70));
                 fVsOnline.setLocationRelativeTo(null);
 
-                chatFrame = new JFrame();
-                chatFrame.setTitle("Chat");
-                chatFrame.setBounds(1275, 20, 250, 700);
-                chatFrame.setLayout(null);
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridx = 1; // Spalte 1
+                gbc.gridy = 0; // Zeile 0
+                gbc.anchor = GridBagConstraints.NORTHWEST;
 
-                chatFrame.add(bSend);
-                chatFrame.add(scrollPane);
-                chatFrame.add(tbEnter);
 
-                chatFrame.setVisible(true);
+                gbc.insets = new Insets(760, 10, 10, 10);
+                tbEnter.setPreferredSize(new Dimension(225, 30));
+                fVsOnline.add(tbEnter, gbc);
+
+                gbc.insets = new Insets(760, 235, 10, 10);
+                bSend.setPreferredSize(new Dimension(75, 30));
+                bSend.addActionListener(this);
+                fVsOnline.add(bSend, gbc);
+
+
+                gbc.insets = new Insets(110, 10, 10, 10);
+                fVsOnline.add(scrollPane, gbc);
+                scrollPane.setPreferredSize(new Dimension(300, 640));
+
+
+                fVsOnline.setVisible(true);
 
                 addPromoWindow(6);
             }
@@ -232,28 +246,45 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         frame.add(c.boardGUI);
         frame.setVisible(true);
 
+
         String[] proms = {"Dame", "Turm", "Läufer", "Springer"};
         dropdownProm = new JComboBox<>(proms);
         dropdownProm.addActionListener(this);
-        dropdownProm.setBounds(50,50,300,30);
+        dropdownProm.setPreferredSize(new Dimension(225, 30));
         dropdownProm.setVisible(true);
+
 
         String[] skins = {"pink-blau","pink-blau-Apo","oransch-lila","",""};
         dropdownSkins = new JComboBox<>(skins);
         dropdownSkins.addActionListener(this);
-        dropdownSkins.setBounds(50,100,300,30);
+        dropdownSkins.setPreferredSize(new Dimension(225, 30));
         dropdownSkins.setVisible(true);
 
+
         bApply = new JButton("Apply");
+        bApply.setPreferredSize(new Dimension(75, 30));
         bApply.addActionListener(this);
-        bApply.setBounds(380, 100, 140, 30);
         bApply.setVisible(true);
 
-        frame.add(dropdownProm);
-        frame.add(dropdownSkins);
-        frame.add(bApply);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1; // Spalte 1
+        gbc.gridy = 0; // Zeile 0
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        frame.add(dropdownProm, gbc);
+
+        gbc.insets = new Insets(50, 10, 10, 10);
+
+        frame.add(dropdownSkins, gbc);
+
+        gbc.insets = new Insets(50, 235, 10, 10);
+
+        frame.add(bApply, gbc);
 
         frame.setVisible(true);
+
 
         return frame;
     }
