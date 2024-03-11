@@ -5,7 +5,6 @@ package pack;
 public class ChatClient extends Client {
 
     public Controller c;
-    private int[] toBeSentArray;
     public StringListener StringEmpfangen;
     private String ip;
 
@@ -33,7 +32,6 @@ public class ChatClient extends Client {
         StringEmpfangen.getString(pMessage);
     }
     public void setIntArray(int[] pIntArray) {
-        toBeSentArray = pIntArray;
     }
 
     public void setIp(String pIp){

@@ -266,7 +266,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         IPLabel.setBounds(10,10,100,30);
         connectionFrame.add(IPLabel);
 
-        tbIP = new JTextField("127.0.0.1");
+        tbIP = new JTextField("192.168.0.213");
         tbIP.setBounds(150,10,100,30);
         connectionFrame.add(tbIP);
 
@@ -275,7 +275,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         portLabel.setBounds(10,50,100,30);
         connectionFrame.add(portLabel);
 
-        tbPort = new JTextField("4000");
+        tbPort = new JTextField("14000");
         tbPort.setBounds(150,50,100,30);
         connectionFrame.add(tbPort);
 
