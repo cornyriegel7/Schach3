@@ -1,6 +1,6 @@
 package pack;
 public class Chatserver extends Server {
-    public static final String logout = "ABME", activeNow = "ACTN", inActiveNow = "ACTF", test = "TEST", board = "BOAR", nrOfConnections = "CONN", reciever = "ADDR", weiß = "WHIT", schwarz = "BLAC";
+    public static final String logout = "ABME", activeNow = "ACTN", inActiveNow = "ACTF", test = "TEST", board = "BOAR", nrOfConnections = "CONN", reciever = "ADDR", weiss = "WHIT", schwarz = "BLAC";
     private String hostIP, joinIP, addressee;
     private boolean isHost;
     int connections;
@@ -14,7 +14,7 @@ public class Chatserver extends Server {
         if(connections==0)  {
             hostIP = pClientIP;
             isHost=true;
-            this.send(hostIP,pClientPort,weiß);
+            this.send(hostIP,pClientPort,weiss);
             this.send(hostIP, pClientPort, activeNow);
         }
         if(connections==1) {
