@@ -1,5 +1,4 @@
 package pack;
-
 import java.util.*;
 
 public class Bot {

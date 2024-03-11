@@ -38,13 +38,13 @@ public class Chatserver extends Server {
         String command = pMessage.substring(0, Math.min(pMessage.length(), 4));
         switch (command) {
             case (logout): {processClosingConnection(pClientIP, pClientPort);
-            }//if host dann alles plattmachen - wenn client aber auch
+            }
             return;
             case(nrOfConnections): this.send(pClientIP,pClientPort, String.valueOf(getConnections()));
                 return;
             case (test): this.send(pClientIP,pClientPort,"BOAR[-2, -2, -3, -5, -6, -3, -4, 2, -1, -1, -1, -1, 1, -1, -1, -1, 0, 0, 0, 0, 0, 4, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 0, 1, 1, 1, -4, 1, 1, 1, 1, 4, 2, 3, 5, 6, 3, 2, 4]");
                 return;
-            //schickt das neue brett an alle, (auch an den sender, aber egal)
+            //verschickt das neue brett
             case (board): this.send(addressee, pClientPort, pMessage);
                 return;
             case(reciever): this.send(pClientIP, pClientPort, getAddressee());
@@ -53,10 +53,12 @@ public class Chatserver extends Server {
         this.send(addressee,pClientPort,pMessage);
     }
 
+    //alle menschen, die verbunden sind - moeglich 1 oder 2
     private int getConnections() {
         return connections;
     }
 
+    //der, dem die nachrichten aus geschickt werden müssen. von host zu join und von join zu host
     private String getAddressee() {
         return addressee;
     }

@@ -3,13 +3,9 @@ package pack;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 
 public class BoardGUI extends JPanel {
     Controller c;
-
-    Piece piece;
-    Input input;
     public static int titleSize = 100;
     public int squareIndex = 0;
     public int[] Square;
@@ -17,23 +13,17 @@ public class BoardGUI extends JPanel {
     public BoardGUI(Controller pController) {
 
         c = pController;
-
         this.setPreferredSize(new Dimension(8 * titleSize, 8 * titleSize));
         Square = c.board.giveBoard();
         // Hinzufügen des Input-Listeners zum Board
         this.addMouseListener(c.input);
         this.addMouseMotionListener(c.input);
     }
+
     //Zum Painten des kompletten Felds
-    //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
-    //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
-
-
     public void paintComponent(Graphics g) {
         Square = c.board.giveBoard();
-
         Graphics2D g2d = (Graphics2D) g;
-        //System.out.println("PaintComponent");
 
         //Das Brett painten
         for (int r = 0; r < 8; r++) {
@@ -42,8 +32,6 @@ public class BoardGUI extends JPanel {
                 g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
             }
         }
-
-        //paint highlights
 
         //Führe aus WENN ein Piece ausgewählt ist
         if (c.input.getSelectedPieceValue() != 0) {
@@ -78,7 +66,7 @@ public class BoardGUI extends JPanel {
 
 
 
-    //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild.
+    //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild. - Achtung, neuere java version benötigt!
     private  Image pieceIntToImage(int pPieceInt)
     {
         if(pPieceInt==0) return null; //man kann nicht durch 0 teilen
@@ -124,9 +112,5 @@ public class BoardGUI extends JPanel {
             // Umgang mit ungültigen pSquare-Werten
             return -1;
         }
-    }
-
-    public void setSquare(int[] pSquare) {
-        Square = pSquare;
     }
 }

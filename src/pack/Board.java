@@ -1,19 +1,12 @@
 package pack;
 import java.util.*;
-
-
 public class Board {
-
     Controller c;
     //Gameplay Zeug
     public int[] Square;
-    private static final int emptySquare = 0;
     static int[][] distancesToEdge;
-
-    static final int enPassantInt = 111;
-    static final int castleInt = 444;
+    static final int enPassantInt = 111, castleInt = 444, emptySquare = 0;
     static int oben = -8, unten = 8,  rechts = 1, links = -1, obenrechts = -7, untenlinks = 7, obenlinks = -9, untenrechts = 9;
-    
     static final int[] directions = {oben, unten,
             rechts, links,
             untenlinks, obenrechts,
@@ -26,9 +19,8 @@ public class Board {
 
         c = pController;
 
-        Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts) ist später praktisch
+        Square = new int[64]; //brett als eindimensionales array (von oben links nach unten rechts)
         initalizeSquare();
-        //testInitalizeSquare();
 
         distancesToEdge = getDistanceToEdges();
         whitePositions= getPositions(Piece.white, Square);
@@ -49,8 +41,6 @@ public class Board {
                  this.generateMoves(blackPositions.get(i),Square[blackPositions.get(i)],Square,attackedByBlackPositions,attackedByWhitePositions,specialMovePositions);
             }
         }
-
-
 
     //Wandelt Koordinaten in ein Index fürs Square Array um
     public int xyToSquare(int xValue, int yValue) {
@@ -73,7 +63,6 @@ public class Board {
     {
         return this.Square;
     }
-
     /**
      * gibt den Abstand zum Rand von jedem Feld zum Rand in jeder Richtung in einem Array an,
      * diese Information kann so vorgespeichert werden und muss nicht für jede Figur einzeln berechnet werden
@@ -155,8 +144,6 @@ public class Board {
     }
     public int[][] getAttacksOnKing(int kingPosition, LinkedList<int[]> enemyAttacked)
     {
-
-
         LinkedList<int[]> attacksOnKing = new LinkedList<>();
         for (int i = 0; i < enemyAttacked.size(); i++) {
             if(kingPosition == enemyAttacked.get(i)[1])
@@ -179,13 +166,6 @@ public class Board {
         }
         return kingPosition;
     }
-
-    /**
-     * STALEMATE WIRD NICHT BERUECKSICHTIGT, DAS KOMMT MANUELL IN INPUT BZW BOT
-     * @param positions1
-     * @param positions2
-     * @return
-     */
     public boolean isTie(LinkedList<Integer> positions1, LinkedList<Integer> positions2, int[] pSquare)
     {
         int knightCount1 = 0;
@@ -488,7 +468,6 @@ public class Board {
     /**
      *
      * @param startPosition startPosition auf dem brett
-     * @param pSpecialMovePositions
      * @return die Moves die gehen würden, wenn keine anderen Figuren auf dem Feld wären
      */
    public  int[][] generateMoves(int startPosition, int pPieceValue, int[] pSquares, LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, ArrayList<Integer> pSpecialMovePositions)
@@ -1056,43 +1035,5 @@ public class Board {
         Square[61] = 3;
         Square[62] = 2;
         Square[63] = 4;
-    }
-
-    public void testInitalizeSquare() {
-        Square[0] = 0;
-        Square[1] = 0;
-        Square[2] = -1;
-        Square[3] = -5;
-        Square[4] = -6;
-        Square[5] = 0;
-        Square[6] = 0;
-        Square[7] = 0;
-
-        Square[8] = 0;
-        Square[9] = 0;
-        Square[10] = 0;
-        Square[11] = 0;
-        Square[12] = 0;
-        Square[13] = 0;
-        Square[14] = 0;
-        Square[15] = 0;
-
-        Square[48] = 0;
-        Square[49] = 0;
-        Square[50] = 0;
-        Square[51] = 0;
-        Square[52] = 0;
-        Square[53] = 0;
-        Square[54] = 0;
-        Square[55] = 0;
-
-        Square[56] = 0;
-        Square[57] = 0;
-        Square[58] = 2;
-        Square[59] = 5;
-        Square[60] = 6;
-        Square[61] = 0;
-        Square[62] = 0;
-        Square[63] = 0;
     }
 }

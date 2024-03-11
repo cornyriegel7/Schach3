@@ -1,13 +1,10 @@
 package pack;
+//diese klasse dient nur zur nachrichtenweitergabe von view an den
+// chatserver bzw. vom chatserver an die view
 public class ChatClient extends Client {
-
-    public Controller c;
     public StringListener StringEmpfangen;
-    private String ip;
 
-    private boolean gewaehrt;
-
-    public ChatClient(String pServerIP, int pServerPort, Controller pController){
+    public ChatClient(String pServerIP, int pServerPort){
         super(pServerIP, pServerPort);
     }
 

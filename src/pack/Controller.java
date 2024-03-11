@@ -20,7 +20,7 @@ public class  Controller {
     public void createChatClient()
     {
         if(view.getPickedMode() == 2){
-            chatClient = new ChatClient(view.getIp(), view.getPickedPort(), this);
+            chatClient = new ChatClient(view.getIp(), view.getPickedPort());
         }
     }
 
@@ -58,10 +58,6 @@ public class  Controller {
             dran *= -1;
             input.setActive(true);
         }
-    }
-    public void setDran(int color)
-    {
-        dran = color;
     }
 
 }
