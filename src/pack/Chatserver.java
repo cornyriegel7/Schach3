@@ -2,7 +2,7 @@ package pack;
 //Todo: muss beim onlinespiel dauernd laufen und empfangsbereit sein, wenn int[] kommt an den controller geben und dann das board damit aktualisieren.
 // man muss schauen, dass nur ein move at a time erlaubt ist.
 public class Chatserver extends Server {
-    public static final String logout = "ABME", activeNow = "ACTN", test = "TEST", board = "BOAR", nrOfConnections = "CONN", reciever = "ADDR", weiß = "WHIT";
+    public static final String logout = "ABME", activeNow = "ACTN", test = "TEST", board = "BOAR", nrOfConnections = "CONN", reciever = "ADDR", weiß = "WHIT", schwarz = "BLAC";
     private String hostIP, joinIP;
     private boolean isHost;
     int connections;
@@ -22,6 +22,8 @@ public class Chatserver extends Server {
         }
         if(connections==1) {
             joinIP = pClientIP;
+            this.send(joinIP,pClientPort,schwarz);
+            this.send(joinIP,pClientPort,"ACTF");
             this.send(hostIP,pClientPort,"Neue Anmeldung von " + pClientIP);
         }
         connections++;

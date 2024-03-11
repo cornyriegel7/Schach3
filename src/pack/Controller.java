@@ -14,6 +14,7 @@ public class  Controller {
     public int dran;
     public Controller(View pView) {
         view = pView;
+        if(view.getPickedMode()==1|| view.getPickedMode()==3) dran = Piece.white;
     }
 
     public void createChatClient()
