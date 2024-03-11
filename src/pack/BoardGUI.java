@@ -33,7 +33,7 @@ public class BoardGUI extends JPanel {
         Square = c.board.giveBoard();
 
         Graphics2D g2d = (Graphics2D) g;
-        System.out.println("PaintComponent");
+        //System.out.println("PaintComponent");
 
         //Das Brett painten
         for (int r = 0; r < 8; r++) {
