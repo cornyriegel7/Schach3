@@ -232,6 +232,24 @@ public class Board {
 
         return true;
     }
+    public boolean isStaleMate(int color)
+    {
+        LinkedList<Integer> positions = color == Piece.white ? whitePositions : blackPositions;
+        LinkedList<int[]> attackedByOwn = color == Piece.white ? attackedByWhitePositions : attackedByBlackPositions;
+        LinkedList<int[]> attackedByEnemy = color == Piece.black ? attackedByWhitePositions : attackedByBlackPositions;
+        LinkedList<int[]> ownAttackedN = new LinkedList<>(attackedByOwn);
+        LinkedList<int[]> enemyAttackedN = new LinkedList<>(attackedByEnemy);
+        if(getAttacksOnKing(getKingPos(Square,positions),enemyAttackedN).length != 0)
+        {
+            return false;
+        }
+        for (int i = 0; i < positions.size(); i++) {
+            if(generateLegalMoves(positions.get(i),Square[positions.get(i)],Square,ownAttackedN,enemyAttackedN,positions,specialMovePositions).length != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
     public int[][] generateLegalKingMoves(int startPosition, int color, int[] pSquares, LinkedList<int[]> attackedByOwn, LinkedList<int[]> attackedByEnemy, int[][] attacksOnKing, ArrayList<Integer> pSpecialMovesList)
     {
         LinkedList<int[]> moves = new LinkedList<>();

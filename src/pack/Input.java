@@ -60,7 +60,7 @@ public class Input extends MouseAdapter {
                                 boolean hasWhiteLost = c.dran == Piece.white;
                                 c.view.checkMateMessage(hasWhiteLost);
                             }
-                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),vonAnderenAngegriffen).length == 0)
+                            else if(c.board.isStaleMate(c.dran))
                             {
                                 c.view.staleMateMessage();
                             }
@@ -106,14 +106,14 @@ public class Input extends MouseAdapter {
                                 boolean hasWhiteLost = c.dran == Piece.white;
                                 c.view.checkMateMessage(hasWhiteLost);
                             }
-                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),vonAnderenAngegriffen).length == 0)
+                            else if(c.board.isStaleMate(c.dran))
                             {
-
+                                c.view.staleMateMessage();
                             }
                         }
                         else if(c.board.isTie(eigenePositionen,gegnerPositionen,c.board.Square))
                         {
-
+                            c.view.staleMateMessage();
                         }
 
                         c.boardGUI.repaint();
