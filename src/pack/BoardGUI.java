@@ -24,70 +24,58 @@ public class BoardGUI extends JPanel {
         this.addMouseListener(c.input);
         this.addMouseMotionListener(c.input);
     }
-        //Zum Painten des kompletten Felds
-        //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
-        //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
+    //Zum Painten des kompletten Felds
+    //Wird immer automatisch von Java Swing aufgerufen, wenn es nötig ist.
+    //Man kann mit repaint() dem Swing einen Hinweis geben neu zu painten.
 
 
+    public void paintComponent(Graphics g) {
+        Square = c.board.giveBoard();
 
-            public void paintComponent(Graphics g) {
-                Square = c.board.giveBoard();
-                
-                Graphics2D g2d = (Graphics2D) g;
-                System.out.println("PaintComponent");
+        Graphics2D g2d = (Graphics2D) g;
+        System.out.println("PaintComponent");
 
-                //Das Brett painten
-                for(int r = 0; r < 8; r++){
-                    for(int c = 0; c < 8; c++){
-                        g2d.setColor((c+r) % 2 == 0 ? new Color(239, 182, 134) : new Color(80, 52, 22));
-                        g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
-                    }
-                }
-
-                //paint highlights
-
-                //Führe aus WENN ein Piece ausgewählt ist
-               if(c.input.getSelectedPieceValue() != 0) {
-
-                   int i;
-
-                   //Führe die Schleife so oft aus wie legalMoves Endpositionen hat
-
-                   for (i = 0; i < Input.legalMoves.length; i++){
-                       //paintComponent auf Grün setzen fürs painten der availableMoves
-                       g2d.setColor(new Color(46, 217, 27, 202));
-                       //Wandle den Index des Squares (gegeben vom LegalMovesArray) in Koordinaten um und painte es quasi genau über die andere Farbe des Feldes
-                       g2d.fillRect(squareToX(c.input.legalMoves[i][1]), squareToY(c.input.legalMoves[i][1]), titleSize, titleSize);
-                   }
-               }
-
-
-               //Die Pieces painten
-                for(int i = 0; (i < Square.length); i++) {
-                    squareIndex = i;
-                    Image img = pieceIntToImage(Square[squareIndex]);
-                    g2d.drawImage(img, squareToX(squareIndex), squareToY(squareIndex), null);
-                }
-
-                if(c.input.getSelectedPieceValue() != 0) {
-                    //selectedPieces werden größer angezeigt!!!
-                    Image selectedPiece = pieceIntToImage(c.input.getSelectedPieceValue()).getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
-                    g2d.drawImage(selectedPiece, c.input.getxE() - titleSize / 2, c.input.getyE() - titleSize / 2, null);
-                }
+        //Das Brett painten
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                g2d.setColor((c + r) % 2 == 0 ? new Color(239, 182, 134) : new Color(80, 52, 22));
+                g2d.fillRect(c * titleSize, r * titleSize, titleSize, titleSize);
             }
-
-        //Bestimmtes Feld(pSquare Index) färben(um z.B. available Moves anzuzeigen)
-        public void paintSquare(int pSquareInt) {
-        System.out.println("wRAAAAH MALEN");
-            Graphics g = getGraphics();
-            Graphics2D g2d = (Graphics2D) g;
-
-            // Hier kannst du die Farbe für das bestimmte Feld festlegen
-            g2d.setColor(new Color(0, 255, 0, 186));
-
-            // Hier zeichnest du das bestimmte Feld
-            g2d.fillRect(squareToX(pSquareInt) * titleSize, squareToY(pSquareInt) * titleSize, titleSize, titleSize);
         }
+
+        //paint highlights
+
+        //Führe aus WENN ein Piece ausgewählt ist
+        if (c.input.getSelectedPieceValue() != 0) {
+
+            int i;
+
+            //Führe die Schleife so oft aus wie legalMoves Endpositionen hat
+
+            for (i = 0; i < Input.legalMoves.length; i++) {
+                //paintComponent auf Grün setzen fürs painten der availableMoves
+                g2d.setColor(new Color(46, 217, 27, 202));
+                //Wandle den Index des Squares (gegeben vom LegalMovesArray) in Koordinaten um und painte es quasi genau über die andere Farbe des Feldes
+                g2d.fillRect(squareToX(c.input.legalMoves[i][1]), squareToY(c.input.legalMoves[i][1]), titleSize, titleSize);
+            }
+        }
+
+
+        //Die Pieces painten
+        for (int i = 0; (i < Square.length); i++) {
+            squareIndex = i;
+            Image img = pieceIntToImage(Square[squareIndex]);
+            g2d.drawImage(img, squareToX(squareIndex), squareToY(squareIndex), null);
+        }
+
+        if (c.input.getSelectedPieceValue() != 0) {
+            //selectedPieces werden größer angezeigt!!!
+            Image selectedPiece = pieceIntToImage(c.input.getSelectedPieceValue()).getScaledInstance(120, 120, BufferedImage.SCALE_SMOOTH);
+            g2d.drawImage(selectedPiece, c.input.getxE() - titleSize / 2, c.input.getyE() - titleSize / 2, null);
+        }
+    }
+
+
 
 
     //"Wandelt" den Inhalt des Arrays in ein Bild um und returnt das Bild.
