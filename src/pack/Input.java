@@ -242,11 +242,9 @@ public class Input extends MouseAdapter {
 
                             //REPAINTE DU ...
                             c.boardGUI.repaint();
-                            if(c.view.getPickedMode()==2)
-                                c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
-                            //Bei Online oder gegen Bot setze active auf false nach einem Move
                             if(c.view.getPickedMode() == 2) {
                                 active = false;
+                                c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
                             }
                             else if(c.view.getPickedMode() == 3) {
                                 c.vsBot();
@@ -294,13 +292,12 @@ public class Input extends MouseAdapter {
                                 startSquare = -1;
                                 //System.out.println("selectedPieceValue = 0 KLICKEN SCHLEIFE");
 
-                                System.out.println("MOVEEEE!!");
-                                System.out.println(c.view.getPickedMode());
+                               //System.out.println(c.view.getPickedMode());
                                 //Bei Online oder gegen Bot setze active auf false nach einem Move (Bot 3, Online 2)
 
 
                                 //REPAINTE DU ...
-                                System.out.println("Paint Component aufgerufen");
+                                //System.out.println("Paint Component aufgerufen");
                                 c.boardGUI.repaint();
 
 

@@ -41,6 +41,7 @@ public class Chatserver extends Server {
         String command = pMessage.substring(0, Math.min(pMessage.length(), 4));
         switch (command) {
             case (logout): {processClosingConnection(pClientIP, pClientPort);
+            close();
             }//if host dann alles plattmachen - wenn client aber auch
             return;
             case(nrOfConnections): this.send(pClientIP,pClientPort, String.valueOf(getConnections()));
@@ -49,11 +50,12 @@ public class Chatserver extends Server {
                 return;
             //schickt das neue brett an alle, (auch an den sender, aber egal)
             case (board): this.send(addressee, pClientPort, pMessage);
+            this.send(addressee,pClientPort, "ACTN");
                 return;
             case(reciever): this.send(pClientIP, pClientPort, getAddressee());
                 return;
+            default: this.send(addressee,pClientPort,pMessage);
         }
-        this.send(addressee,pClientPort,pMessage);
     }
 
     private int getConnections() {
