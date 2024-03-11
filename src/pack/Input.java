@@ -37,6 +37,7 @@ public class Input extends MouseAdapter {
     //Wenn die Maus gedrückt wird
     @Override
     public void mousePressed(MouseEvent e) {
+        System.out.print(active);
         if(active) {
             //Koords updaten
             xE = e.getX();
@@ -78,7 +79,7 @@ public class Input extends MouseAdapter {
                             {
                                 //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
                                 c.view.staleMateMessage();
-                                //System.out.println("PATTPATTPATTPATTPATT");
+                                System.out.println("PATTPATTPATTPATTPATT");
                             }
                         }
                         else if(c.board.isTie(eigenePositionen,gegnerPositionen,c.board.Square))

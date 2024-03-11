@@ -401,7 +401,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     public void disposeAFrame(){
-        promFrame.dispose();
         switch (getPickedMode()){
             case 1: this.fVsLokal.dispose(); break;
             case 2: this.fVsOnline.dispose(); break;

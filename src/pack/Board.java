@@ -1087,7 +1087,7 @@ public class Board {
         Square[55] = 0;
 
         Square[56] = 0;
-        Square[57] = 2;
+        Square[57] = 0;
         Square[58] = 2;
         Square[59] = 5;
         Square[60] = 6;
