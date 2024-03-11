@@ -193,7 +193,7 @@ public class Bot {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         int depth = getDepth(moves.size());
-        System.out.println(depth);
+        //System.out.println(depth);
 
         for (int i = 0; i < moves.size(); i++) {
 
@@ -232,7 +232,7 @@ public class Bot {
             System.arraycopy(pSquares,0,SquareN,0,pSquares.length);
         }
         long execTime = System.currentTimeMillis() - startTime;
-        System.out.println(execTime);
+        //System.out.println(execTime);
        // System.out.println(total);
         return moveTotal;
     }

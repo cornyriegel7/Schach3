@@ -78,14 +78,14 @@ public class Input extends MouseAdapter {
                             {
                                 //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
                                 c.view.staleMateMessage();
-                                System.out.println("PATTPATTPATTPATTPATT");
+                                //System.out.println("PATTPATTPATTPATTPATT");
                             }
                         }
                         else if(c.board.isTie(eigenePositionen,gegnerPositionen,c.board.Square))
                         {
                             //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
                             c.view.staleMateMessage();
-                            System.out.println("PATTPATTPATTPATTPATT");
+                            //System.out.println("PATTPATTPATTPATTPATT");
                         }
 
 
@@ -142,13 +142,23 @@ public class Input extends MouseAdapter {
                         legalMoves = c.board.generateLegalMoves(startSquare, selectedPieceValue, c.board.giveBoard(), vonEigenenAngegriffen, vonAnderenAngegriffen, eigenePositionen,c.board.specialMovePositions);
 
                         if (legalMoves.length == 0) {
-                            if (c.board.isCheckMate(c.dran)) {
+                            if(c.board.isCheckMate(c.dran)) {
                                 boolean hasWhiteLost = c.dran == Piece.white;
                                 c.view.checkMateMessage(hasWhiteLost);
                             }
-
-                            c.boardGUI.repaint();
+                            else if(c.board.getAttacksOnKing(c.board.getKingPos(c.board.Square,eigenePositionen),vonAnderenAngegriffen).length == 0)
+                            {
+                                //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
+                                //System.out.println("PATTPATTPATTPATTPATT");
+                            }
                         }
+                        else if(c.board.isTie(eigenePositionen,gegnerPositionen,c.board.Square))
+                        {
+                            //HIER FENSTER FÜR UNENTSCHIEDEN HIN?
+                            //System.out.println("PATTPATTPATTPATTPATT");
+                        }
+
+                        c.boardGUI.repaint();
                     }
                 }
             }
@@ -227,7 +237,7 @@ public class Input extends MouseAdapter {
 
 
 
-                            System.out.println("MOVEEEE!!");
+                            //System.out.println("MOVEEEE!!");
 
                             //REPAINTE DU ...
                             c.boardGUI.repaint();
