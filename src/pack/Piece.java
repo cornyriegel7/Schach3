@@ -48,8 +48,8 @@ public class Piece {
         switch(pSkin){
             case("schwarz-weiß") -> sheet = readPicture("schwarz-weiß.png");
             case("pink-blau") -> sheet = readPicture("pink-blau-ohne-apo.png");
-            case("pink-blau-apo") -> sheet = readPicture("pink-blau-mit-apo.png");            //Wenn wir mehr Skins haben einfach bei case den Namen im dropdown
-            case("orange-lila") -> sheet = readPicture("orange-lila.png");                  //Menü eintragen und rechts den Namen vom zugehörigen Skin der png
+            case("pink-blau-apo") -> sheet = readPicture("pink-blau-mit-apo.png");
+            case("orange-lila") -> sheet = readPicture("orange-lila.png");
             case("hehe") -> sheet = readPicture("hehe.png");
         }
         c.boardGUI.repaint();

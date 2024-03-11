@@ -186,8 +186,6 @@ public class Input extends MouseAdapter {
                         selectedPieceValue = 0;
                         c.boardGUI.repaint();
                     }
-
-
                 }
                 else
                 {
@@ -230,8 +228,6 @@ public class Input extends MouseAdapter {
                             c.boardGUI.repaint();
                         }
                     }
-
-
                     //METHODEN FÜR NUR AUSWÄHLEN DURCH KLICKEN
                     else{
                         c.board.setSquare(startSquare, 0);

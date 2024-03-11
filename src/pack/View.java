@@ -13,7 +13,7 @@ import static javax.swing.JOptionPane.YES_OPTION;
 
 public class View extends JFrame implements ActionListener, WindowListener, StringListener {
     static Controller c;
-    JFrame fVsBot, fVsLokal, fVsOnline, promFrame, connectionFrame;
+    JFrame fVsBot, fVsLokal, fVsOnline, connectionFrame;
     JButton bVsBot, bVsLokal, bVsOnline, bSend, bJoin, bHost, bApply;
     JLabel lTitle, IPLabel, portLabel;
     JTextArea taChat;
@@ -21,8 +21,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     JScrollPane scrollPane;
     JComboBox<String> dropdownProm, dropdownSkins;
 
-    public final static String verbindungGewaehrt = "OKOK", verbindungAbgebrochen = "CCUT", spielZuende = "GMOV", brettEmpfangen = "BOAR",
-    allesBeenden = "Lieb";
+    public final static String setActive = "ACTN", setInActive = "ACTF", brettEmpfangen = "BOAR",  weiss = "WHIT", schwarz = "BLAC";
 
     boolean host = false;
     private String ip;
@@ -304,15 +303,15 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
                 c.input.setActive(true);
                 neuesBrett(text.substring(4));
             }
-            return;
-            case("ACTN"): c.input.setActive(true);
                 return;
-            case("ACTF"): c.input.setActive(false);
+            case(setActive): c.input.setActive(true);
                 return;
-            case("WHIT"): c.dran = 1;
-            return;
-            case("BLAC"): c.dran = -1;
-            return;
+            case(setInActive): c.input.setActive(false);
+                return;
+            case(weiss): c.dran = 1;
+                return;
+            case(schwarz): c.dran = -1;
+                return;
         }
         taChat.append("Server: " + text + "\r\n");
     }
@@ -407,17 +406,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     public int getPickedPort(){
         return pickedPort;
     }
-    public void appendToArea(String pText) {
-        taChat.append("Du: " + pText + "\n");
-    }
     public int getPickedMode() { return pickedMode; }
     public void setPickedMode(int pPickedMode) {this.pickedMode = pPickedMode;}
-    public void setPromotionValue(int pValue){
-        promotionValue = pValue;
-    }
-    public int getPromotionValue(){
-        return promotionValue;
-    }
     @Override
     public void windowOpened(WindowEvent e) {}
     @Override
