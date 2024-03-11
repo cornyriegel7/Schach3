@@ -64,11 +64,11 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         bSend.addActionListener(this);
 
         bJoin = new JButton("Join");
-        bJoin.setBounds(40,100,100,30);
+        bJoin.setBounds(10,100,100,30);
         bJoin.addActionListener(this);
 
         bHost = new JButton("Host");
-        bHost.setBounds(160,100,100,30);
+        bHost.setBounds(180,100,100,30);
         bHost.addActionListener(this);
 
         taChat = new JTextArea();
@@ -262,12 +262,12 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         connectionFrame.setLayout(null);
 
         // IP Label und TB
-        IPLabel = new JLabel("Deine IP:");
-        IPLabel.setBounds(10,10,100,30);
+        IPLabel = new JLabel("Deine IP / IP des Servers:");
+        IPLabel.setBounds(10,10,150,30);
         connectionFrame.add(IPLabel);
 
-        tbIP = new JTextField("192.168.0.213");
-        tbIP.setBounds(150,10,100,30);
+        tbIP = new JTextField("192.168.185.9");
+        tbIP.setBounds(180,10,100,30);
         connectionFrame.add(tbIP);
 
         // Port &  TB
@@ -275,8 +275,8 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         portLabel.setBounds(10,50,100,30);
         connectionFrame.add(portLabel);
 
-        tbPort = new JTextField("14000");
-        tbPort.setBounds(150,50,100,30);
+        tbPort = new JTextField("33000");
+        tbPort.setBounds(180,50,100,30);
         connectionFrame.add(tbPort);
 
         connectionFrame.add(bJoin);
@@ -366,7 +366,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     public void sendMessage(String pMessage){
         c.input.setActive(false);
-      c.chatClient.send(pMessage);
+      c.chatClient.nachrichtVersenden(pMessage);
     }
 
     public void checkMateMessage(boolean hasWhiteLost)

@@ -1,12 +1,9 @@
 package pack;
-//Todo: muss beim onlinespiel dauernd laufen und empfangsbereit sein, wenn int[] kommt an den controller geben und dann das board damit aktualisieren.
-// man muss schauen, dass nur ein move at a time erlaubt ist.
 public class Chatserver extends Server {
-    public static final String logout = "ABME", activeNow = "ACTN", test = "TEST", board = "BOAR", nrOfConnections = "CONN", reciever = "ADDR", weiß = "WHIT", schwarz = "BLAC";
-    private String hostIP, joinIP;
+    public static final String logout = "ABME", activeNow = "ACTN", inActiveNow = "ACTF", test = "TEST", board = "BOAR", nrOfConnections = "CONN", reciever = "ADDR", weiß = "WHIT", schwarz = "BLAC";
+    private String hostIP, joinIP, addressee;
     private boolean isHost;
     int connections;
-    String addressee;
     public Chatserver(int pPort) {
         super(pPort);
     }
@@ -23,7 +20,7 @@ public class Chatserver extends Server {
         if(connections==1) {
             joinIP = pClientIP;
             this.send(joinIP,pClientPort,schwarz);
-            this.send(joinIP,pClientPort,"ACTF");
+            this.send(joinIP,pClientPort,inActiveNow);
             this.send(hostIP,pClientPort,"Neue Anmeldung von " + pClientIP);
         }
         connections++;
@@ -41,7 +38,6 @@ public class Chatserver extends Server {
         String command = pMessage.substring(0, Math.min(pMessage.length(), 4));
         switch (command) {
             case (logout): {processClosingConnection(pClientIP, pClientPort);
-            close();
             }//if host dann alles plattmachen - wenn client aber auch
             return;
             case(nrOfConnections): this.send(pClientIP,pClientPort, String.valueOf(getConnections()));
@@ -50,12 +46,11 @@ public class Chatserver extends Server {
                 return;
             //schickt das neue brett an alle, (auch an den sender, aber egal)
             case (board): this.send(addressee, pClientPort, pMessage);
-            this.send(addressee,pClientPort, "ACTN");
                 return;
             case(reciever): this.send(pClientIP, pClientPort, getAddressee());
                 return;
-            default: this.send(addressee,pClientPort,pMessage);
         }
+        this.send(addressee,pClientPort,pMessage);
     }
 
     private int getConnections() {
@@ -64,10 +59,6 @@ public class Chatserver extends Server {
 
     private String getAddressee() {
         return addressee;
-    }
-
-    public void anAlleSenden(String pMessage) {
-        this.sendToAll(pMessage);
     }
     @Override
     public void processClosingConnection(String pClientIP, int pClientPort) {
