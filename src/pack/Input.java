@@ -243,7 +243,7 @@ public class Input extends MouseAdapter {
                             //REPAINTE DU ...
                             c.boardGUI.repaint();
                             if(c.view.getPickedMode()==2)
-                            c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
+                                c.chatClient.nachrichtVersenden(c.view.intArrayToString(c.board.Square)); //intarray wird verschickt
                             //Bei Online oder gegen Bot setze active auf false nach einem Move
                             if(c.view.getPickedMode() == 2) {
                                 active = false;

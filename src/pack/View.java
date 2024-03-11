@@ -300,13 +300,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
         String command = text.substring(0, Math.min(text.length(), 4));
 
         switch (command) {
-            case (verbindungGewaehrt):
-                neueNachricht = "Du bist connected \uD83D\uDE0E";
-                break;
-            case (verbindungAbgebrochen):
-                neueNachricht = "Verbindung zum Spielpartner getrennt";
-                break;
-            //case (spielZuende):
             case (brettEmpfangen): {
                 c.input.setActive(true);
                 neuesBrett(text.substring(4));
