@@ -25,7 +25,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
     boolean host = false;
     private String ip;
-    private int pickedPort, promotionValue, pickedMode;
+    private int pickedPort, pickedMode;
     public boolean isHost;
 
     public View(){
@@ -116,7 +116,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
 
         if(e.getSource()==bSend) {
             String text = tbEnter.getText();
-
             taChat.append("Du: " + text + "\r\n");
             sendMessage(text);
         }
