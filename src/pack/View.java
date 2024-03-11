@@ -96,7 +96,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             }
 
             if (e.getSource() == bJoin) {
-                c.chatClient.setIp(tbIP.getText());
                 createVsOnline();
                 c.createChatClient();
             }
@@ -108,8 +107,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
                 c.createChatServer(getPickedPort());
                 c.createChatClient();
                 c.chatClient.StringEmpfangen = this;
-
-                c.chatClient.setIp(tbIP.getText());
             }
 
             //Für Spiel gegen Bot
@@ -312,7 +309,6 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             //case (spielZuende):
             case (brettEmpfangen): {
                 c.input.setActive(true);
-                //c.toggleDran();
                 neuesBrett(text.substring(4));
             }
             return;
@@ -376,6 +372,7 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
     }
 
     public void sendMessage(String pMessage){
+        c.input.setActive(false);
       c.chatClient.send(pMessage);
     }
 
