@@ -76,14 +76,6 @@ public class BoardGUI extends JPanel {
                 }
             }
 
-
-
-
-
-
-
-
-
         //Bestimmtes Feld(pSquare Index) färben(um z.B. available Moves anzuzeigen)
         public void paintSquare(int pSquareInt) {
         System.out.println("wRAAAAH MALEN");

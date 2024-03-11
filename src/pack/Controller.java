@@ -11,15 +11,9 @@ public class  Controller {
     Chatserver chatServer;
     ChatClient chatClient;
     Bot bot;
-    boolean BOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT;
     public int dran;
     public Controller(View pView) {
         view = pView;
-        dran = Piece.white;
-    }
-
-    public void restart() {
-
     }
 
     public void createChatClient()
@@ -68,8 +62,6 @@ public class  Controller {
     {
         dran = color;
     }
-
-    public void toggleDran(){dran = dran * -1;}
 
 }
 

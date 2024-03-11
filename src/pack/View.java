@@ -13,7 +13,7 @@ import static javax.swing.JOptionPane.YES_OPTION;
 
 public class View extends JFrame implements ActionListener, WindowListener, StringListener {
     static Controller c;
-    JFrame fVsBot, fVsLokal, fVsOnline, chatFrame, promFrame, connectionFrame;
+    JFrame fVsBot, fVsLokal, fVsOnline, promFrame, connectionFrame;
     JButton bVsBot, bVsLokal, bVsOnline, bSend, bJoin, bHost, bApply;
     JLabel lTitle, IPLabel, portLabel;
     JTextArea taChat;
@@ -318,6 +318,12 @@ public class View extends JFrame implements ActionListener, WindowListener, Stri
             return;
             case("ACTN"): c.input.setActive(true);
                 return;
+            case("ACTF"): c.input.setActive(false);
+                return;
+            case("WHIT"): c.dran = 1;
+            return;
+            case("BLAC"): c.dran = -1;
+            return;
         }
         taChat.append("Server: " + text + "\r\n");
     }
